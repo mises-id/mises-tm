@@ -1,3 +1,4 @@
 vue/node_modules
 vue/dist
+vue/src/store/generated
 secret.yml
