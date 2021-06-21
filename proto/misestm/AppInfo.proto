@@ -1,0 +1,19 @@
+syntax = "proto3";
+package misesid.misestm.misestm;
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+import "gogoproto/gogo.proto";
+
+message AppInfo {
+  string creator = 1;
+  uint64 id = 2;
+  string appid = 3; 
+  string domain = 4; 
+  string name = 5; 
+  string developer = 6; 
+  string iconDid = 7; 
+  string iconThumb = 8; 
+  uint64 quota = 9; 
+  uint64 version = 10; 
+}

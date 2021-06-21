@@ -19274,6 +19274,750 @@ paths:
           format: uint64
       tags:
         - Query
+  /mises-id/misestm/misestm/AppInfo:
+    get:
+      summary: Queries a list of AppInfo items.
+      operationId: MisesidMisestmMisestmAppInfoAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              AppInfo:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    appid:
+                      type: string
+                    domain:
+                      type: string
+                    name:
+                      type: string
+                    developer:
+                      type: string
+                    iconDid:
+                      type: string
+                    iconThumb:
+                      type: string
+                    quota:
+                      type: string
+                      format: uint64
+                    version:
+                      type: string
+                      format: uint64
+              pagination:
+                type: object
+                properties:
+                  nextKey:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.countTotal
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/mises-id/misestm/misestm/AppInfo/{id}':
+    get:
+      summary: Queries a AppInfo by id.
+      operationId: MisesidMisestmMisestmAppInfo
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              AppInfo:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  appid:
+                    type: string
+                  domain:
+                    type: string
+                  name:
+                    type: string
+                  developer:
+                    type: string
+                  iconDid:
+                    type: string
+                  iconThumb:
+                    type: string
+                  quota:
+                    type: string
+                    format: uint64
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /mises-id/misestm/misestm/DidRegistry:
+    get:
+      summary: Queries a list of DidRegistry items.
+      operationId: MisesidMisestmMisestmDidRegistryAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              DidRegistry:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    did:
+                      type: string
+                    pkeyDid:
+                      type: string
+                    pkeyType:
+                      type: string
+                    pkeyMultibase:
+                      type: string
+                    version:
+                      type: string
+                      format: uint64
+              pagination:
+                type: object
+                properties:
+                  nextKey:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.countTotal
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/mises-id/misestm/misestm/DidRegistry/{id}':
+    get:
+      summary: Queries a DidRegistry by id.
+      operationId: MisesidMisestmMisestmDidRegistry
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              DidRegistry:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  did:
+                    type: string
+                  pkeyDid:
+                    type: string
+                  pkeyType:
+                    type: string
+                  pkeyMultibase:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /mises-id/misestm/misestm/UserInfo:
+    get:
+      summary: Queries a list of UserInfo items.
+      operationId: MisesidMisestmMisestmUserInfoAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              UserInfo:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    uid:
+                      type: string
+                    encData:
+                      type: string
+                    iv:
+                      type: string
+                    version:
+                      type: string
+                      format: uint64
+              pagination:
+                type: object
+                properties:
+                  nextKey:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.countTotal
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/mises-id/misestm/misestm/UserInfo/{id}':
+    get:
+      summary: Queries a UserInfo by id.
+      operationId: MisesidMisestmMisestmUserInfo
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              UserInfo:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  uid:
+                    type: string
+                  encData:
+                    type: string
+                  iv:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /mises-id/misestm/misestm/UserRelation:
+    get:
+      summary: Queries a list of UserRelation items.
+      operationId: MisesidMisestmMisestmUserRelationAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              UserRelation:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    uidFrom:
+                      type: string
+                    uidTo:
+                      type: string
+                    relType:
+                      type: string
+                      format: uint64
+                    version:
+                      type: string
+                      format: uint64
+              pagination:
+                type: object
+                properties:
+                  nextKey:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.countTotal
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/mises-id/misestm/misestm/UserRelation/{id}':
+    get:
+      summary: Queries a UserRelation by id.
+      operationId: MisesidMisestmMisestmUserRelation
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              UserRelation:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  uidFrom:
+                    type: string
+                  uidTo:
+                    type: string
+                  relType:
+                    type: string
+                    format: uint64
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
 definitions:
   cosmos.bank.v1beta1.DenomUnit:
     type: object
@@ -29488,3 +30232,415 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
+  misesid.misestm.misestm.AppInfo:
+    type: object
+    properties:
+      creator:
+        type: string
+      id:
+        type: string
+        format: uint64
+      appid:
+        type: string
+      domain:
+        type: string
+      name:
+        type: string
+      developer:
+        type: string
+      iconDid:
+        type: string
+      iconThumb:
+        type: string
+      quota:
+        type: string
+        format: uint64
+      version:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.DidRegistry:
+    type: object
+    properties:
+      creator:
+        type: string
+      id:
+        type: string
+        format: uint64
+      did:
+        type: string
+      pkeyDid:
+        type: string
+      pkeyType:
+        type: string
+      pkeyMultibase:
+        type: string
+      version:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.MsgCreateAppInfoResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.MsgCreateDidRegistryResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.MsgCreateUserInfoResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.MsgCreateUserRelationResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.MsgDeleteAppInfoResponse:
+    type: object
+  misesid.misestm.misestm.MsgDeleteDidRegistryResponse:
+    type: object
+  misesid.misestm.misestm.MsgDeleteUserInfoResponse:
+    type: object
+  misesid.misestm.misestm.MsgDeleteUserRelationResponse:
+    type: object
+  misesid.misestm.misestm.MsgUpdateAppInfoResponse:
+    type: object
+  misesid.misestm.misestm.MsgUpdateDidRegistryResponse:
+    type: object
+  misesid.misestm.misestm.MsgUpdateUserInfoResponse:
+    type: object
+  misesid.misestm.misestm.MsgUpdateUserRelationResponse:
+    type: object
+  misesid.misestm.misestm.QueryAllAppInfoResponse:
+    type: object
+    properties:
+      AppInfo:
+        type: array
+        items:
+          type: object
+          properties:
+            creator:
+              type: string
+            id:
+              type: string
+              format: uint64
+            appid:
+              type: string
+            domain:
+              type: string
+            name:
+              type: string
+            developer:
+              type: string
+            iconDid:
+              type: string
+            iconThumb:
+              type: string
+            quota:
+              type: string
+              format: uint64
+            version:
+              type: string
+              format: uint64
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  misesid.misestm.misestm.QueryAllDidRegistryResponse:
+    type: object
+    properties:
+      DidRegistry:
+        type: array
+        items:
+          type: object
+          properties:
+            creator:
+              type: string
+            id:
+              type: string
+              format: uint64
+            did:
+              type: string
+            pkeyDid:
+              type: string
+            pkeyType:
+              type: string
+            pkeyMultibase:
+              type: string
+            version:
+              type: string
+              format: uint64
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  misesid.misestm.misestm.QueryAllUserInfoResponse:
+    type: object
+    properties:
+      UserInfo:
+        type: array
+        items:
+          type: object
+          properties:
+            creator:
+              type: string
+            id:
+              type: string
+              format: uint64
+            uid:
+              type: string
+            encData:
+              type: string
+            iv:
+              type: string
+            version:
+              type: string
+              format: uint64
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  misesid.misestm.misestm.QueryAllUserRelationResponse:
+    type: object
+    properties:
+      UserRelation:
+        type: array
+        items:
+          type: object
+          properties:
+            creator:
+              type: string
+            id:
+              type: string
+              format: uint64
+            uidFrom:
+              type: string
+            uidTo:
+              type: string
+            relType:
+              type: string
+              format: uint64
+            version:
+              type: string
+              format: uint64
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  misesid.misestm.misestm.QueryGetAppInfoResponse:
+    type: object
+    properties:
+      AppInfo:
+        type: object
+        properties:
+          creator:
+            type: string
+          id:
+            type: string
+            format: uint64
+          appid:
+            type: string
+          domain:
+            type: string
+          name:
+            type: string
+          developer:
+            type: string
+          iconDid:
+            type: string
+          iconThumb:
+            type: string
+          quota:
+            type: string
+            format: uint64
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.misestm.QueryGetDidRegistryResponse:
+    type: object
+    properties:
+      DidRegistry:
+        type: object
+        properties:
+          creator:
+            type: string
+          id:
+            type: string
+            format: uint64
+          did:
+            type: string
+          pkeyDid:
+            type: string
+          pkeyType:
+            type: string
+          pkeyMultibase:
+            type: string
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.misestm.QueryGetUserInfoResponse:
+    type: object
+    properties:
+      UserInfo:
+        type: object
+        properties:
+          creator:
+            type: string
+          id:
+            type: string
+            format: uint64
+          uid:
+            type: string
+          encData:
+            type: string
+          iv:
+            type: string
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.misestm.QueryGetUserRelationResponse:
+    type: object
+    properties:
+      UserRelation:
+        type: object
+        properties:
+          creator:
+            type: string
+          id:
+            type: string
+            format: uint64
+          uidFrom:
+            type: string
+          uidTo:
+            type: string
+          relType:
+            type: string
+            format: uint64
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.misestm.UserInfo:
+    type: object
+    properties:
+      creator:
+        type: string
+      id:
+        type: string
+        format: uint64
+      uid:
+        type: string
+      encData:
+        type: string
+      iv:
+        type: string
+      version:
+        type: string
+        format: uint64
+  misesid.misestm.misestm.UserRelation:
+    type: object
+    properties:
+      creator:
+        type: string
+      id:
+        type: string
+        format: uint64
+      uidFrom:
+        type: string
+      uidTo:
+        type: string
+      relType:
+        type: string
+        format: uint64
+      version:
+        type: string
+        format: uint64

@@ -2,11 +2,23 @@ syntax = "proto3";
 package misesid.misestm.misestm;
 
 // this line is used by starport scaffolding # genesis/proto/import
+import "misestm/UserInfo.proto";
+import "misestm/UserRelation.proto";
+import "misestm/AppInfo.proto";
+import "misestm/DidRegistry.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 // GenesisState defines the misestm module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
+		repeated UserInfo UserInfoList = 7; // this line is used by starport scaffolding # genesis/proto/stateField
+		uint64 UserInfoCount = 8; // this line is used by starport scaffolding # genesis/proto/stateField
+		repeated UserRelation UserRelationList = 5; // this line is used by starport scaffolding # genesis/proto/stateField
+		uint64 UserRelationCount = 6; // this line is used by starport scaffolding # genesis/proto/stateField
+		repeated AppInfo AppInfoList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
+		uint64 AppInfoCount = 4; // this line is used by starport scaffolding # genesis/proto/stateField
+		repeated DidRegistry DidRegistryList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
+		uint64 DidRegistryCount = 2; // this line is used by starport scaffolding # genesis/proto/stateField
     // this line is used by starport scaffolding # ibc/genesis/proto
 }

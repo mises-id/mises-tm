@@ -24,3 +24,23 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+const (
+	DidRegistryKey      = "DidRegistry-value-"
+	DidRegistryCountKey = "DidRegistry-count-"
+)
+
+const (
+	AppInfoKey      = "AppInfo-value-"
+	AppInfoCountKey = "AppInfo-count-"
+)
+
+const (
+	UserRelationKey      = "UserRelation-value-"
+	UserRelationCountKey = "UserRelation-count-"
+)
+
+const (
+	UserInfoKey      = "UserInfo-value-"
+	UserInfoCountKey = "UserInfo-count-"
+)
