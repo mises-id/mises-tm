@@ -25,7 +25,7 @@ func (k Keeper) DidRegistryAll(c context.Context, req *types.QueryAllDidRegistry
 
 	pageRes, err := query.Paginate(DidRegistryStore, req.Pagination, func(key []byte, value []byte) error {
 		var DidRegistry types.DidRegistry
-		if err := k.cdc.UnmarshalBinaryBare(value, &DidRegistry); err != nil {
+		if err := k.cdc.Unmarshal(value, &DidRegistry); err != nil {
 			return err
 		}
 
@@ -53,7 +53,7 @@ func (k Keeper) DidRegistry(c context.Context, req *types.QueryGetDidRegistryReq
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetDidRegistryIDBytes(req.Id)), &DidRegistry)
+	k.cdc.Unmarshal(store.Get(GetDidRegistryIDBytes(req.Id)), &DidRegistry)
 
 	return &types.QueryGetDidRegistryResponse{DidRegistry: &DidRegistry}, nil
 }

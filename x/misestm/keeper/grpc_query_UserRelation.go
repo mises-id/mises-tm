@@ -25,7 +25,7 @@ func (k Keeper) UserRelationAll(c context.Context, req *types.QueryAllUserRelati
 
 	pageRes, err := query.Paginate(UserRelationStore, req.Pagination, func(key []byte, value []byte) error {
 		var UserRelation types.UserRelation
-		if err := k.cdc.UnmarshalBinaryBare(value, &UserRelation); err != nil {
+		if err := k.cdc.Unmarshal(value, &UserRelation); err != nil {
 			return err
 		}
 
@@ -53,7 +53,7 @@ func (k Keeper) UserRelation(c context.Context, req *types.QueryGetUserRelationR
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetUserRelationIDBytes(req.Id)), &UserRelation)
+	k.cdc.Unmarshal(store.Get(GetUserRelationIDBytes(req.Id)), &UserRelation)
 
 	return &types.QueryGetUserRelationResponse{UserRelation: &UserRelation}, nil
 }

@@ -25,7 +25,7 @@ func (k Keeper) AppInfoAll(c context.Context, req *types.QueryAllAppInfoRequest)
 
 	pageRes, err := query.Paginate(AppInfoStore, req.Pagination, func(key []byte, value []byte) error {
 		var AppInfo types.AppInfo
-		if err := k.cdc.UnmarshalBinaryBare(value, &AppInfo); err != nil {
+		if err := k.cdc.Unmarshal(value, &AppInfo); err != nil {
 			return err
 		}
 
@@ -53,7 +53,7 @@ func (k Keeper) AppInfo(c context.Context, req *types.QueryGetAppInfoRequest) (*
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetAppInfoIDBytes(req.Id)), &AppInfo)
+	k.cdc.MustUnmarshal(store.Get(GetAppInfoIDBytes(req.Id)), &AppInfo)
 
 	return &types.QueryGetAppInfoResponse{AppInfo: &AppInfo}, nil
 }

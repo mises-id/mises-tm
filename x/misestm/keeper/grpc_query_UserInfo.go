@@ -25,7 +25,7 @@ func (k Keeper) UserInfoAll(c context.Context, req *types.QueryAllUserInfoReques
 
 	pageRes, err := query.Paginate(UserInfoStore, req.Pagination, func(key []byte, value []byte) error {
 		var UserInfo types.UserInfo
-		if err := k.cdc.UnmarshalBinaryBare(value, &UserInfo); err != nil {
+		if err := k.cdc.Unmarshal(value, &UserInfo); err != nil {
 			return err
 		}
 
@@ -53,7 +53,7 @@ func (k Keeper) UserInfo(c context.Context, req *types.QueryGetUserInfoRequest) 
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetUserInfoIDBytes(req.Id)), &UserInfo)
+	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(req.Id)), &UserInfo)
 
 	return &types.QueryGetUserInfoResponse{UserInfo: &UserInfo}, nil
 }

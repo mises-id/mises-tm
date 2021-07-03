@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"encoding/binary"
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/mises-id/mises-tm/x/misestm/types"
-	"strconv"
 )
 
 // GetUserRelationCount get the total number of UserRelation
@@ -49,7 +50,7 @@ func (k Keeper) AppendUserRelation(
 	UserRelation.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&UserRelation)
+	appendedValue := k.cdc.MustMarshal(&UserRelation)
 	store.Set(GetUserRelationIDBytes(UserRelation.Id), appendedValue)
 
 	// Update UserRelation count
@@ -61,7 +62,7 @@ func (k Keeper) AppendUserRelation(
 // SetUserRelation set a specific UserRelation in the store
 func (k Keeper) SetUserRelation(ctx sdk.Context, UserRelation types.UserRelation) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	b := k.cdc.MustMarshalBinaryBare(&UserRelation)
+	b := k.cdc.MustMarshal(&UserRelation)
 	store.Set(GetUserRelationIDBytes(UserRelation.Id), b)
 }
 
@@ -69,7 +70,7 @@ func (k Keeper) SetUserRelation(ctx sdk.Context, UserRelation types.UserRelation
 func (k Keeper) GetUserRelation(ctx sdk.Context, id uint64) types.UserRelation {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	var UserRelation types.UserRelation
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetUserRelationIDBytes(id)), &UserRelation)
+	k.cdc.MustUnmarshal(store.Get(GetUserRelationIDBytes(id)), &UserRelation)
 	return UserRelation
 }
 
@@ -99,7 +100,7 @@ func (k Keeper) GetAllUserRelation(ctx sdk.Context) (list []types.UserRelation) 
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.UserRelation
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

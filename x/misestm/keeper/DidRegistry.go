@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"encoding/binary"
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/mises-id/mises-tm/x/misestm/types"
-	"strconv"
 )
 
 // GetDidRegistryCount get the total number of DidRegistry
@@ -49,7 +50,7 @@ func (k Keeper) AppendDidRegistry(
 	DidRegistry.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&DidRegistry)
+	appendedValue := k.cdc.MustMarshal(&DidRegistry)
 	store.Set(GetDidRegistryIDBytes(DidRegistry.Id), appendedValue)
 
 	// Update DidRegistry count
@@ -61,7 +62,7 @@ func (k Keeper) AppendDidRegistry(
 // SetDidRegistry set a specific DidRegistry in the store
 func (k Keeper) SetDidRegistry(ctx sdk.Context, DidRegistry types.DidRegistry) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
-	b := k.cdc.MustMarshalBinaryBare(&DidRegistry)
+	b := k.cdc.MustMarshal(&DidRegistry)
 	store.Set(GetDidRegistryIDBytes(DidRegistry.Id), b)
 }
 
@@ -69,7 +70,7 @@ func (k Keeper) SetDidRegistry(ctx sdk.Context, DidRegistry types.DidRegistry) {
 func (k Keeper) GetDidRegistry(ctx sdk.Context, id uint64) types.DidRegistry {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
 	var DidRegistry types.DidRegistry
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetDidRegistryIDBytes(id)), &DidRegistry)
+	k.cdc.MustUnmarshal(store.Get(GetDidRegistryIDBytes(id)), &DidRegistry)
 	return DidRegistry
 }
 
@@ -99,7 +100,7 @@ func (k Keeper) GetAllDidRegistry(ctx sdk.Context) (list []types.DidRegistry) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.DidRegistry
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

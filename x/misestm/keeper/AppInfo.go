@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"encoding/binary"
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/mises-id/mises-tm/x/misestm/types"
-	"strconv"
 )
 
 // GetAppInfoCount get the total number of AppInfo
@@ -49,7 +50,7 @@ func (k Keeper) AppendAppInfo(
 	AppInfo.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&AppInfo)
+	appendedValue := k.cdc.MustMarshal(&AppInfo)
 	store.Set(GetAppInfoIDBytes(AppInfo.Id), appendedValue)
 
 	// Update AppInfo count
@@ -61,7 +62,7 @@ func (k Keeper) AppendAppInfo(
 // SetAppInfo set a specific AppInfo in the store
 func (k Keeper) SetAppInfo(ctx sdk.Context, AppInfo types.AppInfo) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
-	b := k.cdc.MustMarshalBinaryBare(&AppInfo)
+	b := k.cdc.MustMarshal(&AppInfo)
 	store.Set(GetAppInfoIDBytes(AppInfo.Id), b)
 }
 
@@ -69,7 +70,7 @@ func (k Keeper) SetAppInfo(ctx sdk.Context, AppInfo types.AppInfo) {
 func (k Keeper) GetAppInfo(ctx sdk.Context, id uint64) types.AppInfo {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
 	var AppInfo types.AppInfo
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetAppInfoIDBytes(id)), &AppInfo)
+	k.cdc.MustUnmarshal(store.Get(GetAppInfoIDBytes(id)), &AppInfo)
 	return AppInfo
 }
 
@@ -99,7 +100,7 @@ func (k Keeper) GetAllAppInfo(ctx sdk.Context) (list []types.AppInfo) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.AppInfo
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

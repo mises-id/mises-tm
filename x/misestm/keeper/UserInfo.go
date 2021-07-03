@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"encoding/binary"
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/mises-id/mises-tm/x/misestm/types"
-	"strconv"
 )
 
 // GetUserInfoCount get the total number of UserInfo
@@ -49,7 +50,7 @@ func (k Keeper) AppendUserInfo(
 	UserInfo.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&UserInfo)
+	appendedValue := k.cdc.MustMarshal(&UserInfo)
 	store.Set(GetUserInfoIDBytes(UserInfo.Id), appendedValue)
 
 	// Update UserInfo count
@@ -61,7 +62,7 @@ func (k Keeper) AppendUserInfo(
 // SetUserInfo set a specific UserInfo in the store
 func (k Keeper) SetUserInfo(ctx sdk.Context, UserInfo types.UserInfo) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	b := k.cdc.MustMarshalBinaryBare(&UserInfo)
+	b := k.cdc.MustMarshal(&UserInfo)
 	store.Set(GetUserInfoIDBytes(UserInfo.Id), b)
 }
 
@@ -69,7 +70,7 @@ func (k Keeper) SetUserInfo(ctx sdk.Context, UserInfo types.UserInfo) {
 func (k Keeper) GetUserInfo(ctx sdk.Context, id uint64) types.UserInfo {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
 	var UserInfo types.UserInfo
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetUserInfoIDBytes(id)), &UserInfo)
+	k.cdc.MustUnmarshal(store.Get(GetUserInfoIDBytes(id)), &UserInfo)
 	return UserInfo
 }
 
@@ -99,7 +100,7 @@ func (k Keeper) GetAllUserInfo(ctx sdk.Context) (list []types.UserInfo) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.UserInfo
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

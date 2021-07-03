@@ -16,6 +16,8 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_misestm"
 
+	JsonDbKey = "jsondb_misestm"
+
 	// this line is used by starport scaffolding # ibc/keys/name
 )
 
