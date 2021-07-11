@@ -97,6 +97,7 @@ import (
 	_ "github.com/mises-id/mises-tm/docs"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
+	misescodec "github.com/mises-id/mises-tm/codec"
 	"github.com/mises-id/mises-tm/docs"
 	"github.com/mises-id/mises-tm/x/misestm"
 	misestmkeeper "github.com/mises-id/mises-tm/x/misestm/keeper"
@@ -258,7 +259,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		authzkeeper.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		misestmtypes.StoreKey, misestmtypes.JsonDbKey, feegrant.StoreKey,
+		misestmtypes.StoreKey, feegrant.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -358,11 +359,11 @@ func New(
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
+	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
 	app.MisestmKeeper = *misestmkeeper.NewKeeper(
-		appCodec,
+		mongoCodec,
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
-		keys[misestmtypes.JsonDbKey],
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -455,16 +456,17 @@ func New(
 	// initialize stores
 	kvkeys := make(map[string]*sdk.KVStoreKey)
 	for k, v := range keys {
-		if k != misestmtypes.JsonDbKey {
+		if k != misestmtypes.StoreKey {
 			kvkeys[k] = v
 		}
 	}
-	app.MountKVStores(keys)
+	app.MountKVStores(kvkeys)
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
 
-	//mongodb, _ := NewMongoDB("mises", MongoDBHome)
-	//cms.MountStoreWithDB(keys[misestmtypes.JsonDbKey], sdk.StoreTypeDB, mongodb)
+	logger.Error("NewMongoDB")
+	mongodb, _ := NewMongoDB("mises", MongoDBHome)
+	cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeDB, mongodb)
 
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)
