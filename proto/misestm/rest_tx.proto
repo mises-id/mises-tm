@@ -1,0 +1,34 @@
+syntax = "proto3";
+package misesid.misestm.misestm;
+
+import "google/api/annotations.proto";
+import "cosmos/base/abci/v1beta1/abci.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+import "misestm/DidRegistry.proto";
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+// RestTx defines the gRPC rest service.
+service RestTx {
+
+	// create a did
+	rpc CreateDid(RestCreateDidRequest) returns (RestCreateDidResponse) {
+		option (google.api.http) = {
+      post: "/mises/did"
+      body: "*"
+    };
+	}
+
+}
+
+message RestCreateDidRequest {
+	string did = 1;
+	string type = 2;
+	string pkey = 3;
+}
+
+message RestCreateDidResponse {
+	uint64 ret = 1;
+	cosmos.base.abci.v1beta1.TxResponse tx_response = 2;
+}

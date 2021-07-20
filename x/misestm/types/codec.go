@@ -9,6 +9,7 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+
 	cdc.RegisterConcrete(&MsgCreateUserInfo{}, "misestm/CreateUserInfo", nil)
 	cdc.RegisterConcrete(&MsgUpdateUserInfo{}, "misestm/UpdateUserInfo", nil)
 	cdc.RegisterConcrete(&MsgDeleteUserInfo{}, "misestm/DeleteUserInfo", nil)

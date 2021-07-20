@@ -1,0 +1,27 @@
+syntax = "proto3";
+package misesid.misestm.misestm;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+import "misestm/DidRegistry.proto";
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+// Rest defines the gRPC rest service.
+service RestQuery {
+
+	// query a did
+	rpc QueryDid(RestQueryDidRequest) returns (RestQueryDidResponse) {
+		option (google.api.http).get = "/mises/did/{did}";
+	}
+
+}
+
+message RestQueryDidRequest {
+	string did = 1;
+}
+
+message RestQueryDidResponse {
+	DidRegistry didRegistry = 1;
+}

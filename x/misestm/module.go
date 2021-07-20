@@ -17,6 +17,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/mises-id/mises-tm/x/misestm/client/cli"
+	"github.com/mises-id/mises-tm/x/misestm/client/rest"
 	"github.com/mises-id/mises-tm/x/misestm/keeper"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	// this line is used by starport scaffolding # ibc/module/import
@@ -75,11 +76,13 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 
 // RegisterRESTRoutes registers the capability module's REST service handlers.
 func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
+	rest.RegisterRoutes(clientCtx, rtr)
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx))
+	types.RegisterRestQueryHandlerClient(context.Background(), mux, types.NewRestQueryClient(clientCtx))
 }
 
 // GetTxCmd returns the capability module's root tx command.
