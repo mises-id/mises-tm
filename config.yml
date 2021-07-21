@@ -18,6 +18,6 @@ build:
   binary: "misestmd"
 init:
   app:
-    minimum-gas-prices: "0.0001token"
+    minimum-gas-prices: "0token"
     api:
       swagger: true

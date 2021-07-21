@@ -367,6 +367,7 @@ func New(
 		mongoCodec,
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
+		app.AccountKeeper,
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -466,9 +467,12 @@ func New(
 	app.MountKVStores(kvkeys)
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
-
-	mongodb, _ := NewMongoDB("mises", MongoDBHome)
-	cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
+	if misesdb := appOpts.Get("misesdb"); misesdb == nil {
+		mongodb, _ := NewMongoDB("mises", MongoDBHome)
+		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
+	} else {
+		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
+	}
 
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)

@@ -26,9 +26,9 @@ message RestCreateDidRequest {
 	string did = 1;
 	string type = 2;
 	string pkey = 3;
+	string sig = 4;
 }
 
 message RestCreateDidResponse {
-	uint64 ret = 1;
 	cosmos.base.abci.v1beta1.TxResponse tx_response = 2;
 }

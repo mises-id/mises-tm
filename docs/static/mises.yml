@@ -126,6 +126,9 @@ paths:
               pkey:
                 description: puiblic key
                 type: string
+              sig:
+                description: signature
+                type: string
       tags:
         - Rest
   /mises-id/misestm/misestm/AppInfo:

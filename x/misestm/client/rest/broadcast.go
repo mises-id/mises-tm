@@ -3,18 +3,21 @@ package rest
 import (
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
+	authclient "github.com/cosmos/cosmos-sdk/x/auth/client"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 )
 
 func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error) {
-	gasSetting := flags.GasSetting{true, 0}
+	gasSetting := flags.GasSetting{true, 10000}
 	txf = txf.
 		WithTxConfig(clientCtx.TxConfig).
 		WithAccountRetriever(clientCtx.AccountRetriever).
@@ -23,9 +26,32 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error
 		WithGas(gasSetting.Gas).
 		WithSimulateAndExecute(gasSetting.Simulate).
 		WithTimeoutHeight(0).
-		WithGasAdjustment(0).
+		WithGasAdjustment(2.0).
 		WithMemo("memo").
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT)
+
+	from := clientCtx.GetFromAddress()
+	if from != nil {
+		if err := txf.AccountRetriever().EnsureExists(clientCtx, from); err != nil {
+			return txf, err
+		}
+
+		initNum, initSeq := txf.AccountNumber(), txf.Sequence()
+		if initNum == 0 || initSeq == 0 {
+			num, seq, err := txf.AccountRetriever().GetAccountNumberSequence(clientCtx, from)
+			if err != nil {
+				return txf, err
+			}
+
+			if initNum == 0 {
+				txf = txf.WithAccountNumber(num)
+			}
+
+			if initSeq == 0 {
+				txf = txf.WithSequence(seq)
+			}
+		}
+	}
 
 	return txf, nil
 }
@@ -50,11 +76,6 @@ func CalculateGas(
 
 func BroadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
 
-	txf, err := prepareFactory(clientCtx, txf)
-	if err != nil {
-		return nil, err
-	}
-
 	if txf.SimulateAndExecute() || clientCtx.Simulate {
 		_, adjusted, err := CalculateGas(clientCtx, txf, msgs...)
 		if err != nil {
@@ -74,17 +95,10 @@ func BroadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 
 	txb.SetFeeGranter(clientCtx.GetFeeGranterAddress())
 
-	// Construct the SignatureV2 struct
-	sigData := signing.SingleSignatureData{
-		SignMode:  txf.SignMode(),
-		Signature: []byte{},
+	err = authclient.SignTx(txf, clientCtx, clientCtx.GetFromName(), txb, clientCtx.Offline, true)
+	if err != nil {
+		return nil, err
 	}
-	sig := signing.SignatureV2{
-		PubKey:   nil,
-		Data:     &sigData,
-		Sequence: txf.Sequence(),
-	}
-	txb.SetSignatures(sig)
 
 	txBytes, err := clientCtx.TxConfig.TxEncoder()(txb.GetTx())
 	if err != nil {
@@ -99,15 +113,47 @@ func BroadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 	return res, nil
 }
 
+func AddrFormDid(did string) string {
+	return strings.Replace(did, "did:mises:", "", 1)
+}
+
+func prepareSigner(clientCtx client.Context) (client.Context, error) {
+	if clientCtx.ChainID == "" {
+		clientCtx = clientCtx.WithChainID("mises")
+	}
+	if clientCtx.Keyring == nil {
+		keyring, err := client.NewKeyringFromBackend(clientCtx, keyring.BackendTest)
+		if err != nil {
+			return clientCtx, err
+		}
+		clientCtx = clientCtx.WithKeyring(keyring)
+	}
+
+	keyring := clientCtx.Keyring
+	// keyring, err := client.NewKeyringFromBackend(clientCtx, keyring.BackendTest)
+	// if err != nil {
+	// 	return clientCtx, err
+	// }
+	keyname := "signer"
+	var keyaddr sdk.AccAddress
+	if key, err := keyring.Key(keyname); err != nil {
+		return clientCtx, err
+	} else {
+		keyaddr = key.GetAddress()
+	}
+
+	clientCtx = clientCtx.WithKeyring(keyring).
+		WithFromAddress(keyaddr).
+		WithFromName(keyname)
+	return clientCtx, nil
+}
 func RestCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.RestCreateDidRequest
-
 		body, err := ioutil.ReadAll(r.Body)
 		if rest.CheckBadRequestError(w, err) {
 			return
 		}
-
 		// NOTE: amino is used intentionally here, don't migrate it!
 		err = clientCtx.Codec.UnmarshalJSON(body, &req)
 		if err != nil {
@@ -115,22 +161,41 @@ func RestCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 				return
 			}
 		}
-		msg := types.NewMsgCreateDidRegistry(req.Did, req.Did, "key0", "user", req.Pkey, 0)
-		if err := msg.ValidateBasic(); err != nil {
+
+		clientCtx := clientCtx.
+			WithBroadcastMode(flags.BroadcastSync)
+
+		clientCtx, err = prepareSigner(clientCtx)
+		if rest.CheckInternalServerError(w, err) {
 			return
 		}
-		clientCtx := clientCtx.
-			WithChainID("misestm").
-			WithBroadcastMode(flags.BroadcastSync)
-		txf := tx.Factory{}.
-			WithSequence(1).
-			WithAccountNumber(0)
+
+		msg := types.NewMsgCreateDidRegistry(
+			clientCtx.FromAddress.String(),
+			req.Did,
+			req.Did+"#key0",
+			"EcdsaSecp256k1VerificationKey2019", // will shift to Ed25519VerificationKey2020
+			req.Pkey,
+			0,
+		)
+		if err := msg.ValidateBasic(); err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+		txf := tx.Factory{}
+		txf, err = prepareFactory(clientCtx, txf)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
 
 		res, err := BroadcastTx(clientCtx, txf, msg)
 		if rest.CheckInternalServerError(w, err) {
 			return
 		}
 
-		rest.PostProcessResponseBare(w, clientCtx, res)
+		resp := types.RestCreateDidResponse{TxResponse: res}
+
+		rest.PostProcessResponseBare(w, clientCtx, resp)
 	}
 }

@@ -6872,9 +6872,6 @@ paths:
           schema:
             type: object
             properties:
-              ret:
-                type: string
-                format: uint64
               txResponse:
                 type: object
                 properties:
@@ -7027,6 +7024,8 @@ paths:
               type:
                 type: string
               pkey:
+                type: string
+              sig:
                 type: string
       tags:
         - RestTx
@@ -12466,12 +12465,11 @@ definitions:
         type: string
       pkey:
         type: string
+      sig:
+        type: string
   misesid.misestm.misestm.RestCreateDidResponse:
     type: object
     properties:
-      ret:
-        type: string
-        format: uint64
       txResponse:
         type: object
         properties:

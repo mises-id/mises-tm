@@ -3,7 +3,7 @@ module github.com/mises-id/mises-tm
 go 1.16
 
 require (
-	github.com/cosmos/cosmos-sdk v0.43.0-rc0
+	github.com/cosmos/cosmos-sdk v0.43.0-rc2
 	github.com/cosmos/ibc-go v1.0.0-beta1
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
