@@ -363,11 +363,13 @@ func New(
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
+	mongodb, _ := NewMongoDB("mises", MongoDBHome)
 	app.MisestmKeeper = *misestmkeeper.NewKeeper(
 		mongoCodec,
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
 		app.AccountKeeper,
+		mongodb.(dbm.RawDB),
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -468,7 +470,6 @@ func New(
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
 	if misesdb := appOpts.Get("misesdb"); misesdb == nil {
-		mongodb, _ := NewMongoDB("mises", MongoDBHome)
 		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
 	} else {
 		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))

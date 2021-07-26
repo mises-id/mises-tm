@@ -5,11 +5,8 @@ option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 import "gogoproto/gogo.proto";
 
-message UserRelation {
-  string creator = 1;
-  uint64 id = 2;
-  string uidFrom = 3; 
-  string uidTo = 4; 
-  uint64 relType = 5; 
-  uint64 version = 6;
+message MisesAccount {
+  string misesID = 1;
+  uint64 didRegistryID = 2;
+  uint64 userInfoID = 3;
 }

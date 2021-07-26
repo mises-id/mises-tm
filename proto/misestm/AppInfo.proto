@@ -15,5 +15,5 @@ message AppInfo {
   string iconDid = 7; 
   string iconThumb = 8; 
   uint64 quota = 9; 
-  uint64 version = 10; 
+  uint64 version = 10;
 }

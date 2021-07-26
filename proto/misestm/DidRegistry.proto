@@ -12,5 +12,5 @@ message DidRegistry {
   string pkeyDid = 4; 
   string pkeyType = 5; 
   string pkeyMultibase = 6; 
-  uint64 version = 7; 
+  uint64 version = 7;
 }

@@ -11,5 +11,5 @@ message UserInfo {
   string uid = 3; 
   string encData = 4; 
   string iv = 5; 
-  uint64 version = 6; 
+  uint64 version = 6;
 }

@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,10 +12,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 )
-
-func AddrFormDid(did string) string {
-	return strings.Replace(did, "did:mises:", "", 1)
-}
 
 func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreateDidRegistry) (*types.MsgCreateDidRegistryResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -30,15 +25,18 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		Version:       msg.Version,
 	}
 	ak := k.ak
-	addr, err := sdk.AccAddressFromBech32(AddrFormDid(DidRegistry.Did))
+	userMgr := NewUserMgrImpl(k.Keeper)
+	misesAcc, err := userMgr.GetUserAccount(ctx, DidRegistry.Did)
+	if misesAcc != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "account %s already exists", msg.Did)
+	}
 	if err != nil {
 		return nil, err
 	}
-
-	if acc := ak.GetAccount(ctx, addr); acc != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "account %s already exists", msg.Did)
+	addr, err := userMgr.AddrFormDid(DidRegistry.Did)
+	if err != nil {
+		return nil, err
 	}
-
 	baseAccount := ak.NewAccountWithAddress(ctx, addr)
 	if _, ok := baseAccount.(*authtypes.BaseAccount); !ok {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid account type; expected: BaseAccount, got: %T", baseAccount)
@@ -51,13 +49,28 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		telemetry.IncrCounter(1, "new", "account")
 	}()
 
-	id := k.AppendDidRegistry(
+	regID := k.AppendDidRegistry(
 		ctx,
 		DidRegistry,
 	)
 
+	info := types.UserInfo{}
+	info.Creator = DidRegistry.Creator
+
+	infoID := k.AppendUserInfo(
+		ctx,
+		info,
+	)
+
+	newMisesAcc := types.MisesAccount{
+		MisesID:       DidRegistry.Did,
+		DidRegistryID: regID,
+		UserInfoID:    infoID,
+	}
+	k.SetMisesAccount(ctx, newMisesAcc)
+
 	return &types.MsgCreateDidRegistryResponse{
-		Id: id,
+		Id: regID,
 	}, nil
 }
 

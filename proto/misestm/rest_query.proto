@@ -5,6 +5,8 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 
 import "misestm/DidRegistry.proto";
+import "misestm/UserInfo.proto";
+import "misestm/UserRelation.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
@@ -16,6 +18,18 @@ service RestQuery {
 		option (google.api.http).get = "/mises/did/{did}";
 	}
 
+	// query a user info
+	rpc QueryUser(RestQueryUserRequest) returns (RestQueryUserResponse) {
+		option (google.api.http).get = "/mises/user/{did}";
+	}
+
+	// query user relations
+	rpc QueryUserRelation(RestQueryUserRelationRequest) returns (RestQueryUserRelationResponse) {
+		option (google.api.http).get = "/mises/user/{did}/relation";
+	}
+
+
+
 }
 
 message RestQueryDidRequest {
@@ -25,3 +39,24 @@ message RestQueryDidRequest {
 message RestQueryDidResponse {
 	DidRegistry didRegistry = 1;
 }
+
+
+message RestQueryUserRequest {
+	string did = 1;
+}
+
+message RestQueryUserResponse {
+	UserInfo userInfo = 1;
+}
+
+message RestQueryUserRelationRequest {
+	string did = 1;
+	string filter = 2;
+	cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+message RestQueryUserRelationResponse {
+	repeated UserRelation userRelation = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

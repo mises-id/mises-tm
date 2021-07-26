@@ -20,6 +20,26 @@ service RestTx {
     };
 	}
 
+	// update a user info
+	rpc UpdateUserInfo(RestUpdateUserInfoRequest) returns (RestUpdateUserInfoResponse) {
+		option (google.api.http) = {
+      post: "/mises/user/{did}"
+      body: "*"
+    };
+	}
+
+	// update a user relation
+	rpc UpdateUserRelation(RestUpdateUserRelationRequest) returns (RestUpdateUserRelationResponse) {
+		option (google.api.http) = {
+      post: "/mises/user/{did}/relation"
+      body: "*"
+    };
+	}
+
+		// query a tx result
+	rpc QueryTx(RestQueryTxRequest) returns (RestQueryTxResponse) {
+		option (google.api.http).get = "/mises/tx/{txhash}";
+	}
 }
 
 message RestCreateDidRequest {
@@ -30,5 +50,37 @@ message RestCreateDidRequest {
 }
 
 message RestCreateDidResponse {
-	cosmos.base.abci.v1beta1.TxResponse tx_response = 2;
+	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+}
+
+message RestUpdateUserInfoRequest {
+	string did = 1;
+	string encData = 2;
+	string iv = 3;
+	string sig = 4;
+}
+
+message RestUpdateUserInfoResponse {
+	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+}
+message RestUpdateUserRelationRequest {
+	string did = 1;
+	string toDid = 2;
+	string action = 3;
+	string sig = 4;
+}
+
+message RestUpdateUserRelationResponse {
+	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+}
+
+
+
+message RestQueryTxRequest {
+	string  txhash = 1;
+}
+
+message RestQueryTxResponse {
+	// tx_response is the queried TxResponses.
+  cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
 }

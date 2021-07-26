@@ -1,9 +1,11 @@
 package rest
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
-	"strings"
+
+	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -17,7 +19,10 @@ import (
 )
 
 func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error) {
-	gasSetting := flags.GasSetting{true, 10000}
+	gasSetting := flags.GasSetting{
+		Simulate: true,
+		Gas:      10000,
+	}
 	txf = txf.
 		WithTxConfig(clientCtx.TxConfig).
 		WithAccountRetriever(clientCtx.AccountRetriever).
@@ -58,7 +63,7 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error
 
 // CalculateGas simulates the execution of a transaction and returns the
 // simulation response obtained by the query and the adjusted gas amount.
-func CalculateGas(
+func calculateGas(
 	clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg,
 ) (*sdk.Result, uint64, error) {
 	txBytes, err := tx.BuildSimTx(txf, msgs...)
@@ -74,10 +79,10 @@ func CalculateGas(
 	return result, uint64(txf.GasAdjustment() * float64(gasInfo.GasUsed)), nil
 }
 
-func BroadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
+func broadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
 
 	if txf.SimulateAndExecute() || clientCtx.Simulate {
-		_, adjusted, err := CalculateGas(clientCtx, txf, msgs...)
+		_, adjusted, err := calculateGas(clientCtx, txf, msgs...)
 		if err != nil {
 			return nil, err
 		}
@@ -113,10 +118,6 @@ func BroadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 	return res, nil
 }
 
-func AddrFormDid(did string) string {
-	return strings.Replace(did, "did:mises:", "", 1)
-}
-
 func prepareSigner(clientCtx client.Context) (client.Context, error) {
 	if clientCtx.ChainID == "" {
 		clientCtx = clientCtx.WithChainID("mises")
@@ -130,24 +131,30 @@ func prepareSigner(clientCtx client.Context) (client.Context, error) {
 	}
 
 	keyring := clientCtx.Keyring
-	// keyring, err := client.NewKeyringFromBackend(clientCtx, keyring.BackendTest)
-	// if err != nil {
-	// 	return clientCtx, err
-	// }
-	keyname := "signer"
-	var keyaddr sdk.AccAddress
-	if key, err := keyring.Key(keyname); err != nil {
+
+	// keyname := "signer"
+	// key, err := keyring.Key(keyname)
+
+	keyList, err := keyring.List()
+	if err != nil {
 		return clientCtx, err
-	} else {
-		keyaddr = key.GetAddress()
 	}
+	if len(keyList) == 0 {
+		return clientCtx, errors.New("no local keyring")
+	}
+	key := keyList[0]
+	keyname := key.GetName()
+	keyaddr := key.GetAddress()
 
 	clientCtx = clientCtx.WithKeyring(keyring).
 		WithFromAddress(keyaddr).
-		WithFromName(keyname)
+		WithFromName(keyname).
+		WithBroadcastMode(flags.BroadcastSync)
 	return clientCtx, nil
 }
-func RestCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
+
+// HandleCreateDidRequest the CreateDidRequest http handler
+func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.RestCreateDidRequest
 		body, err := ioutil.ReadAll(r.Body)
@@ -161,9 +168,6 @@ func RestCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 				return
 			}
 		}
-
-		clientCtx := clientCtx.
-			WithBroadcastMode(flags.BroadcastSync)
 
 		clientCtx, err = prepareSigner(clientCtx)
 		if rest.CheckInternalServerError(w, err) {
@@ -189,13 +193,132 @@ func RestCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		res, err := BroadcastTx(clientCtx, txf, msg)
+		res, err := broadcastTx(clientCtx, txf, msg)
 		if rest.CheckInternalServerError(w, err) {
 			return
 		}
 
-		resp := types.RestCreateDidResponse{TxResponse: res}
+		resp := &types.RestCreateDidResponse{TxResponse: res}
 
-		rest.PostProcessResponseBare(w, clientCtx, resp)
+		PostProcessResponseBare(w, clientCtx, resp)
+	}
+}
+
+// HandleUpdateUserInfoRequest the UpdateUserInfoRequest http handler
+func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.RestUpdateUserInfoRequest
+		body, err := ioutil.ReadAll(r.Body)
+		if rest.CheckBadRequestError(w, err) {
+			return
+		}
+		// NOTE: amino is used intentionally here, don't migrate it!
+		err = clientCtx.Codec.UnmarshalJSON(body, &req)
+		if err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+
+		vars := mux.Vars(r)
+		req.Did = vars["did"]
+
+		clientCtx, err = prepareSigner(clientCtx)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		msg := types.NewMsgUpdateUserInfo(
+			clientCtx.FromAddress.String(),
+			types.InvalidID,
+			req.Did,
+			req.EncData,
+			req.Iv,
+			0,
+		)
+		if err := msg.ValidateBasic(); err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+		txf := tx.Factory{}
+		txf, err = prepareFactory(clientCtx, txf)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		res, err := broadcastTx(clientCtx, txf, msg)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		resp := &types.RestCreateDidResponse{TxResponse: res}
+
+		PostProcessResponseBare(w, clientCtx, resp)
+	}
+}
+
+// HandleUpdateUserRelationRequest the UpdateUserRelationRequest http handler
+func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var req types.RestUpdateUserRelationRequest
+		body, err := ioutil.ReadAll(r.Body)
+		if rest.CheckBadRequestError(w, err) {
+			return
+		}
+		// NOTE: amino is used intentionally here, don't migrate it!
+		err = clientCtx.Codec.UnmarshalJSON(body, &req)
+		if err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+
+		vars := mux.Vars(r)
+		req.Did = vars["did"]
+
+		clientCtx, err = prepareSigner(clientCtx)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+		var action uint64
+		switch req.Action {
+		case "follow":
+			action = 0
+		case "unfollow":
+			action = 1
+		case "block":
+			action = 2
+		case "unblock":
+			action = 3
+		}
+
+		msg := types.NewMsgCreateUserRelation(
+			clientCtx.FromAddress.String(),
+			req.Did,
+			req.ToDid,
+			action,
+			0,
+		)
+		if err := msg.ValidateBasic(); err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+		txf := tx.Factory{}
+		txf, err = prepareFactory(clientCtx, txf)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		res, err := broadcastTx(clientCtx, txf, msg)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		resp := &types.RestUpdateUserRelationResponse{TxResponse: res}
+
+		PostProcessResponseBare(w, clientCtx, resp)
 	}
 }

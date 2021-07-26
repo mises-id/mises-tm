@@ -6,7 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	_ "github.com/cosmos/cosmos-sdk/types/query"
+	query "github.com/cosmos/cosmos-sdk/types/query"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -117,35 +117,253 @@ func (m *RestQueryDidResponse) GetDidRegistry() *DidRegistry {
 	return nil
 }
 
+type RestQueryUserRequest struct {
+	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+}
+
+func (m *RestQueryUserRequest) Reset()         { *m = RestQueryUserRequest{} }
+func (m *RestQueryUserRequest) String() string { return proto.CompactTextString(m) }
+func (*RestQueryUserRequest) ProtoMessage()    {}
+func (*RestQueryUserRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_56d6cefbd419a531, []int{2}
+}
+func (m *RestQueryUserRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RestQueryUserRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RestQueryUserRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RestQueryUserRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestQueryUserRequest.Merge(m, src)
+}
+func (m *RestQueryUserRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RestQueryUserRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestQueryUserRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestQueryUserRequest proto.InternalMessageInfo
+
+func (m *RestQueryUserRequest) GetDid() string {
+	if m != nil {
+		return m.Did
+	}
+	return ""
+}
+
+type RestQueryUserResponse struct {
+	UserInfo *UserInfo `protobuf:"bytes,1,opt,name=userInfo,proto3" json:"userInfo,omitempty"`
+}
+
+func (m *RestQueryUserResponse) Reset()         { *m = RestQueryUserResponse{} }
+func (m *RestQueryUserResponse) String() string { return proto.CompactTextString(m) }
+func (*RestQueryUserResponse) ProtoMessage()    {}
+func (*RestQueryUserResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_56d6cefbd419a531, []int{3}
+}
+func (m *RestQueryUserResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RestQueryUserResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RestQueryUserResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RestQueryUserResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestQueryUserResponse.Merge(m, src)
+}
+func (m *RestQueryUserResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RestQueryUserResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestQueryUserResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestQueryUserResponse proto.InternalMessageInfo
+
+func (m *RestQueryUserResponse) GetUserInfo() *UserInfo {
+	if m != nil {
+		return m.UserInfo
+	}
+	return nil
+}
+
+type RestQueryUserRelationRequest struct {
+	Did        string             `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	Filter     string             `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
+	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *RestQueryUserRelationRequest) Reset()         { *m = RestQueryUserRelationRequest{} }
+func (m *RestQueryUserRelationRequest) String() string { return proto.CompactTextString(m) }
+func (*RestQueryUserRelationRequest) ProtoMessage()    {}
+func (*RestQueryUserRelationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_56d6cefbd419a531, []int{4}
+}
+func (m *RestQueryUserRelationRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RestQueryUserRelationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RestQueryUserRelationRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RestQueryUserRelationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestQueryUserRelationRequest.Merge(m, src)
+}
+func (m *RestQueryUserRelationRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RestQueryUserRelationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestQueryUserRelationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestQueryUserRelationRequest proto.InternalMessageInfo
+
+func (m *RestQueryUserRelationRequest) GetDid() string {
+	if m != nil {
+		return m.Did
+	}
+	return ""
+}
+
+func (m *RestQueryUserRelationRequest) GetFilter() string {
+	if m != nil {
+		return m.Filter
+	}
+	return ""
+}
+
+func (m *RestQueryUserRelationRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type RestQueryUserRelationResponse struct {
+	UserRelation []*UserRelation     `protobuf:"bytes,1,rep,name=userRelation,proto3" json:"userRelation,omitempty"`
+	Pagination   *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *RestQueryUserRelationResponse) Reset()         { *m = RestQueryUserRelationResponse{} }
+func (m *RestQueryUserRelationResponse) String() string { return proto.CompactTextString(m) }
+func (*RestQueryUserRelationResponse) ProtoMessage()    {}
+func (*RestQueryUserRelationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_56d6cefbd419a531, []int{5}
+}
+func (m *RestQueryUserRelationResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RestQueryUserRelationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RestQueryUserRelationResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RestQueryUserRelationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestQueryUserRelationResponse.Merge(m, src)
+}
+func (m *RestQueryUserRelationResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RestQueryUserRelationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestQueryUserRelationResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestQueryUserRelationResponse proto.InternalMessageInfo
+
+func (m *RestQueryUserRelationResponse) GetUserRelation() []*UserRelation {
+	if m != nil {
+		return m.UserRelation
+	}
+	return nil
+}
+
+func (m *RestQueryUserRelationResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*RestQueryDidRequest)(nil), "misesid.misestm.misestm.RestQueryDidRequest")
 	proto.RegisterType((*RestQueryDidResponse)(nil), "misesid.misestm.misestm.RestQueryDidResponse")
+	proto.RegisterType((*RestQueryUserRequest)(nil), "misesid.misestm.misestm.RestQueryUserRequest")
+	proto.RegisterType((*RestQueryUserResponse)(nil), "misesid.misestm.misestm.RestQueryUserResponse")
+	proto.RegisterType((*RestQueryUserRelationRequest)(nil), "misesid.misestm.misestm.RestQueryUserRelationRequest")
+	proto.RegisterType((*RestQueryUserRelationResponse)(nil), "misesid.misestm.misestm.RestQueryUserRelationResponse")
 }
 
 func init() { proto.RegisterFile("misestm/rest_query.proto", fileDescriptor_56d6cefbd419a531) }
 
 var fileDescriptor_56d6cefbd419a531 = []byte{
-	// 313 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x90, 0xcf, 0x4a, 0x3b, 0x31,
-	0x10, 0xc7, 0x9b, 0xdf, 0x0f, 0xc4, 0xa6, 0x97, 0x12, 0x05, 0x6b, 0x91, 0x45, 0x8a, 0xa0, 0x48,
-	0xbb, 0x43, 0xeb, 0x1b, 0x88, 0xf4, 0xee, 0x1e, 0x3d, 0x28, 0xd9, 0x26, 0xac, 0x03, 0xee, 0x66,
-	0xdb, 0x99, 0x8a, 0x45, 0x3c, 0xe8, 0x0b, 0x28, 0xf8, 0x52, 0x1e, 0x0b, 0x5e, 0x3c, 0x4a, 0xeb,
-	0x83, 0x48, 0xd3, 0xae, 0x56, 0xb0, 0xe0, 0x29, 0x03, 0xf3, 0xf9, 0xfe, 0xc9, 0xc8, 0x5a, 0x8a,
-	0x64, 0x89, 0x53, 0x18, 0x58, 0xe2, 0x8b, 0xfe, 0xd0, 0x0e, 0x46, 0x61, 0x3e, 0x70, 0xec, 0xd4,
-	0x96, 0xdf, 0xa0, 0x09, 0x17, 0x44, 0xf1, 0xd6, 0x77, 0x12, 0xe7, 0x92, 0x2b, 0x0b, 0x3a, 0x47,
-	0xd0, 0x59, 0xe6, 0x58, 0x33, 0xba, 0x8c, 0xe6, 0xb2, 0xfa, 0x61, 0xcf, 0x51, 0xea, 0x08, 0x62,
-	0x4d, 0x16, 0xbc, 0x1f, 0x5c, 0xb7, 0x63, 0xcb, 0xba, 0x0d, 0xb9, 0x4e, 0x30, 0xf3, 0xf0, 0x82,
-	0xdd, 0x2e, 0xc2, 0x4f, 0xd0, 0x44, 0x36, 0x41, 0xe2, 0x22, 0xbd, 0xb1, 0x2f, 0x37, 0x22, 0x4b,
-	0x7c, 0x3a, 0x33, 0xf0, 0xdb, 0xfe, 0xd0, 0x12, 0xab, 0xaa, 0xfc, 0x6f, 0xd0, 0xd4, 0xc4, 0xae,
-	0x38, 0x28, 0x47, 0xb3, 0xb1, 0x71, 0x2e, 0x37, 0x7f, 0x82, 0x94, 0xbb, 0x8c, 0xac, 0xea, 0xca,
-	0x8a, 0xf9, 0x76, 0xf5, 0x8a, 0x4a, 0x67, 0x2f, 0x5c, 0xf1, 0xa9, 0x70, 0xa9, 0x41, 0xb4, 0x2c,
-	0xec, 0x3c, 0x0a, 0x59, 0xfe, 0x0a, 0x50, 0xf7, 0x42, 0xae, 0x17, 0x51, 0xaa, 0xb9, 0xd2, 0xed,
-	0x97, 0xea, 0xf5, 0xd6, 0x1f, 0xe9, 0x79, 0xff, 0x46, 0xed, 0xe1, 0xf5, 0xe3, 0xf9, 0x9f, 0x52,
-	0x55, 0xf0, 0x18, 0x18, 0x34, 0x70, 0x6b, 0xd0, 0xdc, 0x1d, 0x77, 0x5f, 0x26, 0x81, 0x18, 0x4f,
-	0x02, 0xf1, 0x3e, 0x09, 0xc4, 0xd3, 0x34, 0x28, 0x8d, 0xa7, 0x41, 0xe9, 0x6d, 0x1a, 0x94, 0xce,
-	0x9a, 0x09, 0xf2, 0xe5, 0x30, 0x0e, 0x7b, 0x2e, 0x9d, 0xab, 0x5a, 0x68, 0x16, 0x03, 0xa7, 0x70,
-	0x03, 0xc5, 0xb9, 0x79, 0x94, 0x5b, 0x8a, 0xd7, 0xfc, 0xa5, 0x8f, 0x3e, 0x03, 0x00, 0x00, 0xff,
-	0xff, 0x9b, 0xb4, 0xe8, 0x94, 0x03, 0x02, 0x00, 0x00,
+	// 532 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0x41, 0x6f, 0xd3, 0x30,
+	0x14, 0xc7, 0xeb, 0x56, 0x9a, 0xd6, 0x57, 0x0e, 0x9b, 0x07, 0x23, 0x8b, 0x4a, 0x34, 0x22, 0x60,
+	0x15, 0xda, 0x6c, 0xad, 0x08, 0x6e, 0x5c, 0x10, 0x2a, 0xda, 0x0d, 0x22, 0xc1, 0x81, 0x03, 0x28,
+	0x9d, 0xbd, 0x60, 0xa9, 0x89, 0xb3, 0xd8, 0x41, 0x4c, 0x88, 0x03, 0x48, 0xdc, 0x27, 0xf1, 0x1d,
+	0xf8, 0x02, 0x7c, 0x01, 0x8e, 0x1c, 0x27, 0x71, 0xe1, 0x88, 0x5a, 0x3e, 0x08, 0xaa, 0xe3, 0x74,
+	0xe9, 0x4a, 0xa0, 0x9c, 0x9a, 0x3e, 0xff, 0xff, 0xef, 0xfd, 0xfc, 0xde, 0x93, 0xc1, 0x89, 0x85,
+	0xe2, 0x4a, 0xc7, 0x34, 0xe3, 0x4a, 0xbf, 0x3c, 0xce, 0x79, 0x76, 0x42, 0xd2, 0x4c, 0x6a, 0x89,
+	0xaf, 0x9a, 0x13, 0xc1, 0x88, 0x55, 0x94, 0xbf, 0x6e, 0x37, 0x92, 0x32, 0x1a, 0x71, 0x1a, 0xa6,
+	0x82, 0x86, 0x49, 0x22, 0x75, 0xa8, 0x85, 0x4c, 0x54, 0x61, 0x73, 0x6f, 0x1f, 0x4a, 0x15, 0x4b,
+	0x45, 0x87, 0xa1, 0xe2, 0xd4, 0xe4, 0xa3, 0xaf, 0xf7, 0x87, 0x5c, 0x87, 0xfb, 0x34, 0x0d, 0x23,
+	0x91, 0x18, 0xb1, 0xd5, 0x6e, 0x95, 0xc5, 0x1f, 0x0a, 0x16, 0xf0, 0x48, 0x28, 0x5d, 0x56, 0x77,
+	0x37, 0xcb, 0xa3, 0xa7, 0x8a, 0x67, 0x07, 0xc9, 0x91, 0xb4, 0x71, 0xb7, 0x1a, 0x0f, 0xf8, 0xa8,
+	0x92, 0xce, 0xdf, 0x81, 0x8d, 0x80, 0x2b, 0xfd, 0x64, 0x5a, 0xd4, 0x64, 0x3c, 0xce, 0xb9, 0xd2,
+	0x78, 0x0d, 0x5a, 0x4c, 0x30, 0x07, 0x6d, 0xa3, 0x5e, 0x3b, 0x98, 0x7e, 0xfa, 0x2f, 0xe0, 0xf2,
+	0xbc, 0x50, 0xa5, 0x32, 0x51, 0x1c, 0x0f, 0xa0, 0xc3, 0xce, 0x49, 0x8c, 0xa3, 0xd3, 0xbf, 0x41,
+	0x6a, 0x1a, 0x41, 0x2a, 0xd4, 0x41, 0xd5, 0xe8, 0xf7, 0x2a, 0xf9, 0x0b, 0xce, 0x3a, 0x92, 0x67,
+	0x70, 0xe5, 0x82, 0xd2, 0xa2, 0xdc, 0x87, 0xd5, 0xdc, 0xde, 0xdc, 0x72, 0x5c, 0xaf, 0xe5, 0x28,
+	0x5b, 0x14, 0xcc, 0x2c, 0xfe, 0x29, 0x82, 0xee, 0x85, 0xc4, 0x45, 0xab, 0x6a, 0x51, 0xf0, 0x26,
+	0xac, 0x1c, 0x89, 0x91, 0xe6, 0x99, 0xd3, 0x34, 0x41, 0xfb, 0x0f, 0x0f, 0x00, 0xce, 0x07, 0xe7,
+	0xb4, 0x0c, 0xcb, 0x2d, 0x52, 0x4c, 0x99, 0x4c, 0xa7, 0x4c, 0x8a, 0xad, 0xb1, 0x53, 0x26, 0x8f,
+	0xc3, 0x88, 0xdb, 0x2a, 0x41, 0xc5, 0xe9, 0x7f, 0x41, 0x70, 0xad, 0x06, 0xc9, 0xde, 0xf9, 0x00,
+	0x2e, 0xe5, 0x95, 0xb8, 0x83, 0xb6, 0x5b, 0xbd, 0x4e, 0xff, 0xe6, 0x5f, 0xef, 0x3d, 0x4b, 0x32,
+	0x67, 0xc5, 0x8f, 0xe6, 0xa0, 0x9b, 0x06, 0x7a, 0xe7, 0x9f, 0xd0, 0x05, 0x47, 0x95, 0xba, 0xff,
+	0xb5, 0x05, 0xed, 0x19, 0x35, 0x7e, 0x8f, 0x60, 0xb5, 0xdc, 0x1a, 0xbc, 0x5b, 0x0b, 0xf6, 0x87,
+	0x2d, 0x74, 0xf7, 0x96, 0x54, 0x17, 0x0c, 0xbe, 0xf3, 0xe1, 0xfb, 0xaf, 0x4f, 0x4d, 0x8c, 0xd7,
+	0xa8, 0x91, 0x51, 0x26, 0x18, 0x7d, 0xcb, 0x04, 0x7b, 0x87, 0x3f, 0x22, 0x68, 0xcf, 0x7a, 0x88,
+	0x97, 0x48, 0x5b, 0xd9, 0x40, 0x97, 0x2c, 0x2b, 0xb7, 0x18, 0x5b, 0x06, 0x63, 0x03, 0xaf, 0x5b,
+	0x8c, 0x69, 0x93, 0x2d, 0xc7, 0x67, 0x04, 0xeb, 0x0b, 0xb3, 0xc4, 0x77, 0x97, 0x2d, 0x30, 0xb7,
+	0x8e, 0xee, 0xbd, 0xff, 0xb5, 0x59, 0x3e, 0xdf, 0xf0, 0x75, 0xb1, 0xbb, 0xc0, 0x47, 0x33, 0xab,
+	0x7d, 0x30, 0xf8, 0x36, 0xf6, 0xd0, 0xd9, 0xd8, 0x43, 0x3f, 0xc7, 0x1e, 0x3a, 0x9d, 0x78, 0x8d,
+	0xb3, 0x89, 0xd7, 0xf8, 0x31, 0xf1, 0x1a, 0xcf, 0x77, 0x23, 0xa1, 0x5f, 0xe5, 0x43, 0x72, 0x28,
+	0xe3, 0xc2, 0xbf, 0x27, 0x98, 0xfd, 0xd0, 0x31, 0x7d, 0x43, 0xcb, 0xb7, 0x46, 0x9f, 0xa4, 0x5c,
+	0x0d, 0x57, 0xcc, 0x2b, 0x73, 0xe7, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0xe8, 0x50, 0xf7, 0xd2,
+	0x33, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -162,6 +380,10 @@ const _ = grpc.SupportPackageIsVersion4
 type RestQueryClient interface {
 	// query a did
 	QueryDid(ctx context.Context, in *RestQueryDidRequest, opts ...grpc.CallOption) (*RestQueryDidResponse, error)
+	// query a user info
+	QueryUser(ctx context.Context, in *RestQueryUserRequest, opts ...grpc.CallOption) (*RestQueryUserResponse, error)
+	// query user relations
+	QueryUserRelation(ctx context.Context, in *RestQueryUserRelationRequest, opts ...grpc.CallOption) (*RestQueryUserRelationResponse, error)
 }
 
 type restQueryClient struct {
@@ -181,10 +403,32 @@ func (c *restQueryClient) QueryDid(ctx context.Context, in *RestQueryDidRequest,
 	return out, nil
 }
 
+func (c *restQueryClient) QueryUser(ctx context.Context, in *RestQueryUserRequest, opts ...grpc.CallOption) (*RestQueryUserResponse, error) {
+	out := new(RestQueryUserResponse)
+	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestQuery/QueryUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *restQueryClient) QueryUserRelation(ctx context.Context, in *RestQueryUserRelationRequest, opts ...grpc.CallOption) (*RestQueryUserRelationResponse, error) {
+	out := new(RestQueryUserRelationResponse)
+	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestQuery/QueryUserRelation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RestQueryServer is the server API for RestQuery service.
 type RestQueryServer interface {
 	// query a did
 	QueryDid(context.Context, *RestQueryDidRequest) (*RestQueryDidResponse, error)
+	// query a user info
+	QueryUser(context.Context, *RestQueryUserRequest) (*RestQueryUserResponse, error)
+	// query user relations
+	QueryUserRelation(context.Context, *RestQueryUserRelationRequest) (*RestQueryUserRelationResponse, error)
 }
 
 // UnimplementedRestQueryServer can be embedded to have forward compatible implementations.
@@ -193,6 +437,12 @@ type UnimplementedRestQueryServer struct {
 
 func (*UnimplementedRestQueryServer) QueryDid(ctx context.Context, req *RestQueryDidRequest) (*RestQueryDidResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryDid not implemented")
+}
+func (*UnimplementedRestQueryServer) QueryUser(ctx context.Context, req *RestQueryUserRequest) (*RestQueryUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryUser not implemented")
+}
+func (*UnimplementedRestQueryServer) QueryUserRelation(ctx context.Context, req *RestQueryUserRelationRequest) (*RestQueryUserRelationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryUserRelation not implemented")
 }
 
 func RegisterRestQueryServer(s grpc1.Server, srv RestQueryServer) {
@@ -217,6 +467,42 @@ func _RestQuery_QueryDid_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RestQuery_QueryUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RestQueryUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RestQueryServer).QueryUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/misesid.misestm.misestm.RestQuery/QueryUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RestQueryServer).QueryUser(ctx, req.(*RestQueryUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RestQuery_QueryUserRelation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RestQueryUserRelationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RestQueryServer).QueryUserRelation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/misesid.misestm.misestm.RestQuery/QueryUserRelation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RestQueryServer).QueryUserRelation(ctx, req.(*RestQueryUserRelationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _RestQuery_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "misesid.misestm.misestm.RestQuery",
 	HandlerType: (*RestQueryServer)(nil),
@@ -224,6 +510,14 @@ var _RestQuery_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryDid",
 			Handler:    _RestQuery_QueryDid_Handler,
+		},
+		{
+			MethodName: "QueryUser",
+			Handler:    _RestQuery_QueryUser_Handler,
+		},
+		{
+			MethodName: "QueryUserRelation",
+			Handler:    _RestQuery_QueryUserRelation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -295,6 +589,169 @@ func (m *RestQueryDidResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *RestQueryUserRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RestQueryUserRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RestQueryUserRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Did) > 0 {
+		i -= len(m.Did)
+		copy(dAtA[i:], m.Did)
+		i = encodeVarintRestQuery(dAtA, i, uint64(len(m.Did)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *RestQueryUserResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RestQueryUserResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RestQueryUserResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.UserInfo != nil {
+		{
+			size, err := m.UserInfo.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintRestQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *RestQueryUserRelationRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RestQueryUserRelationRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RestQueryUserRelationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintRestQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Filter) > 0 {
+		i -= len(m.Filter)
+		copy(dAtA[i:], m.Filter)
+		i = encodeVarintRestQuery(dAtA, i, uint64(len(m.Filter)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Did) > 0 {
+		i -= len(m.Did)
+		copy(dAtA[i:], m.Did)
+		i = encodeVarintRestQuery(dAtA, i, uint64(len(m.Did)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *RestQueryUserRelationResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RestQueryUserRelationResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RestQueryUserRelationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintRestQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.UserRelation) > 0 {
+		for iNdEx := len(m.UserRelation) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.UserRelation[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintRestQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintRestQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovRestQuery(v)
 	base := offset
@@ -327,6 +784,72 @@ func (m *RestQueryDidResponse) Size() (n int) {
 	_ = l
 	if m.DidRegistry != nil {
 		l = m.DidRegistry.Size()
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *RestQueryUserRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Did)
+	if l > 0 {
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *RestQueryUserResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.UserInfo != nil {
+		l = m.UserInfo.Size()
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *RestQueryUserRelationRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Did)
+	if l > 0 {
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	l = len(m.Filter)
+	if l > 0 {
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovRestQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *RestQueryUserRelationResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.UserRelation) > 0 {
+		for _, e := range m.UserRelation {
+			l = e.Size()
+			n += 1 + l + sovRestQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
 		n += 1 + l + sovRestQuery(uint64(l))
 	}
 	return n
@@ -482,6 +1005,444 @@ func (m *RestQueryDidResponse) Unmarshal(dAtA []byte) error {
 				m.DidRegistry = &DidRegistry{}
 			}
 			if err := m.DidRegistry.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRestQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RestQueryUserRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRestQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RestQueryUserRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RestQueryUserRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Did", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Did = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRestQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RestQueryUserResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRestQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RestQueryUserResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RestQueryUserResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserInfo", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UserInfo == nil {
+				m.UserInfo = &UserInfo{}
+			}
+			if err := m.UserInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRestQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RestQueryUserRelationRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRestQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RestQueryUserRelationRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RestQueryUserRelationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Did", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Did = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Filter", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Filter = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRestQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RestQueryUserRelationResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRestQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RestQueryUserRelationResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RestQueryUserRelationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserRelation", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserRelation = append(m.UserRelation, &UserRelation{})
+			if err := m.UserRelation[len(m.UserRelation)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRestQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthRestQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
