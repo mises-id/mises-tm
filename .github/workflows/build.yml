@@ -58,7 +58,6 @@ jobs:
         run: |
           aws s3 cp \
           --recursive \
-          --acl public-read \
           --region us-east-2 \
           ./build s3://misesid
 
