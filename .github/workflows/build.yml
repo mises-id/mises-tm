@@ -34,7 +34,9 @@ jobs:
           cd cmd/misestmd
           go build .
       - name: 'Tar files'
-        run: tar -czvf misestmd.tar.gz misestmd
+        run: |
+          cd cmd/misestmd
+          tar -czvf misestmd.tar.gz misestmd
       - uses: actions/upload-artifact@v2
         with:
           name: misestmd ${{ matrix.targetos }} ${{ matrix.arch }}
