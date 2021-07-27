@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [amd64, arm64]
-        targetos: [windows, darwin, linux]
+        arch: [amd64]
+        targetos: [linux]
+        #arch: [amd64, arm64]
+        #targetos: [windows, darwin, linux]
     name: misestm ${{ matrix.arch }} for ${{ matrix.targetos }}
     steps:
       - uses: actions/checkout@v2
@@ -31,11 +33,12 @@ jobs:
           go mod download
           cd cmd/misestmd
           go build .
-
+      - name: 'Tar files'
+        run: tar -czvf misestmd.tar.gz misestmd
       - uses: actions/upload-artifact@v2
         with:
           name: misestmd ${{ matrix.targetos }} ${{ matrix.arch }}
-          path: cmd/misestmd/misestmd
+          path: cmd/misestmd/misestmd.tar.gz
 
   deploy:
     name: Deploy
