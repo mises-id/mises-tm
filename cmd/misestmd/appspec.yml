@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: misestmd
+    destination: /apps/mises-tm/
+hooks:
+  BeforeInstall:
+    - location: scripts/stop_running.sh
+  AfterInstall:
+    - location: scripts/check.sh
+      timeout: 180
+  ApplicationStart:
+    - location: scripts/start_running.sh
+      timeout: 3600

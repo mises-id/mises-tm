@@ -36,7 +36,7 @@ jobs:
       - name: 'Tar files'
         run: |
           cd cmd/misestmd
-          tar -czvf misestmd.tar.gz misestmd
+          tar -czvf misestmd.tar.gz ./
       - uses: actions/upload-artifact@v2
         with:
           name: misestmd ${{ matrix.targetos }} ${{ matrix.arch }}
@@ -62,7 +62,13 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 cp \
-          --recursive \
-          --region us-east-2 \
-          ./build s3://misesid
+           --recursive \
+           --region us-east-2 \
+           ./build s3://misesid
+      - name: CodeDeploy to EC2
+        run: |
+          aws deploy create-deployment \
+           --application-name mises \
+           --deployment-group-name MisesDeployGroup \
+           --revision revisionType=S3,s3Location={bucket=misesid,key=misestmd.tar.gz,bundleType=tgz}
 
