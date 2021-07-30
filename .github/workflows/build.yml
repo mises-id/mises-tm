@@ -70,5 +70,5 @@ jobs:
           aws deploy create-deployment \
            --application-name mises \
            --deployment-group-name MisesDeployGroup \
-           --revision revisionType=S3,s3Location={bucket=misesid,key=misestmd.tar.gz,bundleType=tgz}
+           --s3-location bucket=misesid,key=misestmd.tar.gz,bundleType=tgz
 
