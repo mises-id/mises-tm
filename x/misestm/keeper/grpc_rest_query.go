@@ -3,10 +3,10 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -72,18 +72,29 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 	if misesAcc == nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
-	UserRelations, err := userMgr.GetUserRelations(ctx, req.MisesId, string(req.Pagination.Key), int(req.Pagination.Limit))
+	pagination := req.Pagination 
+	if pagination == nil {
+		pagination = &query.PageRequest{
+			Key: []byte(""),
+			Limit: 100,
+		}
+	}
+	UserRelations, err := userMgr.GetUserRelations(ctx, req.MisesId, string(pagination.Key), int(pagination.Limit))
 	if err != nil {
 		return nil, err
 	}
+	misesList := []*types.MisesID{}
+	for _, r := range UserRelations {
+		misesList = append(misesList, &types.MisesID{MisesId: r.UidTo})
+	}
 	nextKey := ""
-	if len(UserRelations) > 0 {
-		nextKey = UserRelations[len(UserRelations)-1].UidTo
+	if len(misesList) > 0 {
+		nextKey = misesList[len(misesList)-1].MisesId
 	}
 	pageRes := &query.PageResponse{NextKey: []byte(nextKey)}
 
 	resp := types.RestQueryUserRelationResponse{
-		UserRelation: UserRelations,
+		MisesList: misesList,
 		Pagination:   pageRes,
 	}
 	return &resp, nil

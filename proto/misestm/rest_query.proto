@@ -55,8 +55,12 @@ message RestQueryUserRelationRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 3;
 }
 
+message MisesID {
+	string mises_id = 1;
+}
+
 message RestQueryUserRelationResponse {
-	repeated UserRelation userRelation = 1;
+	repeated MisesID mises_list = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

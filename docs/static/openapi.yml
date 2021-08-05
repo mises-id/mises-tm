@@ -7475,26 +7475,13 @@ paths:
           schema:
             type: object
             properties:
-              userRelation:
+              misesList:
                 type: array
                 items:
                   type: object
                   properties:
-                    creator:
+                    misesId:
                       type: string
-                    id:
-                      type: string
-                      format: uint64
-                    uidFrom:
-                      type: string
-                    uidTo:
-                      type: string
-                    relType:
-                      type: string
-                      format: uint64
-                    version:
-                      type: string
-                      format: uint64
               pagination:
                 type: object
                 properties:
@@ -12805,6 +12792,11 @@ definitions:
       version:
         type: string
         format: uint64
+  misesid.misestm.misestm.MisesID:
+    type: object
+    properties:
+      misesId:
+        type: string
   misesid.misestm.misestm.MsgCreateAppInfoResponse:
     type: object
     properties:
@@ -13185,26 +13177,13 @@ definitions:
   misesid.misestm.misestm.RestQueryUserRelationResponse:
     type: object
     properties:
-      userRelation:
+      misesList:
         type: array
         items:
           type: object
           properties:
-            creator:
+            misesId:
               type: string
-            id:
-              type: string
-              format: uint64
-            uidFrom:
-              type: string
-            uidTo:
-              type: string
-            relType:
-              type: string
-              format: uint64
-            version:
-              type: string
-              format: uint64
       pagination:
         type: object
         properties:
