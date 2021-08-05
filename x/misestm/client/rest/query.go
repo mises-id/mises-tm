@@ -7,15 +7,18 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
-	"github.com/gorilla/mux"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 )
 
 // HandleQueryTxRequest the QueryTxRequest http handler
 func HandleQueryTxRequest(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		hashHexStr := vars["txhash"]
+		err := r.ParseForm()
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		hashHexStr := r.Form.Get("txhash")
 
 		output, err := authtx.QueryTx(clientCtx, hashHexStr)
 		if err != nil {
@@ -27,7 +30,7 @@ func HandleQueryTxRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		resp := &types.RestQueryTxResponse{
+		resp := &types.RestTxResponse{
 			TxResponse: output,
 		}
 

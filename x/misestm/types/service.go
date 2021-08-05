@@ -1,8 +1,9 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	types "github.com/cosmos/cosmos-sdk/types"
 
 	dbm "github.com/tendermint/tm-db"
 )
@@ -26,8 +27,23 @@ const (
 
 type UserMgr interface {
 	dbm.TrackWriteListener
-	AddrFormDid(did string) (types.AccAddress, error)
+
 	GetUserAccount(ctx sdk.Context, did string) (*MisesAccount, error)
 	GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (*UserRelation, error)
 	GetUserRelations(ctx sdk.Context, didFrom string, lastDidTo string, limit int) ([]*UserRelation, error)
+}
+
+func AddrFormDid(did string) (sdk.AccAddress, error) {
+	addrStr := strings.Replace(did, "did:mises:", "", 1)
+
+	return sdk.AccAddressFromBech32(addrStr)
+}
+
+type MsgReqBase struct {
+	MisesID string `json:"mises_id,omitempty"`
+}
+
+type MsgCreateMisesID struct {
+	MsgReqBase
+	PubKey string `json:"pub_key,omitempty"`
 }

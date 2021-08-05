@@ -21,10 +21,10 @@ const (
 func RegisterRoutes(clientCtx client.Context, rtr *mux.Router) {
 	r := clientrest.WithHTTPDeprecationHeaders(rtr)
 	r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/user/{did}", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/user/{did}/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
+	r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
+	r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
 
-	r.HandleFunc("/mises/tx/{txhash}", HandleQueryTxRequest(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/mises/tx", HandleQueryTxRequest(clientCtx)).Methods(MethodGet)
 }
 
 // PostProcessResponseBare performs post processing for a REST response.

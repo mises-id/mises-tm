@@ -13,7 +13,7 @@ option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 service RestTx {
 
 	// create a did
-	rpc CreateDid(RestCreateDidRequest) returns (RestCreateDidResponse) {
+	rpc CreateDid(RestCreateDidRequest) returns (RestTxResponse) {
 		option (google.api.http) = {
       post: "/mises/did"
       body: "*"
@@ -21,37 +21,32 @@ service RestTx {
 	}
 
 	// update a user info
-	rpc UpdateUserInfo(RestUpdateUserInfoRequest) returns (RestUpdateUserInfoResponse) {
+	rpc UpdateUserInfo(RestUpdateUserInfoRequest) returns (RestTxResponse) {
 		option (google.api.http) = {
-      post: "/mises/user/{did}"
+      post: "/mises/user"
       body: "*"
     };
 	}
 
 	// update a user relation
-	rpc UpdateUserRelation(RestUpdateUserRelationRequest) returns (RestUpdateUserRelationResponse) {
+	rpc UpdateUserRelation(RestUpdateUserRelationRequest) returns (RestTxResponse) {
 		option (google.api.http) = {
-      post: "/mises/user/{did}/relation"
+      post: "/mises/user/relation"
       body: "*"
     };
 	}
 
 		// query a tx result
-	rpc QueryTx(RestQueryTxRequest) returns (RestQueryTxResponse) {
-		option (google.api.http).get = "/mises/tx/{txhash}";
+	rpc QueryTx(RestQueryTxRequest) returns (RestTxResponse) {
+		option (google.api.http).get = "/mises/tx";
 	}
 }
 
 message RestCreateDidRequest {
-	string did = 1;
-	string type = 2;
-	string pkey = 3;
-	string sig = 4;
+	string mises_id = 1;
+	string pub_key = 2;
 }
 
-message RestCreateDidResponse {
-	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
-}
 
 message RestUpdateUserInfoRequest {
 	string did = 1;
@@ -60,9 +55,6 @@ message RestUpdateUserInfoRequest {
 	string sig = 4;
 }
 
-message RestUpdateUserInfoResponse {
-	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
-}
 message RestUpdateUserRelationRequest {
 	string did = 1;
 	string toDid = 2;
@@ -70,17 +62,12 @@ message RestUpdateUserRelationRequest {
 	string sig = 4;
 }
 
-message RestUpdateUserRelationResponse {
-	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
-}
-
-
 
 message RestQueryTxRequest {
 	string  txhash = 1;
 }
 
-message RestQueryTxResponse {
+message RestTxResponse {
 	// tx_response is the queried TxResponses.
   cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
 }

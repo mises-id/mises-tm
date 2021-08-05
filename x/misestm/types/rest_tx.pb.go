@@ -31,10 +31,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type RestCreateDidRequest struct {
-	Did  string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	Pkey string `protobuf:"bytes,3,opt,name=pkey,proto3" json:"pkey,omitempty"`
-	Sig  string `protobuf:"bytes,4,opt,name=sig,proto3" json:"sig,omitempty"`
+	MisesId string `protobuf:"bytes,1,opt,name=mises_id,json=misesId,proto3" json:"mises_id,omitempty"`
+	PubKey  string `protobuf:"bytes,2,opt,name=pub_key,json=pubKey,proto3" json:"pub_key,omitempty"`
 }
 
 func (m *RestCreateDidRequest) Reset()         { *m = RestCreateDidRequest{} }
@@ -70,76 +68,18 @@ func (m *RestCreateDidRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_RestCreateDidRequest proto.InternalMessageInfo
 
-func (m *RestCreateDidRequest) GetDid() string {
+func (m *RestCreateDidRequest) GetMisesId() string {
 	if m != nil {
-		return m.Did
+		return m.MisesId
 	}
 	return ""
 }
 
-func (m *RestCreateDidRequest) GetType() string {
+func (m *RestCreateDidRequest) GetPubKey() string {
 	if m != nil {
-		return m.Type
+		return m.PubKey
 	}
 	return ""
-}
-
-func (m *RestCreateDidRequest) GetPkey() string {
-	if m != nil {
-		return m.Pkey
-	}
-	return ""
-}
-
-func (m *RestCreateDidRequest) GetSig() string {
-	if m != nil {
-		return m.Sig
-	}
-	return ""
-}
-
-type RestCreateDidResponse struct {
-	TxResponse *types.TxResponse `protobuf:"bytes,1,opt,name=tx_response,json=txResponse,proto3" json:"tx_response,omitempty"`
-}
-
-func (m *RestCreateDidResponse) Reset()         { *m = RestCreateDidResponse{} }
-func (m *RestCreateDidResponse) String() string { return proto.CompactTextString(m) }
-func (*RestCreateDidResponse) ProtoMessage()    {}
-func (*RestCreateDidResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{1}
-}
-func (m *RestCreateDidResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *RestCreateDidResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_RestCreateDidResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *RestCreateDidResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RestCreateDidResponse.Merge(m, src)
-}
-func (m *RestCreateDidResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *RestCreateDidResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_RestCreateDidResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_RestCreateDidResponse proto.InternalMessageInfo
-
-func (m *RestCreateDidResponse) GetTxResponse() *types.TxResponse {
-	if m != nil {
-		return m.TxResponse
-	}
-	return nil
 }
 
 type RestUpdateUserInfoRequest struct {
@@ -153,7 +93,7 @@ func (m *RestUpdateUserInfoRequest) Reset()         { *m = RestUpdateUserInfoReq
 func (m *RestUpdateUserInfoRequest) String() string { return proto.CompactTextString(m) }
 func (*RestUpdateUserInfoRequest) ProtoMessage()    {}
 func (*RestUpdateUserInfoRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{2}
+	return fileDescriptor_30a4b9f04197513a, []int{1}
 }
 func (m *RestUpdateUserInfoRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -210,50 +150,6 @@ func (m *RestUpdateUserInfoRequest) GetSig() string {
 	return ""
 }
 
-type RestUpdateUserInfoResponse struct {
-	TxResponse *types.TxResponse `protobuf:"bytes,1,opt,name=tx_response,json=txResponse,proto3" json:"tx_response,omitempty"`
-}
-
-func (m *RestUpdateUserInfoResponse) Reset()         { *m = RestUpdateUserInfoResponse{} }
-func (m *RestUpdateUserInfoResponse) String() string { return proto.CompactTextString(m) }
-func (*RestUpdateUserInfoResponse) ProtoMessage()    {}
-func (*RestUpdateUserInfoResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{3}
-}
-func (m *RestUpdateUserInfoResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *RestUpdateUserInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_RestUpdateUserInfoResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *RestUpdateUserInfoResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RestUpdateUserInfoResponse.Merge(m, src)
-}
-func (m *RestUpdateUserInfoResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *RestUpdateUserInfoResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_RestUpdateUserInfoResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_RestUpdateUserInfoResponse proto.InternalMessageInfo
-
-func (m *RestUpdateUserInfoResponse) GetTxResponse() *types.TxResponse {
-	if m != nil {
-		return m.TxResponse
-	}
-	return nil
-}
-
 type RestUpdateUserRelationRequest struct {
 	Did    string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	ToDid  string `protobuf:"bytes,2,opt,name=toDid,proto3" json:"toDid,omitempty"`
@@ -265,7 +161,7 @@ func (m *RestUpdateUserRelationRequest) Reset()         { *m = RestUpdateUserRel
 func (m *RestUpdateUserRelationRequest) String() string { return proto.CompactTextString(m) }
 func (*RestUpdateUserRelationRequest) ProtoMessage()    {}
 func (*RestUpdateUserRelationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{4}
+	return fileDescriptor_30a4b9f04197513a, []int{2}
 }
 func (m *RestUpdateUserRelationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -322,50 +218,6 @@ func (m *RestUpdateUserRelationRequest) GetSig() string {
 	return ""
 }
 
-type RestUpdateUserRelationResponse struct {
-	TxResponse *types.TxResponse `protobuf:"bytes,1,opt,name=tx_response,json=txResponse,proto3" json:"tx_response,omitempty"`
-}
-
-func (m *RestUpdateUserRelationResponse) Reset()         { *m = RestUpdateUserRelationResponse{} }
-func (m *RestUpdateUserRelationResponse) String() string { return proto.CompactTextString(m) }
-func (*RestUpdateUserRelationResponse) ProtoMessage()    {}
-func (*RestUpdateUserRelationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{5}
-}
-func (m *RestUpdateUserRelationResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *RestUpdateUserRelationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_RestUpdateUserRelationResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *RestUpdateUserRelationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RestUpdateUserRelationResponse.Merge(m, src)
-}
-func (m *RestUpdateUserRelationResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *RestUpdateUserRelationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_RestUpdateUserRelationResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_RestUpdateUserRelationResponse proto.InternalMessageInfo
-
-func (m *RestUpdateUserRelationResponse) GetTxResponse() *types.TxResponse {
-	if m != nil {
-		return m.TxResponse
-	}
-	return nil
-}
-
 type RestQueryTxRequest struct {
 	Txhash string `protobuf:"bytes,1,opt,name=txhash,proto3" json:"txhash,omitempty"`
 }
@@ -374,7 +226,7 @@ func (m *RestQueryTxRequest) Reset()         { *m = RestQueryTxRequest{} }
 func (m *RestQueryTxRequest) String() string { return proto.CompactTextString(m) }
 func (*RestQueryTxRequest) ProtoMessage()    {}
 func (*RestQueryTxRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{6}
+	return fileDescriptor_30a4b9f04197513a, []int{3}
 }
 func (m *RestQueryTxRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -410,23 +262,23 @@ func (m *RestQueryTxRequest) GetTxhash() string {
 	return ""
 }
 
-type RestQueryTxResponse struct {
+type RestTxResponse struct {
 	// tx_response is the queried TxResponses.
 	TxResponse *types.TxResponse `protobuf:"bytes,1,opt,name=tx_response,json=txResponse,proto3" json:"tx_response,omitempty"`
 }
 
-func (m *RestQueryTxResponse) Reset()         { *m = RestQueryTxResponse{} }
-func (m *RestQueryTxResponse) String() string { return proto.CompactTextString(m) }
-func (*RestQueryTxResponse) ProtoMessage()    {}
-func (*RestQueryTxResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_30a4b9f04197513a, []int{7}
+func (m *RestTxResponse) Reset()         { *m = RestTxResponse{} }
+func (m *RestTxResponse) String() string { return proto.CompactTextString(m) }
+func (*RestTxResponse) ProtoMessage()    {}
+func (*RestTxResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_30a4b9f04197513a, []int{4}
 }
-func (m *RestQueryTxResponse) XXX_Unmarshal(b []byte) error {
+func (m *RestTxResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *RestQueryTxResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *RestTxResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_RestQueryTxResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_RestTxResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -436,19 +288,19 @@ func (m *RestQueryTxResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *RestQueryTxResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RestQueryTxResponse.Merge(m, src)
+func (m *RestTxResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestTxResponse.Merge(m, src)
 }
-func (m *RestQueryTxResponse) XXX_Size() int {
+func (m *RestTxResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *RestQueryTxResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_RestQueryTxResponse.DiscardUnknown(m)
+func (m *RestTxResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestTxResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_RestQueryTxResponse proto.InternalMessageInfo
+var xxx_messageInfo_RestTxResponse proto.InternalMessageInfo
 
-func (m *RestQueryTxResponse) GetTxResponse() *types.TxResponse {
+func (m *RestTxResponse) GetTxResponse() *types.TxResponse {
 	if m != nil {
 		return m.TxResponse
 	}
@@ -457,57 +309,52 @@ func (m *RestQueryTxResponse) GetTxResponse() *types.TxResponse {
 
 func init() {
 	proto.RegisterType((*RestCreateDidRequest)(nil), "misesid.misestm.misestm.RestCreateDidRequest")
-	proto.RegisterType((*RestCreateDidResponse)(nil), "misesid.misestm.misestm.RestCreateDidResponse")
 	proto.RegisterType((*RestUpdateUserInfoRequest)(nil), "misesid.misestm.misestm.RestUpdateUserInfoRequest")
-	proto.RegisterType((*RestUpdateUserInfoResponse)(nil), "misesid.misestm.misestm.RestUpdateUserInfoResponse")
 	proto.RegisterType((*RestUpdateUserRelationRequest)(nil), "misesid.misestm.misestm.RestUpdateUserRelationRequest")
-	proto.RegisterType((*RestUpdateUserRelationResponse)(nil), "misesid.misestm.misestm.RestUpdateUserRelationResponse")
 	proto.RegisterType((*RestQueryTxRequest)(nil), "misesid.misestm.misestm.RestQueryTxRequest")
-	proto.RegisterType((*RestQueryTxResponse)(nil), "misesid.misestm.misestm.RestQueryTxResponse")
+	proto.RegisterType((*RestTxResponse)(nil), "misesid.misestm.misestm.RestTxResponse")
 }
 
 func init() { proto.RegisterFile("misestm/rest_tx.proto", fileDescriptor_30a4b9f04197513a) }
 
 var fileDescriptor_30a4b9f04197513a = []byte{
-	// 603 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xd1, 0x6a, 0x13, 0x4d,
-	0x18, 0xed, 0xa6, 0xf9, 0x53, 0xfa, 0x15, 0xfa, 0xeb, 0x98, 0xc4, 0x74, 0xa9, 0xab, 0xac, 0x0a,
-	0x52, 0xd3, 0x1d, 0x9a, 0x82, 0x82, 0x97, 0x1a, 0x05, 0x2f, 0x0d, 0xed, 0x8d, 0x88, 0x65, 0x76,
-	0x77, 0xdc, 0x0c, 0x36, 0x3b, 0x9b, 0x9d, 0x49, 0xd8, 0x50, 0x0a, 0xea, 0x13, 0x08, 0x5e, 0xf8,
-	0x12, 0x3e, 0x88, 0x97, 0x05, 0x6f, 0x7a, 0x29, 0x89, 0x0f, 0x22, 0x33, 0x3b, 0x09, 0xa6, 0x4d,
-	0x4a, 0x0a, 0xb9, 0xca, 0xf7, 0xcd, 0x9c, 0x6f, 0xce, 0x39, 0xd9, 0x33, 0x03, 0x95, 0x0e, 0x13,
-	0x54, 0xc8, 0x0e, 0x4e, 0xa9, 0x90, 0x47, 0x32, 0xf3, 0x92, 0x94, 0x4b, 0x8e, 0x6e, 0xeb, 0x65,
-	0x16, 0x7a, 0x66, 0x7b, 0xfc, 0x6b, 0x6f, 0x47, 0x9c, 0x47, 0xc7, 0x14, 0x93, 0x84, 0x61, 0x12,
-	0xc7, 0x5c, 0x12, 0xc9, 0x78, 0x2c, 0xf2, 0x31, 0xfb, 0x7e, 0xc0, 0x45, 0x87, 0x0b, 0xec, 0x13,
-	0x41, 0x31, 0xf1, 0x03, 0x86, 0xfb, 0x7b, 0x3e, 0x95, 0x64, 0x4f, 0x37, 0x06, 0xb4, 0xf3, 0x2f,
-	0xa8, 0xdb, 0xa3, 0xe9, 0x60, 0x82, 0x4a, 0x48, 0xc4, 0x62, 0x7d, 0xa2, 0xc1, 0x6e, 0x8d, 0xe5,
-	0x35, 0x59, 0xd8, 0xa2, 0x11, 0x13, 0x32, 0x1d, 0xe4, 0x5b, 0xae, 0x0f, 0xe5, 0x16, 0x15, 0xf2,
-	0x45, 0x4a, 0x89, 0xa4, 0x7a, 0xbb, 0xdb, 0xa3, 0x42, 0xa2, 0x1b, 0xb0, 0x1a, 0xb2, 0xb0, 0x66,
-	0xdd, 0xb3, 0x1e, 0xad, 0xb7, 0x54, 0x89, 0x10, 0x14, 0xe5, 0x20, 0xa1, 0xb5, 0x82, 0x5e, 0xd2,
-	0xb5, 0x5a, 0x4b, 0x3e, 0xd2, 0x41, 0x6d, 0x35, 0x5f, 0x53, 0xb5, 0x9a, 0x14, 0x2c, 0xaa, 0x15,
-	0xf3, 0x49, 0xc1, 0x22, 0xf7, 0x3d, 0x54, 0x2e, 0x70, 0x88, 0x84, 0xc7, 0x82, 0xa2, 0x97, 0xb0,
-	0x21, 0xb3, 0xa3, 0xd4, 0xb4, 0x9a, 0x6c, 0xa3, 0xf1, 0xc0, 0xcb, 0x9d, 0x79, 0xca, 0x99, 0xa7,
-	0x1d, 0x1b, 0x63, 0xde, 0x41, 0x36, 0x1e, 0x6d, 0x81, 0x9c, 0xd4, 0x2e, 0x83, 0x2d, 0x75, 0xfe,
-	0x61, 0x12, 0x12, 0x49, 0x0f, 0x05, 0x4d, 0x5f, 0xc7, 0x1f, 0xf8, 0x7c, 0x23, 0x35, 0x58, 0xa3,
-	0x71, 0xd0, 0x24, 0x92, 0x18, 0x2f, 0xe3, 0x16, 0x6d, 0x42, 0x81, 0xf5, 0x8d, 0x99, 0x02, 0xeb,
-	0xcf, 0xb0, 0x12, 0x80, 0x3d, 0x8b, 0x6a, 0xb9, 0x7e, 0xba, 0x70, 0x67, 0x9a, 0xa4, 0x45, 0x8f,
-	0xf5, 0xe7, 0x9c, 0xef, 0xa9, 0x0c, 0xff, 0x49, 0xde, 0x64, 0xa1, 0x71, 0x94, 0x37, 0xa8, 0x0a,
-	0x25, 0x12, 0xa8, 0x41, 0xe3, 0xc9, 0x74, 0x33, 0x7c, 0x45, 0xe0, 0xcc, 0xa3, 0x5c, 0xae, 0xb7,
-	0x3a, 0x20, 0x45, 0xf4, 0x46, 0x05, 0x56, 0x41, 0x72, 0x43, 0x55, 0x28, 0xc9, 0xac, 0x4d, 0x44,
-	0xdb, 0x78, 0x32, 0x9d, 0xfb, 0x0e, 0x6e, 0x4d, 0xa1, 0x97, 0xaa, 0xa5, 0x71, 0x5e, 0x84, 0x92,
-	0x3a, 0xfe, 0x20, 0x43, 0x9f, 0x2d, 0x58, 0x9f, 0xe4, 0x13, 0xed, 0x7a, 0x73, 0x2e, 0xae, 0x37,
-	0xeb, 0xae, 0xd8, 0xde, 0xa2, 0x70, 0xf3, 0x1f, 0x54, 0xbe, 0xfc, 0xfa, 0xf3, 0xad, 0xf0, 0xbf,
-	0x0b, 0x58, 0xe3, 0x70, 0xc8, 0xc2, 0x67, 0xd6, 0x0e, 0xfa, 0x6e, 0xc1, 0xe6, 0x74, 0xb0, 0x50,
-	0xe3, 0xca, 0x93, 0x67, 0x06, 0xde, 0xde, 0xbf, 0xd6, 0x8c, 0x91, 0xb4, 0xad, 0x25, 0x55, 0xdd,
-	0x9b, 0x46, 0x52, 0x4f, 0xd0, 0x14, 0x9f, 0x84, 0x2c, 0x3c, 0x55, 0xca, 0x7e, 0x58, 0x80, 0x2e,
-	0x47, 0x03, 0x3d, 0x59, 0x90, 0xe9, 0x42, 0x7c, 0xed, 0xa7, 0xd7, 0x9e, 0x33, 0x2a, 0x1f, 0x6a,
-	0x95, 0x77, 0x5d, 0xfb, 0x92, 0x4a, 0x9c, 0x1a, 0xac, 0x92, 0xfb, 0xc9, 0x82, 0x35, 0x13, 0x19,
-	0xf4, 0xf8, 0x4a, 0xae, 0xe9, 0x18, 0xda, 0xf5, 0xc5, 0xc0, 0x46, 0x8d, 0xad, 0xd5, 0x94, 0x11,
-	0x32, 0x6a, 0x64, 0x86, 0x4f, 0xf2, 0xdc, 0x9e, 0x3e, 0x7f, 0xf5, 0x73, 0xe8, 0x58, 0x67, 0x43,
-	0xc7, 0xfa, 0x3d, 0x74, 0xac, 0xaf, 0x23, 0x67, 0xe5, 0x6c, 0xe4, 0xac, 0x9c, 0x8f, 0x9c, 0x95,
-	0xb7, 0xf5, 0x88, 0xc9, 0x76, 0xcf, 0xf7, 0x02, 0xde, 0xc9, 0xe7, 0x76, 0x59, 0x68, 0x0a, 0xd9,
-	0xc1, 0x19, 0x1e, 0x3f, 0xd5, 0xea, 0x7d, 0x15, 0x7e, 0x49, 0xbf, 0xd2, 0xfb, 0x7f, 0x03, 0x00,
-	0x00, 0xff, 0xff, 0xef, 0x72, 0x9a, 0x61, 0x61, 0x06, 0x00, 0x00,
+	// 561 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0x41, 0x6b, 0x13, 0x41,
+	0x14, 0xce, 0xa6, 0x35, 0x31, 0x2f, 0x10, 0xeb, 0x90, 0xa6, 0x49, 0xd0, 0x55, 0x56, 0x41, 0xa9,
+	0xed, 0x0e, 0x8d, 0xe0, 0xc1, 0xa3, 0x46, 0xa1, 0x7a, 0x32, 0x58, 0x04, 0x2f, 0x61, 0x36, 0x3b,
+	0x6e, 0x06, 0x9b, 0x9d, 0xcd, 0xce, 0x6c, 0xd8, 0x78, 0x14, 0xbc, 0x0b, 0x82, 0xe0, 0x3f, 0xf2,
+	0x58, 0xf0, 0xe2, 0x51, 0x12, 0x7f, 0x88, 0xcc, 0xec, 0x6c, 0xda, 0xd8, 0x34, 0xe4, 0x94, 0x79,
+	0xf3, 0xbe, 0xf7, 0x7d, 0x5f, 0xf6, 0x7b, 0x0c, 0xec, 0x8e, 0x98, 0xa0, 0x42, 0x8e, 0x70, 0x4c,
+	0x85, 0xec, 0xcb, 0xd4, 0x8d, 0x62, 0x2e, 0x39, 0xda, 0xd3, 0xd7, 0xcc, 0x77, 0x4d, 0x3b, 0xff,
+	0x6d, 0xdf, 0x0a, 0x38, 0x0f, 0x4e, 0x29, 0x26, 0x11, 0xc3, 0x24, 0x0c, 0xb9, 0x24, 0x92, 0xf1,
+	0x50, 0x64, 0x63, 0xed, 0x7b, 0x03, 0x2e, 0x46, 0x5c, 0x60, 0x8f, 0x08, 0x8a, 0x89, 0x37, 0x60,
+	0x78, 0x72, 0xe4, 0x51, 0x49, 0x8e, 0x74, 0x61, 0x40, 0xfb, 0x17, 0x41, 0xe3, 0x84, 0xc6, 0xd3,
+	0x05, 0x2a, 0x22, 0x01, 0x0b, 0x35, 0xa3, 0xc1, 0xb6, 0x72, 0x7b, 0x5d, 0xe6, 0xf7, 0x68, 0xc0,
+	0x84, 0x8c, 0xa7, 0x59, 0xcb, 0x79, 0x05, 0xf5, 0x1e, 0x15, 0xf2, 0x79, 0x4c, 0x89, 0xa4, 0xba,
+	0x3d, 0x4e, 0xa8, 0x90, 0xa8, 0x05, 0xd7, 0xf5, 0x50, 0x9f, 0xf9, 0x4d, 0xeb, 0xae, 0xf5, 0xb0,
+	0xd2, 0x2b, 0xeb, 0xfa, 0xd8, 0x47, 0x7b, 0x50, 0x8e, 0x12, 0xaf, 0xff, 0x91, 0x4e, 0x9b, 0x45,
+	0xdd, 0x29, 0x45, 0x89, 0xf7, 0x9a, 0x4e, 0x1d, 0x06, 0x2d, 0xc5, 0x75, 0x12, 0xf9, 0x44, 0xd2,
+	0x13, 0x41, 0xe3, 0xe3, 0xf0, 0x03, 0xcf, 0x09, 0x77, 0x60, 0xcb, 0x5f, 0x70, 0xa9, 0x23, 0x6a,
+	0x42, 0x99, 0x86, 0x83, 0x2e, 0x91, 0xc4, 0xf0, 0xe4, 0x25, 0xaa, 0x41, 0x91, 0x4d, 0x9a, 0x5b,
+	0xfa, 0xb2, 0xc8, 0x26, 0x6a, 0x56, 0xb0, 0xa0, 0xb9, 0x9d, 0xcd, 0x0a, 0x16, 0x38, 0x63, 0xb8,
+	0xbd, 0x2c, 0xd5, 0xa3, 0xa7, 0xfa, 0x1f, 0x5f, 0x2d, 0x57, 0x87, 0x6b, 0x92, 0x77, 0x99, 0x6f,
+	0xc4, 0xb2, 0x02, 0x35, 0xa0, 0x44, 0x06, 0x6a, 0xd0, 0xc8, 0x99, 0x6a, 0x85, 0xe4, 0x01, 0x20,
+	0x25, 0xf9, 0x46, 0x7d, 0xea, 0xb7, 0x69, 0xae, 0xd3, 0x80, 0x92, 0x4c, 0x87, 0x44, 0x0c, 0x8d,
+	0x94, 0xa9, 0x9c, 0x77, 0x50, 0x53, 0x68, 0x05, 0x14, 0x11, 0x0f, 0x05, 0x45, 0x2f, 0xa0, 0x2a,
+	0xd3, 0x7e, 0x6c, 0x4a, 0x0d, 0xaf, 0x76, 0xee, 0xbb, 0x59, 0x8c, 0xae, 0x8a, 0xd1, 0xd5, 0xf1,
+	0x9a, 0x14, 0xdd, 0xf3, 0xd1, 0x1e, 0xc8, 0xc5, 0xb9, 0xf3, 0x63, 0x1b, 0x4a, 0x19, 0x33, 0xfa,
+	0x04, 0x95, 0x45, 0x6e, 0xe8, 0xd0, 0xbd, 0x62, 0xd9, 0xdc, 0x55, 0xf9, 0xb6, 0x1f, 0xac, 0x85,
+	0x9f, 0x6b, 0x3b, 0xbb, 0x9f, 0x7f, 0xfd, 0xfd, 0x56, 0xbc, 0xe1, 0x00, 0xd6, 0x00, 0xec, 0x33,
+	0xff, 0xa9, 0xb5, 0x8f, 0xbe, 0x58, 0x50, 0x5b, 0x0e, 0x1a, 0x75, 0xd6, 0x52, 0xae, 0xdc, 0x8a,
+	0xcd, 0x6d, 0x34, 0xb4, 0x8d, 0x1d, 0xa7, 0x6a, 0x6c, 0x24, 0x82, 0xc6, 0xca, 0xc7, 0x77, 0x0b,
+	0xd0, 0xe5, 0x2d, 0x40, 0x4f, 0x36, 0xf4, 0xf2, 0xdf, 0xda, 0x6c, 0xee, 0xe7, 0x8e, 0xf6, 0xd3,
+	0x72, 0xea, 0x17, 0xfc, 0xe0, 0xd8, 0xb0, 0x29, 0x63, 0x31, 0x94, 0xcd, 0xaa, 0xa0, 0x47, 0x6b,
+	0x49, 0x97, 0x17, 0x6a, 0x73, 0x07, 0x37, 0xb5, 0x83, 0x2a, 0xaa, 0x18, 0x07, 0x32, 0x7d, 0xf6,
+	0xf2, 0xe7, 0xcc, 0xb6, 0xce, 0x66, 0xb6, 0xf5, 0x67, 0x66, 0x5b, 0x5f, 0xe7, 0x76, 0xe1, 0x6c,
+	0x6e, 0x17, 0x7e, 0xcf, 0xed, 0xc2, 0xfb, 0x83, 0x80, 0xc9, 0x61, 0xe2, 0xb9, 0x03, 0x3e, 0xca,
+	0xe0, 0x87, 0xcc, 0x37, 0x07, 0x39, 0xc2, 0x29, 0xce, 0x1f, 0x08, 0x39, 0x8d, 0xa8, 0xf0, 0x4a,
+	0xfa, 0x6d, 0x78, 0xfc, 0x2f, 0x00, 0x00, 0xff, 0xff, 0x7b, 0xba, 0x02, 0xde, 0xd7, 0x04, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -523,13 +370,13 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RestTxClient interface {
 	// create a did
-	CreateDid(ctx context.Context, in *RestCreateDidRequest, opts ...grpc.CallOption) (*RestCreateDidResponse, error)
+	CreateDid(ctx context.Context, in *RestCreateDidRequest, opts ...grpc.CallOption) (*RestTxResponse, error)
 	// update a user info
-	UpdateUserInfo(ctx context.Context, in *RestUpdateUserInfoRequest, opts ...grpc.CallOption) (*RestUpdateUserInfoResponse, error)
+	UpdateUserInfo(ctx context.Context, in *RestUpdateUserInfoRequest, opts ...grpc.CallOption) (*RestTxResponse, error)
 	// update a user relation
-	UpdateUserRelation(ctx context.Context, in *RestUpdateUserRelationRequest, opts ...grpc.CallOption) (*RestUpdateUserRelationResponse, error)
+	UpdateUserRelation(ctx context.Context, in *RestUpdateUserRelationRequest, opts ...grpc.CallOption) (*RestTxResponse, error)
 	// query a tx result
-	QueryTx(ctx context.Context, in *RestQueryTxRequest, opts ...grpc.CallOption) (*RestQueryTxResponse, error)
+	QueryTx(ctx context.Context, in *RestQueryTxRequest, opts ...grpc.CallOption) (*RestTxResponse, error)
 }
 
 type restTxClient struct {
@@ -540,8 +387,8 @@ func NewRestTxClient(cc grpc1.ClientConn) RestTxClient {
 	return &restTxClient{cc}
 }
 
-func (c *restTxClient) CreateDid(ctx context.Context, in *RestCreateDidRequest, opts ...grpc.CallOption) (*RestCreateDidResponse, error) {
-	out := new(RestCreateDidResponse)
+func (c *restTxClient) CreateDid(ctx context.Context, in *RestCreateDidRequest, opts ...grpc.CallOption) (*RestTxResponse, error) {
+	out := new(RestTxResponse)
 	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestTx/CreateDid", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -549,8 +396,8 @@ func (c *restTxClient) CreateDid(ctx context.Context, in *RestCreateDidRequest, 
 	return out, nil
 }
 
-func (c *restTxClient) UpdateUserInfo(ctx context.Context, in *RestUpdateUserInfoRequest, opts ...grpc.CallOption) (*RestUpdateUserInfoResponse, error) {
-	out := new(RestUpdateUserInfoResponse)
+func (c *restTxClient) UpdateUserInfo(ctx context.Context, in *RestUpdateUserInfoRequest, opts ...grpc.CallOption) (*RestTxResponse, error) {
+	out := new(RestTxResponse)
 	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestTx/UpdateUserInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -558,8 +405,8 @@ func (c *restTxClient) UpdateUserInfo(ctx context.Context, in *RestUpdateUserInf
 	return out, nil
 }
 
-func (c *restTxClient) UpdateUserRelation(ctx context.Context, in *RestUpdateUserRelationRequest, opts ...grpc.CallOption) (*RestUpdateUserRelationResponse, error) {
-	out := new(RestUpdateUserRelationResponse)
+func (c *restTxClient) UpdateUserRelation(ctx context.Context, in *RestUpdateUserRelationRequest, opts ...grpc.CallOption) (*RestTxResponse, error) {
+	out := new(RestTxResponse)
 	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestTx/UpdateUserRelation", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -567,8 +414,8 @@ func (c *restTxClient) UpdateUserRelation(ctx context.Context, in *RestUpdateUse
 	return out, nil
 }
 
-func (c *restTxClient) QueryTx(ctx context.Context, in *RestQueryTxRequest, opts ...grpc.CallOption) (*RestQueryTxResponse, error) {
-	out := new(RestQueryTxResponse)
+func (c *restTxClient) QueryTx(ctx context.Context, in *RestQueryTxRequest, opts ...grpc.CallOption) (*RestTxResponse, error) {
+	out := new(RestTxResponse)
 	err := c.cc.Invoke(ctx, "/misesid.misestm.misestm.RestTx/QueryTx", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -579,29 +426,29 @@ func (c *restTxClient) QueryTx(ctx context.Context, in *RestQueryTxRequest, opts
 // RestTxServer is the server API for RestTx service.
 type RestTxServer interface {
 	// create a did
-	CreateDid(context.Context, *RestCreateDidRequest) (*RestCreateDidResponse, error)
+	CreateDid(context.Context, *RestCreateDidRequest) (*RestTxResponse, error)
 	// update a user info
-	UpdateUserInfo(context.Context, *RestUpdateUserInfoRequest) (*RestUpdateUserInfoResponse, error)
+	UpdateUserInfo(context.Context, *RestUpdateUserInfoRequest) (*RestTxResponse, error)
 	// update a user relation
-	UpdateUserRelation(context.Context, *RestUpdateUserRelationRequest) (*RestUpdateUserRelationResponse, error)
+	UpdateUserRelation(context.Context, *RestUpdateUserRelationRequest) (*RestTxResponse, error)
 	// query a tx result
-	QueryTx(context.Context, *RestQueryTxRequest) (*RestQueryTxResponse, error)
+	QueryTx(context.Context, *RestQueryTxRequest) (*RestTxResponse, error)
 }
 
 // UnimplementedRestTxServer can be embedded to have forward compatible implementations.
 type UnimplementedRestTxServer struct {
 }
 
-func (*UnimplementedRestTxServer) CreateDid(ctx context.Context, req *RestCreateDidRequest) (*RestCreateDidResponse, error) {
+func (*UnimplementedRestTxServer) CreateDid(ctx context.Context, req *RestCreateDidRequest) (*RestTxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDid not implemented")
 }
-func (*UnimplementedRestTxServer) UpdateUserInfo(ctx context.Context, req *RestUpdateUserInfoRequest) (*RestUpdateUserInfoResponse, error) {
+func (*UnimplementedRestTxServer) UpdateUserInfo(ctx context.Context, req *RestUpdateUserInfoRequest) (*RestTxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
 }
-func (*UnimplementedRestTxServer) UpdateUserRelation(ctx context.Context, req *RestUpdateUserRelationRequest) (*RestUpdateUserRelationResponse, error) {
+func (*UnimplementedRestTxServer) UpdateUserRelation(ctx context.Context, req *RestUpdateUserRelationRequest) (*RestTxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserRelation not implemented")
 }
-func (*UnimplementedRestTxServer) QueryTx(ctx context.Context, req *RestQueryTxRequest) (*RestQueryTxResponse, error) {
+func (*UnimplementedRestTxServer) QueryTx(ctx context.Context, req *RestQueryTxRequest) (*RestTxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryTx not implemented")
 }
 
@@ -726,66 +573,17 @@ func (m *RestCreateDidRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Sig) > 0 {
-		i -= len(m.Sig)
-		copy(dAtA[i:], m.Sig)
-		i = encodeVarintRestTx(dAtA, i, uint64(len(m.Sig)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.Pkey) > 0 {
-		i -= len(m.Pkey)
-		copy(dAtA[i:], m.Pkey)
-		i = encodeVarintRestTx(dAtA, i, uint64(len(m.Pkey)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if len(m.Type) > 0 {
-		i -= len(m.Type)
-		copy(dAtA[i:], m.Type)
-		i = encodeVarintRestTx(dAtA, i, uint64(len(m.Type)))
+	if len(m.PubKey) > 0 {
+		i -= len(m.PubKey)
+		copy(dAtA[i:], m.PubKey)
+		i = encodeVarintRestTx(dAtA, i, uint64(len(m.PubKey)))
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Did) > 0 {
-		i -= len(m.Did)
-		copy(dAtA[i:], m.Did)
-		i = encodeVarintRestTx(dAtA, i, uint64(len(m.Did)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *RestCreateDidResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *RestCreateDidResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *RestCreateDidResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		{
-			size, err := m.TxResponse.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintRestTx(dAtA, i, uint64(size))
-		}
+	if len(m.MisesId) > 0 {
+		i -= len(m.MisesId)
+		copy(dAtA[i:], m.MisesId)
+		i = encodeVarintRestTx(dAtA, i, uint64(len(m.MisesId)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -843,41 +641,6 @@ func (m *RestUpdateUserInfoRequest) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *RestUpdateUserInfoResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *RestUpdateUserInfoResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *RestUpdateUserInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		{
-			size, err := m.TxResponse.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintRestTx(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
 func (m *RestUpdateUserRelationRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -929,41 +692,6 @@ func (m *RestUpdateUserRelationRequest) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *RestUpdateUserRelationResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *RestUpdateUserRelationResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *RestUpdateUserRelationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		{
-			size, err := m.TxResponse.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintRestTx(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
 func (m *RestQueryTxRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -994,7 +722,7 @@ func (m *RestQueryTxRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *RestQueryTxResponse) Marshal() (dAtA []byte, err error) {
+func (m *RestTxResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1004,12 +732,12 @@ func (m *RestQueryTxResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *RestQueryTxResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *RestTxResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *RestQueryTxResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *RestTxResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1046,33 +774,12 @@ func (m *RestCreateDidRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Did)
+	l = len(m.MisesId)
 	if l > 0 {
 		n += 1 + l + sovRestTx(uint64(l))
 	}
-	l = len(m.Type)
+	l = len(m.PubKey)
 	if l > 0 {
-		n += 1 + l + sovRestTx(uint64(l))
-	}
-	l = len(m.Pkey)
-	if l > 0 {
-		n += 1 + l + sovRestTx(uint64(l))
-	}
-	l = len(m.Sig)
-	if l > 0 {
-		n += 1 + l + sovRestTx(uint64(l))
-	}
-	return n
-}
-
-func (m *RestCreateDidResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		l = m.TxResponse.Size()
 		n += 1 + l + sovRestTx(uint64(l))
 	}
 	return n
@@ -1103,19 +810,6 @@ func (m *RestUpdateUserInfoRequest) Size() (n int) {
 	return n
 }
 
-func (m *RestUpdateUserInfoResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		l = m.TxResponse.Size()
-		n += 1 + l + sovRestTx(uint64(l))
-	}
-	return n
-}
-
 func (m *RestUpdateUserRelationRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1141,19 +835,6 @@ func (m *RestUpdateUserRelationRequest) Size() (n int) {
 	return n
 }
 
-func (m *RestUpdateUserRelationResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.TxResponse != nil {
-		l = m.TxResponse.Size()
-		n += 1 + l + sovRestTx(uint64(l))
-	}
-	return n
-}
-
 func (m *RestQueryTxRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1167,7 +848,7 @@ func (m *RestQueryTxRequest) Size() (n int) {
 	return n
 }
 
-func (m *RestQueryTxResponse) Size() (n int) {
+func (m *RestTxResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1217,7 +898,7 @@ func (m *RestCreateDidRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Did", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MisesId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1245,11 +926,11 @@ func (m *RestCreateDidRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Did = string(dAtA[iNdEx:postIndex])
+			m.MisesId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PubKey", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1277,157 +958,7 @@ func (m *RestCreateDidRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Type = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pkey", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRestTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Pkey = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sig", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRestTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sig = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipRestTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *RestCreateDidResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowRestTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: RestCreateDidResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: RestCreateDidResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TxResponse", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRestTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.TxResponse == nil {
-				m.TxResponse = &types.TxResponse{}
-			}
-			if err := m.TxResponse.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
+			m.PubKey = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1628,92 +1159,6 @@ func (m *RestUpdateUserInfoRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *RestUpdateUserInfoResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowRestTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: RestUpdateUserInfoResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: RestUpdateUserInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TxResponse", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRestTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.TxResponse == nil {
-				m.TxResponse = &types.TxResponse{}
-			}
-			if err := m.TxResponse.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipRestTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *RestUpdateUserRelationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1892,92 +1337,6 @@ func (m *RestUpdateUserRelationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *RestUpdateUserRelationResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowRestTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: RestUpdateUserRelationResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: RestUpdateUserRelationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TxResponse", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRestTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.TxResponse == nil {
-				m.TxResponse = &types.TxResponse{}
-			}
-			if err := m.TxResponse.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipRestTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthRestTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *RestQueryTxRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2060,7 +1419,7 @@ func (m *RestQueryTxRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *RestQueryTxResponse) Unmarshal(dAtA []byte) error {
+func (m *RestTxResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2083,10 +1442,10 @@ func (m *RestQueryTxResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: RestQueryTxResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: RestTxResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: RestQueryTxResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: RestTxResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

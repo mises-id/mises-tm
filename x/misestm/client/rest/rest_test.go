@@ -1,8 +1,13 @@
 package rest_test
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"net/url"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 
@@ -98,7 +103,7 @@ func (s *IntegrationTestSuite) SetupSuite() {
 
 	s.setupSigner()
 
-	s.Require().NoError(s.network.WaitForNextBlock())
+	//s.Require().NoError(s.network.WaitForNextBlock())
 }
 
 func (s *IntegrationTestSuite) TearDownSuite() {
@@ -107,13 +112,30 @@ func (s *IntegrationTestSuite) TearDownSuite() {
 }
 
 func (s *IntegrationTestSuite) TestCreateDid() {
+	val := s.network.Validators[0]
+	kb := val.ClientCtx.Keyring
+	account, _, err := kb.NewMnemonic("newAccount3", keyring.English, sdk.FullFundraiserPath, keyring.DefaultBIP39Passphrase, hd.Secp256k1)
+	s.Require().NoError(err)
+
+	req := &types.MsgCreateMisesID{
+		MsgReqBase: types.MsgReqBase{
+			MisesID: "did:mises:" + account.GetAddress().String(),
+		},
+		PubKey: hex.EncodeToString(account.GetPubKey().Bytes()),
+	}
+	msg, err := json.Marshal(req)
+	s.Require().NoError(err)
+
+	s.Require().NoError(err)
+	nonce := strconv.FormatInt(time.Now().UTC().Unix(), 10)
+	msgSign := string(msg) + "&" + nonce
+	sigBytes, _, err := kb.Sign("newAccount3", []byte(msgSign))
+	s.Require().NoError(err)
+	sig := hex.EncodeToString(sigBytes)
 
 	// we just test with async mode because this tx will fail - all we care about is that it got encoded and broadcast correctly
-	txRes, err := s.broadcastRestCreateDidRequest(
-		"did:mises:mises19zutzg923yy8x24745lqtsmz5narsaa9tsryd5",
-		"eyJhbGciOiJFUzI1NksiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ==",
-		"027560af3387d375e3342a6968179ef3c6d04f5d33b2b611cf326d4708badd7770",
-	)
+	txRes, err := s.broadcastRestMsgRequest(string(msg), sig, nonce)
+
 	s.Require().NoError(err)
 
 	// NOTE: this uses amino explicitly, don't migrate it!
@@ -122,24 +144,22 @@ func (s *IntegrationTestSuite) TestCreateDid() {
 	s.Require().NotEmpty(txRes.TxHash)
 }
 
-func (s *IntegrationTestSuite) broadcastRestCreateDidRequest(did string, sig string, pkey string) (*sdk.TxResponse, error) {
+func (s *IntegrationTestSuite) broadcastRestMsgRequest(msg string, sig string, nonce string) (*sdk.TxResponse, error) {
 	val := s.network.Validators[0]
 
 	// NOTE: this uses amino explicitly, don't migrate it!
-	cdc := val.ClientCtx.Codec
-	req := &types.RestCreateDidRequest{
-		Did:  did,
-		Type: "user",
-		Pkey: pkey,
-		Sig:  sig,
-	}
-	bz, err := cdc.MarshalJSON(req)
-	s.Require().NoError(err)
+
+	v := url.Values{}
+	v.Set("msg", msg)
+	v.Set("nonce", nonce)
+	v.Set("sig", sig)
+	fmt.Println(v.Encode())
 	rt, err := rest.PostRequest(
-		fmt.Sprintf("%s/mises/did", val.APIAddress), "application/json", bz,
+		fmt.Sprintf("%s/mises/did", val.APIAddress), "application/x-www-form-urlencoded", []byte(v.Encode()),
 	)
 	s.Require().NoError(err)
-	var resp types.RestCreateDidResponse
+	fmt.Println(string(rt))
+	var resp types.RestTxResponse
 	s.Require().NoError(s.cfg.Codec.UnmarshalJSON(rt, &resp))
 
 	return resp.TxResponse, err

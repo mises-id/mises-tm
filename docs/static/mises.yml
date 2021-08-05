@@ -4,7 +4,7 @@ info:
   version: '1.0'
   description: ''
 paths:
-  '/mises/did/{did}':
+  '/mises/did':
     get:
       summary: Queries a did.
       operationId: MisesDidByDid
@@ -55,14 +55,15 @@ paths:
                       format: byte
       parameters:
         - name: did
-          in: path
+          in: query
           required: true
           type: string
       tags:
         - MisesID
-  '/mises/did':
     post:
       summary: create a did.
+      consumes:
+        - application/x-www-form-urlencoded
       operationId: MisesDidCreate
       responses:
         '200':
@@ -90,28 +91,22 @@ paths:
                       type: string
                       format: byte
       parameters:
-        - in: body
-          name: body
-          description: the did to create
+        - in: formData
+          name: msg
+          type: string
+          description: A json string of msg
           required: true
-          schema:
-            type: object
-            properties:
-              did:
-                type: string
-                description: the did
-              type:
-                type: string
-                description: the did type app|user
-              pkey:
-                description: puiblic key
-                type: string
-              sig:
-                description: signature
-                type: string
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
       tags:
         - MisesID 
-  '/mises/user/{did}':
+  '/mises/user':
     get:
       summary: Queries a user info.
       operationId: MisesUserByDid
@@ -158,13 +153,15 @@ paths:
                       format: byte
       parameters:
         - name: did
-          in: path
+          in: query
           required: true
           type: string
       tags:
         - User
     post:
       summary: update a user info.
+      consumes:
+        - application/x-www-form-urlencoded
       operationId: MisesUserInfoUpdate
       responses:
         '200':
@@ -192,29 +189,22 @@ paths:
                       type: string
                       format: byte
       parameters:
-        - name: did
-          in: path
-          required: true
+        - in: formData
+          name: msg
           type: string
-        - in: body
-          name: body
-          description: the did to create
+          description: A json string of msg
           required: true
-          schema:
-            type: object
-            properties:
-              encData:
-                type: string
-                description: the encrypted user info
-              iv:
-                type: string
-                description: the decode iv
-              sig:
-                description: signature
-                type: string
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
       tags:
         - User
-  '/mises/user/{did}/relation':
+  '/mises/user/relation':
     get:
       summary: Queries a list of UserRelation items.
       operationId: MisesUserRelationAll
@@ -298,7 +288,7 @@ paths:
                   title: "`Any` contains an arbitrary serialized protocol buffer message along with a\r\nURL that describes the type of the serialized message.\r\n\r\nProtobuf library provides support to pack/unpack Any values in the form\r\nof utility functions or additional generated methods of the Any type.\r\n\r\nExample 1: Pack and unpack a message in C++.\r\n\r\n    Foo foo = ...;\r\n    Any any;\r\n    any.PackFrom(foo);\r\n    ...\r\n    if (any.UnpackTo(&foo)) {\r\n      ...\r\n    }\r\n\r\nExample 2: Pack and unpack a message in Java.\r\n\r\n    Foo foo = ...;\r\n    Any any = Any.pack(foo);\r\n    ...\r\n    if (any.is(Foo.class)) {\r\n      foo = any.unpack(Foo.class);\r\n    }\r\n\r\n Example 3: Pack and unpack a message in Python.\r\n\r\n    foo = Foo(...)\r\n    any = Any()\r\n    any.Pack(foo)\r\n    ...\r\n    if any.Is(Foo.DESCRIPTOR):\r\n      any.Unpack(foo)\r\n      ...\r\n\r\n Example 4: Pack and unpack a message in Go\r\n\r\n     foo := &pb.Foo{...}\r\n     any, err := anypb.New(foo)\r\n     if err != nil {\r\n       ...\r\n     }\r\n     ...\r\n     foo := &pb.Foo{}\r\n     if err := any.UnmarshalTo(foo); err != nil {\r\n       ...\r\n     }\r\n\r\nThe pack methods provided by protobuf library will by default use\r\n'type.googleapis.com/full.type.name' as the type URL and the unpack\r\nmethods only use the fully qualified type name after the last '/'\r\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\r\nname \"y.z\".\r\n\r\n\r\nJSON\r\n====\r\nThe JSON representation of an `Any` value uses the regular\r\nrepresentation of the deserialized, embedded message, with an\r\nadditional field `@type` which contains the type URL. Example:\r\n\r\n    package google.profile;\r\n    message Person {\r\n      string first_name = 1;\r\n      string last_name = 2;\r\n    }\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\r\n      \"firstName\": <string>,\r\n      \"lastName\": <string>\r\n    }\r\n\r\nIf the embedded message type is well-known and has a custom JSON\r\nrepresentation, that representation will be embedded adding a field\r\n`value` which holds the custom JSON in addition to the `@type`\r\nfield. Example (for message [google.protobuf.Duration][]):\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\r\n      \"value\": \"1.212s\"\r\n    }"
       parameters:
         - name: did
-          in: path
+          in: query
           required: true
           type: string
         - name: relType
@@ -364,6 +354,8 @@ paths:
         - User
     post:
       summary: update a user relation.
+      consumes:
+        - application/x-www-form-urlencoded
       operationId: MisesUserRelationUpdate
       responses:
         '200':
@@ -391,30 +383,22 @@ paths:
                       type: string
                       format: byte
       parameters:
-        - name: did
-          in: path
-          required: true
+        - in: formData
+          name: msg
           type: string
-        - in: body
-          name: body
-          description: the relation to create
+          description: A json string of msg
           required: true
-          schema:
-            type: object
-            properties:
-              toDid:
-                type: string
-                description: relation to user did
-              action:
-                type: string
-                enum: [follow, unfollow, block, unblock]
-                description: the action should be perform on the relation [follow, unfollow, block, unblock]
-              sig:
-                description: signature
-                type: string
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
       tags:
         - User
-  '/mises/tx/{txhash}':
+  '/mises/tx':
     get:
       summary: Get a Tx by hash
       tags:
@@ -423,7 +407,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: path
+        - in: query
           name: txhash
           description: Tx hash
           required: true

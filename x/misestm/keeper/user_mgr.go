@@ -3,7 +3,6 @@ package keeper
 import (
 	"bytes"
 	"context"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -27,7 +26,7 @@ var _ types.UserMgr = &userMgr{}
 
 func (k *userMgr) GetUserAccount(ctx sdk.Context, did string) (*types.MisesAccount, error) {
 	ak := k.ak
-	addr, err := k.AddrFormDid(did)
+	addr, err := types.AddrFormDid(did)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +41,6 @@ func (k *userMgr) GetUserAccount(ctx sdk.Context, did string) (*types.MisesAccou
 	return &misesAcc, nil
 }
 
-func (k *userMgr) AddrFormDid(did string) (sdk.AccAddress, error) {
-	addrStr := strings.Replace(did, "did:mises:", "", 1)
-
-	return sdk.AccAddressFromBech32(addrStr)
-}
 
 func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (ret *types.UserRelation, err error) {
 	if didFrom == didTo {

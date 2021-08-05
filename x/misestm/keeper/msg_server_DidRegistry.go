@@ -33,7 +33,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	if err != nil {
 		return nil, err
 	}
-	addr, err := userMgr.AddrFormDid(DidRegistry.Did)
+	addr, err := types.AddrFormDid(DidRegistry.Did)
 	if err != nil {
 		return nil, err
 	}

@@ -1,8 +1,9 @@
 package rest
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,6 +12,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/btcsuite/btcd/btcec"
+	tmbtcec "github.com/tendermint/btcd/btcec"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
@@ -157,12 +163,12 @@ func prepareSigner(clientCtx client.Context) (client.Context, error) {
 func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.RestCreateDidRequest
-		body, err := ioutil.ReadAll(r.Body)
+		reqMsg, err := ParseReqeustBody(clientCtx, r, true)
 		if rest.CheckBadRequestError(w, err) {
 			return
 		}
 		// NOTE: amino is used intentionally here, don't migrate it!
-		err = clientCtx.Codec.UnmarshalJSON(body, &req)
+		err = clientCtx.Codec.UnmarshalJSON(reqMsg, &req)
 		if err != nil {
 			if rest.CheckBadRequestError(w, err) {
 				return
@@ -176,10 +182,10 @@ func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 
 		msg := types.NewMsgCreateDidRegistry(
 			clientCtx.FromAddress.String(),
-			req.Did,
-			req.Did+"#key0",
+			req.MisesId,
+			req.MisesId+"#key0",
 			"EcdsaSecp256k1VerificationKey2019", // will shift to Ed25519VerificationKey2020
-			req.Pkey,
+			req.PubKey,
 			0,
 		)
 		if err := msg.ValidateBasic(); err != nil {
@@ -198,30 +204,97 @@ func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		resp := &types.RestCreateDidResponse{TxResponse: res}
+		resp := &types.RestTxResponse{TxResponse: res}
 
 		PostProcessResponseBare(w, clientCtx, resp)
 	}
+}
+
+func convertDERtoBER(signatureDER []byte) ([]byte, error) {
+	sigDER, err := btcec.ParseDERSignature(signatureDER, btcec.S256())
+	if err != nil {
+		return nil, err
+	}
+	sigBER := tmbtcec.Signature{R: sigDER.R, S: sigDER.S}
+	return sigBER.Serialize(), nil
+}
+
+
+func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid bool) ([]byte, error) {
+	if err := r.ParseForm(); err != nil {
+		return nil, err
+	}
+	msg := r.Form.Get("msg")
+	sig := r.Form.Get("sig")
+	nonce := r.Form.Get("nonce")
+	msgToSign := msg + "&" + nonce
+	var pubKey cryptotypes.PubKey
+	if !isCreateDid {
+		var msgReq types.MsgReqBase
+		err := json.Unmarshal([]byte(msg), &msgReq)
+		if err != nil {
+			return nil, err
+		}
+		if err := clientCtx.AccountRetriever.EnsureExists(clientCtx, sdk.AccAddress(msgReq.MisesID)); err != nil {
+			return nil, err
+		}
+		account, err := clientCtx.AccountRetriever.GetAccount(clientCtx, sdk.AccAddress(msgReq.MisesID))
+		if err != nil {
+			return nil, err
+		}
+		pubKey = account.GetPubKey()
+	} else {
+		var msgReq types.MsgCreateMisesID
+		err := json.Unmarshal([]byte(msg), &msgReq)
+		if err != nil {
+			return nil, err
+		}
+		addr, err := types.AddrFormDid(msgReq.MisesID)
+		if err != nil {
+			return nil, err
+		}
+		if err := clientCtx.AccountRetriever.EnsureExists(clientCtx, addr); err == nil {
+			return nil, errors.New("user already exsit")
+		}
+		key, err := hex.DecodeString(msgReq.PubKey)
+		if err != nil {
+			return nil, err
+		}
+		pubKey = &secp256k1.PubKey{Key: key}
+		if err != nil {
+			return nil, err
+		}
+	}
+	sigBytes, err := hex.DecodeString(sig)
+	if err != nil {
+		return nil, err
+	}
+	sigBytes, err = convertDERtoBER(sigBytes)
+	if err != nil {
+		return nil, err
+	}
+	if !pubKey.VerifySignature([]byte(msgToSign), sigBytes) {
+		return nil, errors.New("wrong signature")
+	}
+
+	return []byte(msg), nil
+
 }
 
 // HandleUpdateUserInfoRequest the UpdateUserInfoRequest http handler
 func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.RestUpdateUserInfoRequest
-		body, err := ioutil.ReadAll(r.Body)
+		reqMsg, err := ParseReqeustBody(clientCtx, r, false)
 		if rest.CheckBadRequestError(w, err) {
 			return
 		}
-		// NOTE: amino is used intentionally here, don't migrate it!
-		err = clientCtx.Codec.UnmarshalJSON(body, &req)
+		err = clientCtx.Codec.UnmarshalJSON(reqMsg, &req)
 		if err != nil {
 			if rest.CheckBadRequestError(w, err) {
 				return
 			}
 		}
-
-		vars := mux.Vars(r)
-		req.Did = vars["did"]
 
 		clientCtx, err = prepareSigner(clientCtx)
 		if rest.CheckInternalServerError(w, err) {
@@ -252,7 +325,7 @@ func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		resp := &types.RestCreateDidResponse{TxResponse: res}
+		resp := &types.RestTxResponse{TxResponse: res}
 
 		PostProcessResponseBare(w, clientCtx, resp)
 	}
@@ -263,12 +336,12 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var req types.RestUpdateUserRelationRequest
-		body, err := ioutil.ReadAll(r.Body)
+		reqMsg, err := ParseReqeustBody(clientCtx, r, true)
 		if rest.CheckBadRequestError(w, err) {
 			return
 		}
 		// NOTE: amino is used intentionally here, don't migrate it!
-		err = clientCtx.Codec.UnmarshalJSON(body, &req)
+		err = clientCtx.Codec.UnmarshalJSON(reqMsg, &req)
 		if err != nil {
 			if rest.CheckBadRequestError(w, err) {
 				return
@@ -317,7 +390,7 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 			return
 		}
 
-		resp := &types.RestUpdateUserRelationResponse{TxResponse: res}
+		resp := &types.RestTxResponse{TxResponse: res}
 
 		PostProcessResponseBare(w, clientCtx, resp)
 	}

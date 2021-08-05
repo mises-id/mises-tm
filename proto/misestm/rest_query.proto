@@ -15,17 +15,17 @@ service RestQuery {
 
 	// query a did
 	rpc QueryDid(RestQueryDidRequest) returns (RestQueryDidResponse) {
-		option (google.api.http).get = "/mises/did/{did}";
+		option (google.api.http).get = "/mises/did";
 	}
 
 	// query a user info
 	rpc QueryUser(RestQueryUserRequest) returns (RestQueryUserResponse) {
-		option (google.api.http).get = "/mises/user/{did}";
+		option (google.api.http).get = "/mises/user";
 	}
 
 	// query user relations
 	rpc QueryUserRelation(RestQueryUserRelationRequest) returns (RestQueryUserRelationResponse) {
-		option (google.api.http).get = "/mises/user/{did}/relation";
+		option (google.api.http).get = "/mises/user/relation";
 	}
 
 
