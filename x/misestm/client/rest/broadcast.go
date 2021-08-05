@@ -6,13 +6,14 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/btcsuite/btcutil/base58"
 	"github.com/btcsuite/btcd/btcec"
 	tmbtcec "github.com/tendermint/btcd/btcec"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -180,12 +181,17 @@ func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
+		pubKeyBytes, err := hex.DecodeString(req.PubKey)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
 		msg := types.NewMsgCreateDidRegistry(
 			clientCtx.FromAddress.String(),
 			req.MisesId,
 			req.MisesId+"#key0",
 			"EcdsaSecp256k1VerificationKey2019", // will shift to Ed25519VerificationKey2020
-			req.PubKey,
+			base58.Encode(pubKeyBytes),
 			0,
 		)
 		if err := msg.ValidateBasic(); err != nil {
@@ -235,10 +241,14 @@ func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid boo
 		if err != nil {
 			return nil, err
 		}
-		if err := clientCtx.AccountRetriever.EnsureExists(clientCtx, sdk.AccAddress(msgReq.MisesID)); err != nil {
+		addr, err := types.AddrFormDid(msgReq.MisesID)
+		if err != nil {
 			return nil, err
 		}
-		account, err := clientCtx.AccountRetriever.GetAccount(clientCtx, sdk.AccAddress(msgReq.MisesID))
+		if err := clientCtx.AccountRetriever.EnsureExists(clientCtx, addr); err != nil {
+			return nil, err
+		}
+		account, err := clientCtx.AccountRetriever.GetAccount(clientCtx, addr)
 		if err != nil {
 			return nil, err
 		}
@@ -304,9 +314,9 @@ func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 		msg := types.NewMsgUpdateUserInfo(
 			clientCtx.FromAddress.String(),
 			types.InvalidID,
-			req.Did,
-			req.EncData,
-			req.Iv,
+			req.MisesId,
+			req.PriInfo.EncData,
+			req.PriInfo.Iv,
 			0,
 		)
 		if err := msg.ValidateBasic(); err != nil {
@@ -336,7 +346,7 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var req types.RestUpdateUserRelationRequest
-		reqMsg, err := ParseReqeustBody(clientCtx, r, true)
+		reqMsg, err := ParseReqeustBody(clientCtx, r, false)
 		if rest.CheckBadRequestError(w, err) {
 			return
 		}
@@ -347,9 +357,6 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 				return
 			}
 		}
-
-		vars := mux.Vars(r)
-		req.Did = vars["did"]
 
 		clientCtx, err = prepareSigner(clientCtx)
 		if rest.CheckInternalServerError(w, err) {
@@ -369,8 +376,8 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 
 		msg := types.NewMsgCreateUserRelation(
 			clientCtx.FromAddress.String(),
-			req.Did,
-			req.ToDid,
+			req.MisesId,
+			req.TargetId,
 			action,
 			0,
 		)

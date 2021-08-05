@@ -33,7 +33,7 @@ service RestQuery {
 }
 
 message RestQueryDidRequest {
-	string did = 1;
+	string mises_id = 1;
 }
 
 message RestQueryDidResponse {
@@ -42,7 +42,7 @@ message RestQueryDidResponse {
 
 
 message RestQueryUserRequest {
-	string did = 1;
+	string mises_id = 1;
 }
 
 message RestQueryUserResponse {
@@ -50,7 +50,7 @@ message RestQueryUserResponse {
 }
 
 message RestQueryUserRelationRequest {
-	string did = 1;
+	string mises_id = 1;
 	string filter = 2;
 	cosmos.base.query.v1beta1.PageRequest pagination = 3;
 }

@@ -47,19 +47,26 @@ message RestCreateDidRequest {
 	string pub_key = 2;
 }
 
+message PrivateUserInfo {
+	string enc_data = 1;
+	string iv = 2;
+}
+message PublicUserInfo {
+	string name = 1;
+	string gender = 2;
+	string intro = 3;
+}
 
 message RestUpdateUserInfoRequest {
-	string did = 1;
-	string encData = 2;
-	string iv = 3;
-	string sig = 4;
+	string mises_id = 1;
+	PublicUserInfo pub_info = 2;
+	PrivateUserInfo pri_info = 3;
 }
 
 message RestUpdateUserRelationRequest {
-	string did = 1;
-	string toDid = 2;
+	string mises_id = 1;
+	string target_id = 2;
 	string action = 3;
-	string sig = 4;
 }
 
 

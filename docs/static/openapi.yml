@@ -6917,7 +6917,7 @@ paths:
                         specified type.
                   title: "`Any` contains an arbitrary serialized protocol buffer message along with a\r\nURL that describes the type of the serialized message.\r\n\r\nProtobuf library provides support to pack/unpack Any values in the form\r\nof utility functions or additional generated methods of the Any type.\r\n\r\nExample 1: Pack and unpack a message in C++.\r\n\r\n    Foo foo = ...;\r\n    Any any;\r\n    any.PackFrom(foo);\r\n    ...\r\n    if (any.UnpackTo(&foo)) {\r\n      ...\r\n    }\r\n\r\nExample 2: Pack and unpack a message in Java.\r\n\r\n    Foo foo = ...;\r\n    Any any = Any.pack(foo);\r\n    ...\r\n    if (any.is(Foo.class)) {\r\n      foo = any.unpack(Foo.class);\r\n    }\r\n\r\n Example 3: Pack and unpack a message in Python.\r\n\r\n    foo = Foo(...)\r\n    any = Any()\r\n    any.Pack(foo)\r\n    ...\r\n    if any.Is(Foo.DESCRIPTOR):\r\n      any.Unpack(foo)\r\n      ...\r\n\r\n Example 4: Pack and unpack a message in Go\r\n\r\n     foo := &pb.Foo{...}\r\n     any, err := anypb.New(foo)\r\n     if err != nil {\r\n       ...\r\n     }\r\n     ...\r\n     foo := &pb.Foo{}\r\n     if err := any.UnmarshalTo(foo); err != nil {\r\n       ...\r\n     }\r\n\r\nThe pack methods provided by protobuf library will by default use\r\n'type.googleapis.com/full.type.name' as the type URL and the unpack\r\nmethods only use the fully qualified type name after the last '/'\r\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\r\nname \"y.z\".\r\n\r\n\r\nJSON\r\n====\r\nThe JSON representation of an `Any` value uses the regular\r\nrepresentation of the deserialized, embedded message, with an\r\nadditional field `@type` which contains the type URL. Example:\r\n\r\n    package google.profile;\r\n    message Person {\r\n      string first_name = 1;\r\n      string last_name = 2;\r\n    }\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\r\n      \"firstName\": <string>,\r\n      \"lastName\": <string>\r\n    }\r\n\r\nIf the embedded message type is well-known and has a custom JSON\r\nrepresentation, that representation will be embedded adding a field\r\n`value` which holds the custom JSON in addition to the `@type`\r\nfield. Example (for message [google.protobuf.Duration][]):\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\r\n      \"value\": \"1.212s\"\r\n    }"
       parameters:
-        - name: did
+        - name: misesId
           in: query
           required: false
           type: string
@@ -7287,7 +7287,7 @@ paths:
                         specified type.
                   title: "`Any` contains an arbitrary serialized protocol buffer message along with a\r\nURL that describes the type of the serialized message.\r\n\r\nProtobuf library provides support to pack/unpack Any values in the form\r\nof utility functions or additional generated methods of the Any type.\r\n\r\nExample 1: Pack and unpack a message in C++.\r\n\r\n    Foo foo = ...;\r\n    Any any;\r\n    any.PackFrom(foo);\r\n    ...\r\n    if (any.UnpackTo(&foo)) {\r\n      ...\r\n    }\r\n\r\nExample 2: Pack and unpack a message in Java.\r\n\r\n    Foo foo = ...;\r\n    Any any = Any.pack(foo);\r\n    ...\r\n    if (any.is(Foo.class)) {\r\n      foo = any.unpack(Foo.class);\r\n    }\r\n\r\n Example 3: Pack and unpack a message in Python.\r\n\r\n    foo = Foo(...)\r\n    any = Any()\r\n    any.Pack(foo)\r\n    ...\r\n    if any.Is(Foo.DESCRIPTOR):\r\n      any.Unpack(foo)\r\n      ...\r\n\r\n Example 4: Pack and unpack a message in Go\r\n\r\n     foo := &pb.Foo{...}\r\n     any, err := anypb.New(foo)\r\n     if err != nil {\r\n       ...\r\n     }\r\n     ...\r\n     foo := &pb.Foo{}\r\n     if err := any.UnmarshalTo(foo); err != nil {\r\n       ...\r\n     }\r\n\r\nThe pack methods provided by protobuf library will by default use\r\n'type.googleapis.com/full.type.name' as the type URL and the unpack\r\nmethods only use the fully qualified type name after the last '/'\r\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\r\nname \"y.z\".\r\n\r\n\r\nJSON\r\n====\r\nThe JSON representation of an `Any` value uses the regular\r\nrepresentation of the deserialized, embedded message, with an\r\nadditional field `@type` which contains the type URL. Example:\r\n\r\n    package google.profile;\r\n    message Person {\r\n      string first_name = 1;\r\n      string last_name = 2;\r\n    }\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\r\n      \"firstName\": <string>,\r\n      \"lastName\": <string>\r\n    }\r\n\r\nIf the embedded message type is well-known and has a custom JSON\r\nrepresentation, that representation will be embedded adding a field\r\n`value` which holds the custom JSON in addition to the `@type`\r\nfield. Example (for message [google.protobuf.Duration][]):\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\r\n      \"value\": \"1.212s\"\r\n    }"
       parameters:
-        - name: did
+        - name: misesId
           in: query
           required: false
           type: string
@@ -7445,14 +7445,24 @@ paths:
           schema:
             type: object
             properties:
-              did:
+              misesId:
                 type: string
-              encData:
-                type: string
-              iv:
-                type: string
-              sig:
-                type: string
+              pubInfo:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  gender:
+                    type: string
+                  intro:
+                    type: string
+              priInfo:
+                type: object
+                properties:
+                  encData:
+                    type: string
+                  iv:
+                    type: string
       tags:
         - RestTx
   /mises/user/relation:
@@ -7538,7 +7548,7 @@ paths:
                         specified type.
                   title: "`Any` contains an arbitrary serialized protocol buffer message along with a\r\nURL that describes the type of the serialized message.\r\n\r\nProtobuf library provides support to pack/unpack Any values in the form\r\nof utility functions or additional generated methods of the Any type.\r\n\r\nExample 1: Pack and unpack a message in C++.\r\n\r\n    Foo foo = ...;\r\n    Any any;\r\n    any.PackFrom(foo);\r\n    ...\r\n    if (any.UnpackTo(&foo)) {\r\n      ...\r\n    }\r\n\r\nExample 2: Pack and unpack a message in Java.\r\n\r\n    Foo foo = ...;\r\n    Any any = Any.pack(foo);\r\n    ...\r\n    if (any.is(Foo.class)) {\r\n      foo = any.unpack(Foo.class);\r\n    }\r\n\r\n Example 3: Pack and unpack a message in Python.\r\n\r\n    foo = Foo(...)\r\n    any = Any()\r\n    any.Pack(foo)\r\n    ...\r\n    if any.Is(Foo.DESCRIPTOR):\r\n      any.Unpack(foo)\r\n      ...\r\n\r\n Example 4: Pack and unpack a message in Go\r\n\r\n     foo := &pb.Foo{...}\r\n     any, err := anypb.New(foo)\r\n     if err != nil {\r\n       ...\r\n     }\r\n     ...\r\n     foo := &pb.Foo{}\r\n     if err := any.UnmarshalTo(foo); err != nil {\r\n       ...\r\n     }\r\n\r\nThe pack methods provided by protobuf library will by default use\r\n'type.googleapis.com/full.type.name' as the type URL and the unpack\r\nmethods only use the fully qualified type name after the last '/'\r\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\r\nname \"y.z\".\r\n\r\n\r\nJSON\r\n====\r\nThe JSON representation of an `Any` value uses the regular\r\nrepresentation of the deserialized, embedded message, with an\r\nadditional field `@type` which contains the type URL. Example:\r\n\r\n    package google.profile;\r\n    message Person {\r\n      string first_name = 1;\r\n      string last_name = 2;\r\n    }\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\r\n      \"firstName\": <string>,\r\n      \"lastName\": <string>\r\n    }\r\n\r\nIf the embedded message type is well-known and has a custom JSON\r\nrepresentation, that representation will be embedded adding a field\r\n`value` which holds the custom JSON in addition to the `@type`\r\nfield. Example (for message [google.protobuf.Duration][]):\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\r\n      \"value\": \"1.212s\"\r\n    }"
       parameters:
-        - name: did
+        - name: misesId
           in: query
           required: false
           type: string
@@ -7753,13 +7763,11 @@ paths:
           schema:
             type: object
             properties:
-              did:
+              misesId:
                 type: string
-              toDid:
+              targetId:
                 type: string
               action:
-                type: string
-              sig:
                 type: string
       tags:
         - RestTx
@@ -12837,6 +12845,22 @@ definitions:
     type: object
   misesid.misestm.misestm.MsgUpdateUserRelationResponse:
     type: object
+  misesid.misestm.misestm.PrivateUserInfo:
+    type: object
+    properties:
+      encData:
+        type: string
+      iv:
+        type: string
+  misesid.misestm.misestm.PublicUserInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      gender:
+        type: string
+      intro:
+        type: string
   misesid.misestm.misestm.QueryAllAppInfoResponse:
     type: object
     properties:
@@ -13341,24 +13365,32 @@ definitions:
   misesid.misestm.misestm.RestUpdateUserInfoRequest:
     type: object
     properties:
-      did:
+      misesId:
         type: string
-      encData:
-        type: string
-      iv:
-        type: string
-      sig:
-        type: string
+      pubInfo:
+        type: object
+        properties:
+          name:
+            type: string
+          gender:
+            type: string
+          intro:
+            type: string
+      priInfo:
+        type: object
+        properties:
+          encData:
+            type: string
+          iv:
+            type: string
   misesid.misestm.misestm.RestUpdateUserRelationRequest:
     type: object
     properties:
-      did:
+      misesId:
         type: string
-      toDid:
+      targetId:
         type: string
       action:
-        type: string
-      sig:
         type: string
   misesid.misestm.misestm.UserInfo:
     type: object

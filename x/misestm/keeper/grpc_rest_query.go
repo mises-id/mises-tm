@@ -15,18 +15,18 @@ import (
 var _ types.RestQueryServer = Keeper{}
 
 func (k Keeper) QueryDid(c context.Context, req *types.RestQueryDidRequest) (*types.RestQueryDidResponse, error) {
-	if req == nil {
+ 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	var DidRegistry types.DidRegistry
 	ctx := sdk.UnwrapSDKContext(c)
 	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.Did)
+	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
 	if err != nil {
 		return nil, err
 	}
 	if misesAcc == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.Did)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
@@ -42,13 +42,13 @@ func (k Keeper) QueryUser(c context.Context, req *types.RestQueryUserRequest) (*
 	var UserInfo types.UserInfo
 	ctx := sdk.UnwrapSDKContext(c)
 	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.Did)
+	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
 	if err != nil {
 		return nil, err
 	}
 
 	if misesAcc == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.Did)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
@@ -64,15 +64,15 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.Did)
+	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
 	if err != nil {
 		return nil, err
 	}
 
 	if misesAcc == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.Did)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
-	UserRelations, err := userMgr.GetUserRelations(ctx, req.Did, string(req.Pagination.Key), int(req.Pagination.Limit))
+	UserRelations, err := userMgr.GetUserRelations(ctx, req.MisesId, string(req.Pagination.Key), int(req.Pagination.Limit))
 	if err != nil {
 		return nil, err
 	}
