@@ -7244,23 +7244,36 @@ paths:
           schema:
             type: object
             properties:
-              userInfo:
+              pubInfo:
                 type: object
                 properties:
-                  creator:
+                  name:
                     type: string
-                  id:
+                  gender:
                     type: string
-                    format: uint64
-                  uid:
+                  avatarDid:
                     type: string
+                  avatarThumb:
+                    type: string
+                  homePage:
+                    type: string
+                  emails:
+                    type: array
+                    items:
+                      type: string
+                  telephones:
+                    type: array
+                    items:
+                      type: string
+                  intro:
+                    type: string
+              priInfo:
+                type: object
+                properties:
                   encData:
                     type: string
                   iv:
                     type: string
-                  version:
-                    type: string
-                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -7454,6 +7467,20 @@ paths:
                     type: string
                   gender:
                     type: string
+                  avatarDid:
+                    type: string
+                  avatarThumb:
+                    type: string
+                  homePage:
+                    type: string
+                  emails:
+                    type: array
+                    items:
+                      type: string
+                  telephones:
+                    type: array
+                    items:
+                      type: string
                   intro:
                     type: string
               priInfo:
@@ -12851,6 +12878,20 @@ definitions:
         type: string
       gender:
         type: string
+      avatarDid:
+        type: string
+      avatarThumb:
+        type: string
+      homePage:
+        type: string
+      emails:
+        type: array
+        items:
+          type: string
+      telephones:
+        type: array
+        items:
+          type: string
       intro:
         type: string
   misesid.misestm.misestm.QueryAllAppInfoResponse:
@@ -13212,23 +13253,36 @@ definitions:
   misesid.misestm.misestm.RestQueryUserResponse:
     type: object
     properties:
-      userInfo:
+      pubInfo:
         type: object
         properties:
-          creator:
+          name:
             type: string
-          id:
+          gender:
             type: string
-            format: uint64
-          uid:
+          avatarDid:
             type: string
+          avatarThumb:
+            type: string
+          homePage:
+            type: string
+          emails:
+            type: array
+            items:
+              type: string
+          telephones:
+            type: array
+            items:
+              type: string
+          intro:
+            type: string
+      priInfo:
+        type: object
+        properties:
           encData:
             type: string
           iv:
             type: string
-          version:
-            type: string
-            format: uint64
   misesid.misestm.misestm.RestTxResponse:
     type: object
     properties:
@@ -13353,6 +13407,20 @@ definitions:
             type: string
           gender:
             type: string
+          avatarDid:
+            type: string
+          avatarThumb:
+            type: string
+          homePage:
+            type: string
+          emails:
+            type: array
+            items:
+              type: string
+          telephones:
+            type: array
+            items:
+              type: string
           intro:
             type: string
       priInfo:

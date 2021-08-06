@@ -54,7 +54,12 @@ message PrivateUserInfo {
 message PublicUserInfo {
 	string name = 1;
 	string gender = 2;
-	string intro = 3;
+	string avatar_did = 3;
+	string avatar_thumb = 4;
+	string home_page = 5;
+	repeated string emails = 6;
+	repeated string telephones = 7;
+	string intro = 8;
 }
 
 message RestUpdateUserInfoRequest {

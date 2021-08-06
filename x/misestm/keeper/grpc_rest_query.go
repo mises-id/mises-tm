@@ -51,10 +51,17 @@ func (k Keeper) QueryUser(c context.Context, req *types.RestQueryUserRequest) (*
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
 	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(misesAcc.UserInfoID)), &UserInfo)
 
-	return &types.RestQueryUserResponse{UserInfo: &UserInfo}, nil
+	pubInfo := types.PublicUserInfo{
+	}
+	priInfo := types.PrivateUserInfo{
+		EncData: UserInfo.EncData,
+		Iv:   UserInfo.Iv,
+	}
+
+	return &types.RestQueryUserResponse{PubInfo: &pubInfo, PriInfo:&priInfo}, nil
 }
 
 // query user relations
