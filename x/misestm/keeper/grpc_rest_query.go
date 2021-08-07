@@ -86,7 +86,11 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 			Limit: 100,
 		}
 	}
-	UserRelations, err := userMgr.GetUserRelations(ctx, req.MisesId, string(pagination.Key), int(pagination.Limit))
+	relType := uint64(0)
+	if req.Filter == "following" {
+		relType = types.RelTypeBitFollow
+	}
+	UserRelations, err := userMgr.GetUserRelations(ctx, relType, req.MisesId, string(pagination.Key), int(pagination.Limit))
 	if err != nil {
 		return nil, err
 	}

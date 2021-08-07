@@ -30,7 +30,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.33.2
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20210726035515-e495b92fa609
+replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20210807072059-c4a752ad7494
 
 replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.16.1-0.20210713120007-802386a4697d
 

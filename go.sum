@@ -558,8 +558,8 @@ github.com/minio/highwayhash v1.0.1 h1:dZ6IIu8Z14VlC0VpfKofAhCy74wu/Qb5gcn52yWoz
 github.com/minio/highwayhash v1.0.1/go.mod h1:BQskDq+xkJ12lmlUUi7U0M5Swg3EWR+dLTk+kldvVxY=
 github.com/mises-id/iavl v0.16.1-0.20210713120007-802386a4697d h1:e1CFsymc2IGw7W5pvstisYHpHO1HNAkYzeo406L4SlA=
 github.com/mises-id/iavl v0.16.1-0.20210713120007-802386a4697d/go.mod h1:j8lyWe8+AQtAx4g6Y7fSOn0WTjAkdfBmuRJ4uScb8zE=
-github.com/mises-id/tm-db v0.6.5-0.20210726035515-e495b92fa609 h1:ThLMUjdbYNTCT/DExnlKVaeVDjVPh8TaJZefSMaaoKU=
-github.com/mises-id/tm-db v0.6.5-0.20210726035515-e495b92fa609/go.mod h1:ZOy4GaBR9dW7Com3PfPRaVP75ktxRPXw9Lm72I78PZE=
+github.com/mises-id/tm-db v0.6.5-0.20210807072059-c4a752ad7494 h1:1fFShnVPgFRQ05kYQzX4IWPYw1zqONDsOjM1lq0X9Ao=
+github.com/mises-id/tm-db v0.6.5-0.20210807072059-c4a752ad7494/go.mod h1:ZOy4GaBR9dW7Com3PfPRaVP75ktxRPXw9Lm72I78PZE=
 github.com/mitchellh/cli v1.0.0/go.mod h1:hNIlj7HEI86fIcpObd7a0FcrxTWetlwJDGcceTlRvqc=
 github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=

@@ -61,7 +61,8 @@ func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string)
 		return nil, err
 	}
 
-	if collection, ok := k.db.Raw().(*mongo.Collection); ok {
+	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
+		collection := db.Collection("UserRelation")
 		filter := bson.M{
 			"uidfrom": bson.M{"$eq": didFrom},
 			"uidto":   bson.M{"$eq": didTo},
@@ -119,7 +120,7 @@ func (k *userMgr) userRelationFromBsonBytes(rawResult []byte) (*types.UserRelati
 	return &UserRelation, nil
 }
 
-func (k *userMgr) GetUserRelations(ctx sdk.Context, didFrom string, lastDidTo string, limit int) ([]*types.UserRelation, error) {
+func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom string, lastDidTo string, limit int) ([]*types.UserRelation, error) {
 	if didFrom == lastDidTo {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "from user must diff from last to user")
 	}
@@ -147,7 +148,8 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, didFrom string, lastDidTo st
 	}
 
 	var UserRelations = []*types.UserRelation{}
-	if collection, ok := k.db.Raw().(*mongo.Collection); ok {
+	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
+		collection := db.Collection("UserRelation")
 		filter := bson.M{
 			"uidfrom":  bson.M{"$eq": didFrom},
 			"isLatest": bson.M{"$eq": 1},
@@ -175,6 +177,11 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, didFrom string, lastDidTo st
 			UserRelation, err := k.userRelationFromBsonBytes(rawResult)
 			if err != nil {
 				return nil, err
+			}
+			if relType != 0 {
+				if (UserRelation.RelType & relType) == 0 {
+					continue
+				}
 			}
 			UserRelations = append(UserRelations, UserRelation)
 			limit--
@@ -205,7 +212,7 @@ func (k *userMgr) setLatestUserRelation(rel *types.UserRelation) (err error) {
 		filter["version"] = bson.M{"$eq": rel.Version - 1}
 
 		err = k.setLatestTag(filter, 0)
-		if err != nil {
+		if err != nil { 
 			return err
 		}
 	}
@@ -222,7 +229,8 @@ func (k *userMgr) setLatestTag(filter bson.M, isLatest uint8) (err error) {
 
 	opts := &options.UpdateOptions{}
 	opts.SetUpsert(false)
-	if collection, ok := k.db.Raw().(*mongo.Collection); ok {
+	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
+		collection := db.Collection("UserRelation")
 
 		_, err = collection.UpdateOne(context.Background(), filter, update, opts)
 
