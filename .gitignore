@@ -3,3 +3,4 @@ vue/dist
 vue/src/store/generated
 secret.yml
 /.vscode
+/build

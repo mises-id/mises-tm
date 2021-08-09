@@ -1,0 +1,138 @@
+version: "3"
+
+services:
+  misestmdnode0:
+    container_name: misestmdnode0
+    image: "misestmd/node"
+    ports:
+      - "26656-26657:26656-26657"
+      - "1317:1317"
+      - "8545:8545"
+      - "8546:8546"
+    environment:
+      - ID=0
+      - LOG=${LOG:-misestmd.log}
+      - MONGO_URL=mongodb://root:example@mongo0:27017
+    volumes:
+      - ./build:/misestm:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.2
+    entrypoint: "bash start.sh"
+    depends_on:
+      - mongo0
+
+  misestmdnode1:
+    container_name: misestmdnode1
+    image: "misestmd/node"
+    ports:
+      - "26659-26660:26656-26657"
+      - "1318:1317"
+      - "8547:8545"
+      - "8548:8546"
+    environment:
+      - ID=1
+      - LOG=${LOG:-misestmd.log}
+      - MONGO_URL=mongodb://root:example@mongo1:27017
+    volumes:
+      - ./build:/misestm:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.3
+    entrypoint: "bash start.sh"
+    depends_on:
+      - mongo1
+
+  misestmdnode2:
+    container_name: misestmdnode2
+    image: "misestmd/node"
+    environment:
+      - ID=2
+      - LOG=${LOG:-misestmd.log}
+      - MONGO_URL=mongodb://root:example@mongo2:27017
+    ports:
+      - "26661-26662:26656-26657"
+      - "1319:1317"
+      - "8549:8545"
+      - "8550:8546"
+    volumes:
+      - ./build:/misestm:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.4
+    entrypoint: "bash start.sh"
+    depends_on:
+      - mongo2
+
+  misestmdnode3:
+    container_name: misestmdnode3
+    image: "misestmd/node"
+    environment:
+      - ID=3
+      - LOG=${LOG:-misestmd.log}
+      - MONGO_URL=mongodb://root:example@mongo3:27017
+    ports:
+      - "26663-26664:26656-26657"
+      - "1320:1317"
+      - "8551:8545"
+      - "8552:8546"
+    volumes:
+      - ./build:/misestm:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.5
+    entrypoint: "bash start.sh"
+    depends_on:
+      - mongo3
+
+  mongo0:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.100
+  mongo1:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27018:27017
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.101
+  mongo2:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27019:27017
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.102
+  mongo3:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27020:27017
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.103
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/16
