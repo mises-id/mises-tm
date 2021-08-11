@@ -6,17 +6,15 @@ import (
 	"errors"
 	"net/http"
 
-	
-
+	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcutil/base58"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/btcsuite/btcutil/base58"
-	"github.com/btcsuite/btcd/btcec"
-	tmbtcec "github.com/tendermint/btcd/btcec"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tmbtcec "github.com/tendermint/btcd/btcec"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -25,10 +23,10 @@ import (
 	"github.com/mises-id/mises-tm/x/misestm/types"
 )
 
-func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error) {
+func prepareFactory(clientCtx client.Context, txf tx.Factory) tx.Factory {
 	gasSetting := flags.GasSetting{
-		Simulate: true,
-		Gas:      10000,
+		Simulate: false,
+		Gas:      100000,
 	}
 	txf = txf.
 		WithTxConfig(clientCtx.TxConfig).
@@ -42,30 +40,11 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error
 		WithMemo("memo").
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT)
 
-	from := clientCtx.GetFromAddress()
-	if from != nil {
-		if err := txf.AccountRetriever().EnsureExists(clientCtx, from); err != nil {
-			return txf, err
-		}
+	seq := <-SeqInfoChan
+	txf = txf.WithAccountNumber(seq.nextNum)
+	txf = txf.WithSequence(seq.nextSeq)
 
-		initNum, initSeq := txf.AccountNumber(), txf.Sequence()
-		if initNum == 0 || initSeq == 0 {
-			num, seq, err := txf.AccountRetriever().GetAccountNumberSequence(clientCtx, from)
-			if err != nil {
-				return txf, err
-			}
-
-			if initNum == 0 {
-				txf = txf.WithAccountNumber(num)
-			}
-
-			if initSeq == 0 {
-				txf = txf.WithSequence(seq)
-			}
-		}
-	}
-
-	return txf, nil
+	return txf
 }
 
 // CalculateGas simulates the execution of a transaction and returns the
@@ -107,7 +86,7 @@ func broadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 
 	txb.SetFeeGranter(clientCtx.GetFeeGranterAddress())
 
-	err = authclient.SignTx(txf, clientCtx, clientCtx.GetFromName(), txb, clientCtx.Offline, true)
+	err = authclient.SignTx(txf, clientCtx, clientCtx.GetFromName(), txb, true, true)
 	if err != nil {
 		return nil, err
 	}
@@ -117,10 +96,14 @@ func broadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 		return nil, err
 	}
 
+	//types.Logger.Error(fmt.Sprintf("BroadcastTx start with seq %v", txf.Sequence()))
+
 	res, err := clientCtx.BroadcastTx(txBytes)
 	if err != nil {
 		return nil, err
 	}
+
+	//types.Logger.Error(fmt.Sprintf("BroadcastTx finish with code %v", res.Code))
 
 	return res, nil
 }
@@ -129,27 +112,10 @@ func prepareSigner(clientCtx client.Context) (client.Context, error) {
 	if clientCtx.ChainID == "" {
 		clientCtx = clientCtx.WithChainID("mises")
 	}
-	if clientCtx.Keyring == nil {
-		keyring, err := client.NewKeyringFromBackend(clientCtx, keyring.BackendTest)
-		if err != nil {
-			return clientCtx, err
-		}
-		clientCtx = clientCtx.WithKeyring(keyring)
-	}
-
-	keyring := clientCtx.Keyring
-
-	// keyname := "signer"
-	// key, err := keyring.Key(keyname)
-
-	keyList, err := keyring.List()
+	keyring, key, err := getLocalSignerKey(clientCtx)
 	if err != nil {
-		return clientCtx, err
+		panic(err)
 	}
-	if len(keyList) == 0 {
-		return clientCtx, errors.New("no local keyring")
-	}
-	key := keyList[0]
 	keyname := key.GetName()
 	keyaddr := key.GetAddress()
 
@@ -200,20 +166,33 @@ func HandleCreateDidRequest(clientCtx client.Context) http.HandlerFunc {
 			}
 		}
 		txf := tx.Factory{}
-		txf, err = prepareFactory(clientCtx, txf)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
+		txf = prepareFactory(clientCtx, txf)
 
 		res, err := broadcastTx(clientCtx, txf, msg)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
 
-		resp := &types.RestTxResponse{TxResponse: res}
+		postBroadcastTx(clientCtx, res, err, w)
 
-		PostProcessResponseBare(w, clientCtx, resp)
 	}
+}
+
+func postBroadcastTx(clientCtx client.Context, res *sdk.TxResponse, err error, w http.ResponseWriter) {
+	if rest.CheckInternalServerError(w, err) {
+		SeqCmdChan <- -1
+		return
+	}
+	if res.Code == sdkerrors.ErrWrongSequence.ABCICode() {
+		//reset cmdSeqChan
+		SeqCmdChan <- 1
+	} else {
+		SeqCmdChan <- 0
+	}
+
+	resp := &types.RestTxResponse{TxResponse: res}
+	if res.Code != 0 {
+		resp.Code = res.Code
+	}
+
+	PostProcessResponseBare(w, clientCtx, resp)
 }
 
 func convertDERtoBER(signatureDER []byte) ([]byte, error) {
@@ -224,7 +203,6 @@ func convertDERtoBER(signatureDER []byte) ([]byte, error) {
 	sigBER := tmbtcec.Signature{R: sigDER.R, S: sigDER.S}
 	return sigBER.Serialize(), nil
 }
-
 
 func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid bool) ([]byte, error) {
 	if err := r.ParseForm(); err != nil {
@@ -325,19 +303,10 @@ func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 			}
 		}
 		txf := tx.Factory{}
-		txf, err = prepareFactory(clientCtx, txf)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
+		txf = prepareFactory(clientCtx, txf)
 
 		res, err := broadcastTx(clientCtx, txf, msg)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
-
-		resp := &types.RestTxResponse{TxResponse: res}
-
-		PostProcessResponseBare(w, clientCtx, resp)
+		postBroadcastTx(clientCtx, res, err, w)
 	}
 }
 
@@ -387,18 +356,9 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 			}
 		}
 		txf := tx.Factory{}
-		txf, err = prepareFactory(clientCtx, txf)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
+		txf = prepareFactory(clientCtx, txf)
 
 		res, err := broadcastTx(clientCtx, txf, msg)
-		if rest.CheckInternalServerError(w, err) {
-			return
-		}
-
-		resp := &types.RestTxResponse{TxResponse: res}
-
-		PostProcessResponseBare(w, clientCtx, resp)
+		postBroadcastTx(clientCtx, res, err, w)
 	}
 }

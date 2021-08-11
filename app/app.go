@@ -285,7 +285,6 @@ func New(
 	// add capability keeper and ScopeToModule for ibc module
 	app.CapabilityKeeper = capabilitykeeper.NewKeeper(appCodec, keys[capabilitytypes.StoreKey], memKeys[capabilitytypes.MemStoreKey])
 
-
 	// grant capabilities for the ibc and ibc-transfer modules
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
@@ -640,7 +639,7 @@ func RegisterSwaggerAPI(ctx client.Context, rtr *mux.Router) {
 // RegisterTxService implements the Application.RegisterTxService method.
 func (app *App) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
-	misestmtypes.RegisterBaseAppSimulateFn(app.BaseApp.Simulate)
+	misestmtypes.RegisterBaseAppSimulateFn(app.Logger(), app.BaseApp.Simulate)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.

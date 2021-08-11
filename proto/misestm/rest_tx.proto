@@ -82,4 +82,5 @@ message RestQueryTxRequest {
 message RestTxResponse {
 	// tx_response is the queried TxResponses.
   cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+	uint32 code = 2;
 }

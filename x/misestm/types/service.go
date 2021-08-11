@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
+	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 )
 
@@ -12,10 +12,13 @@ import (
 type baseAppSimulateFn func(txBytes []byte) (sdk.GasInfo, *sdk.Result, error)
 
 var Simulater baseAppSimulateFn
+var Logger log.Logger
 
 func RegisterBaseAppSimulateFn(
+	logger log.Logger,
 	simulateFn baseAppSimulateFn,
 ) {
+	Logger = logger
 	Simulater = simulateFn
 }
 
@@ -30,7 +33,7 @@ type UserMgr interface {
 
 	GetUserAccount(ctx sdk.Context, did string) (*MisesAccount, error)
 	GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (*UserRelation, error)
-	GetUserRelations(ctx sdk.Context, relType uint64,didFrom string, lastDidTo string, limit int) ([]*UserRelation, error)
+	GetUserRelations(ctx sdk.Context, relType uint64, didFrom string, lastDidTo string, limit int) ([]*UserRelation, error)
 }
 
 func AddrFormDid(did string) (sdk.AccAddress, error) {

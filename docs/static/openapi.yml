@@ -7043,6 +7043,9 @@ paths:
                       For height == 1,
 
                       it's genesis time.
+              code:
+                type: integer
+                format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -7202,6 +7205,9 @@ paths:
                       For height == 1,
 
                       it's genesis time.
+              code:
+                type: integer
+                format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -7426,6 +7432,9 @@ paths:
                       For height == 1,
 
                       it's genesis time.
+              code:
+                type: integer
+                format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -7745,6 +7754,9 @@ paths:
                       For height == 1,
 
                       it's genesis time.
+              code:
+                type: integer
+                format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -13395,6 +13407,9 @@ definitions:
               height == 1,
 
               it's genesis time.
+      code:
+        type: integer
+        format: int64
   misesid.misestm.misestm.RestUpdateUserInfoRequest:
     type: object
     properties:
