@@ -4,12 +4,124 @@ package misesid.misestm.misestm;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "misestm/UserInfo.proto";
+import "misestm/UserRelation.proto";
+import "misestm/AppInfo.proto";
+import "misestm/DidRegistry.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a UserInfo by id.
+	rpc UserInfo(QueryGetUserInfoRequest) returns (QueryGetUserInfoResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/UserInfo/{id}";
+	}
+
+	// Queries a list of UserInfo items.
+	rpc UserInfoAll(QueryAllUserInfoRequest) returns (QueryAllUserInfoResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/UserInfo";
+	}
+
+
+	// Queries a UserRelation by id.
+	rpc UserRelation(QueryGetUserRelationRequest) returns (QueryGetUserRelationResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/UserRelation/{id}";
+	}
+
+	// Queries a list of UserRelation items.
+	rpc UserRelationAll(QueryAllUserRelationRequest) returns (QueryAllUserRelationResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/UserRelation";
+	}
+
+
+	// Queries a AppInfo by id.
+	rpc AppInfo(QueryGetAppInfoRequest) returns (QueryGetAppInfoResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/AppInfo/{id}";
+	}
+
+	// Queries a list of AppInfo items.
+	rpc AppInfoAll(QueryAllAppInfoRequest) returns (QueryAllAppInfoResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/AppInfo";
+	}
+
+
+	// Queries a DidRegistry by id.
+	rpc DidRegistry(QueryGetDidRegistryRequest) returns (QueryGetDidRegistryResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/DidRegistry/{id}";
+	}
+
+	// Queries a list of DidRegistry items.
+	rpc DidRegistryAll(QueryAllDidRegistryRequest) returns (QueryAllDidRegistryResponse) {
+		option (google.api.http).get = "/mises-id/misestm/misestm/DidRegistry";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetUserInfoRequest {
+	uint64 id = 1;
+}
+
+message QueryGetUserInfoResponse {
+	UserInfo UserInfo = 1;
+}
+
+message QueryAllUserInfoRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllUserInfoResponse {
+	repeated UserInfo UserInfo = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetUserRelationRequest {
+	uint64 id = 1;
+}
+
+message QueryGetUserRelationResponse {
+	UserRelation UserRelation = 1;
+}
+
+message QueryAllUserRelationRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllUserRelationResponse {
+	repeated UserRelation UserRelation = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetAppInfoRequest {
+	uint64 id = 1;
+}
+
+message QueryGetAppInfoResponse {
+	AppInfo AppInfo = 1;
+}
+
+message QueryAllAppInfoRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAppInfoResponse {
+	repeated AppInfo AppInfo = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetDidRegistryRequest {
+	uint64 id = 1;
+}
+
+message QueryGetDidRegistryResponse {
+	DidRegistry DidRegistry = 1;
+}
+
+message QueryAllDidRegistryRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllDidRegistryResponse {
+	repeated DidRegistry DidRegistry = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

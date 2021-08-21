@@ -13,6 +13,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+	_ "github.com/tendermint/tm-db/metadb"
 )
 
 func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
@@ -26,7 +27,7 @@ func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
 	require.NoError(t, stateStore.LoadLatestVersion())
 
 	registry := codectypes.NewInterfaceRegistry()
-	keeper := NewKeeper(codec.NewProtoCodec(registry), storeKey, memStoreKey)
+	keeper := NewKeeper(codec.NewProtoCodec(registry), storeKey, memStoreKey, nil, nil)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
 	return keeper, ctx

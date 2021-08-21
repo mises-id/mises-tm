@@ -1,0 +1,691 @@
+swagger: '2.0'
+info:
+  title: Mises API Console
+  version: '1.0'
+  description: ''
+paths:
+  '/mises/did':
+    get:
+      summary: Queries a did.
+      operationId: MisesDidByDid
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+               DidRegistry:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  did:
+                    type: string
+                  pkeyDid:
+                    type: string
+                  pkeyType:
+                    type: string
+                  pkeyMultibase:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: mises_id
+          in: query
+          required: true
+          type: string
+      tags:
+        - MisesID
+    post:
+      summary: create a did.
+      consumes:
+        - application/x-www-form-urlencoded
+      operationId: MisesDidCreate
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/GetTxResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - in: formData
+          name: msg
+          type: string
+          description: A json string of msg
+          required: true
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
+      tags:
+        - MisesID 
+  '/mises/user':
+    get:
+      summary: Queries a user info.
+      operationId: MisesUserByDid
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+               DidRegistry:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  encData:
+                    type: string
+                  iv:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: mises_id
+          in: query
+          required: true
+          type: string
+      tags:
+        - User
+    post:
+      summary: update a user info.
+      consumes:
+        - application/x-www-form-urlencoded
+      operationId: MisesUserInfoUpdate
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/GetTxResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - in: formData
+          name: msg
+          type: string
+          description: A json string of msg
+          required: true
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
+      tags:
+        - User
+  '/mises/user/relation':
+    get:
+      summary: Queries a list of UserRelation items.
+      operationId: MisesUserRelationAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              UserRelation:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    uidFrom:
+                      type: string
+                    uidTo:
+                      type: string
+                    relType:
+                      type: string
+                      format: uint64
+                    version:
+                      type: string
+                      format: uint64
+              pagination:
+                type: object
+                properties:
+                  nextKey:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                      description: "A URL/resource name that uniquely identifies the type of the serialized\r\nprotocol buffer message. This string must contain at least\r\none \"/\" character. The last segment of the URL's path must represent\r\nthe fully qualified name of the type (as in\r\n`path/google.protobuf.Duration`). The name should be in a canonical form\r\n(e.g., leading \".\" is not accepted).\r\n\r\nIn practice, teams usually precompile into the binary all types that they\r\nexpect it to use in the context of Any. However, for URLs which use the\r\nscheme `http`, `https`, or no scheme, one can optionally set up a type\r\nserver that maps type URLs to message definitions as follows:\r\n\r\n* If no scheme is provided, `https` is assumed.\r\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\r\n  value in binary format, or produce an error.\r\n* Applications are allowed to cache lookup results based on the\r\n  URL, or have them precompiled into a binary to avoid any\r\n  lookup. Therefore, binary compatibility needs to be preserved\r\n  on changes to types. (Use versioned type names to manage\r\n  breaking changes.)\r\n\r\nNote: this functionality is not currently available in the official\r\nprotobuf release, and it is not used for type URLs beginning with\r\ntype.googleapis.com.\r\n\r\nSchemes other than `http`, `https` (or the empty scheme) might be\r\nused with implementation specific semantics."
+                    value:
+                      type: string
+                      format: byte
+                      description: >-
+                        Must be a valid serialized protocol buffer of the above
+                        specified type.
+                  title: "`Any` contains an arbitrary serialized protocol buffer message along with a\r\nURL that describes the type of the serialized message.\r\n\r\nProtobuf library provides support to pack/unpack Any values in the form\r\nof utility functions or additional generated methods of the Any type.\r\n\r\nExample 1: Pack and unpack a message in C++.\r\n\r\n    Foo foo = ...;\r\n    Any any;\r\n    any.PackFrom(foo);\r\n    ...\r\n    if (any.UnpackTo(&foo)) {\r\n      ...\r\n    }\r\n\r\nExample 2: Pack and unpack a message in Java.\r\n\r\n    Foo foo = ...;\r\n    Any any = Any.pack(foo);\r\n    ...\r\n    if (any.is(Foo.class)) {\r\n      foo = any.unpack(Foo.class);\r\n    }\r\n\r\n Example 3: Pack and unpack a message in Python.\r\n\r\n    foo = Foo(...)\r\n    any = Any()\r\n    any.Pack(foo)\r\n    ...\r\n    if any.Is(Foo.DESCRIPTOR):\r\n      any.Unpack(foo)\r\n      ...\r\n\r\n Example 4: Pack and unpack a message in Go\r\n\r\n     foo := &pb.Foo{...}\r\n     any, err := anypb.New(foo)\r\n     if err != nil {\r\n       ...\r\n     }\r\n     ...\r\n     foo := &pb.Foo{}\r\n     if err := any.UnmarshalTo(foo); err != nil {\r\n       ...\r\n     }\r\n\r\nThe pack methods provided by protobuf library will by default use\r\n'type.googleapis.com/full.type.name' as the type URL and the unpack\r\nmethods only use the fully qualified type name after the last '/'\r\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\r\nname \"y.z\".\r\n\r\n\r\nJSON\r\n====\r\nThe JSON representation of an `Any` value uses the regular\r\nrepresentation of the deserialized, embedded message, with an\r\nadditional field `@type` which contains the type URL. Example:\r\n\r\n    package google.profile;\r\n    message Person {\r\n      string first_name = 1;\r\n      string last_name = 2;\r\n    }\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\r\n      \"firstName\": <string>,\r\n      \"lastName\": <string>\r\n    }\r\n\r\nIf the embedded message type is well-known and has a custom JSON\r\nrepresentation, that representation will be embedded adding a field\r\n`value` which holds the custom JSON in addition to the `@type`\r\nfield. Example (for message [google.protobuf.Duration][]):\r\n\r\n    {\r\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\r\n      \"value\": \"1.212s\"\r\n    }"
+      parameters:
+        - name: mises_id
+          in: query
+          required: true
+          type: string
+        - name: filter
+          description: filter by relation type
+          in: query
+          required: false
+          type: string
+          enum: [following, blocking]
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.countTotal
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - User
+    post:
+      summary: update a user relation.
+      consumes:
+        - application/x-www-form-urlencoded
+      operationId: MisesUserRelationUpdate
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/GetTxResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    typeUrl:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - in: formData
+          name: msg
+          type: string
+          description: A json string of msg
+          required: true
+        - in: formData
+          name: sig
+          type: string
+          description:  the signature
+        - in: formData
+          name: nonce
+          type: string
+          description:  the nonce
+      tags:
+        - User
+  '/mises/tx':
+    get:
+      summary: Get a Tx by hash
+      tags:
+        - Transactions
+      description: Retrieve a transaction using its hash.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: txhash
+          description: Tx hash
+          required: true
+          type: string
+          x-example: BCBE20E8D46758B96AE5883B792858296AC06E51435490FBDCAE25A72B3CC76B
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/GetTxResponse'
+        500:
+          description: Internal Server Error
+definitions:
+  GetTxResponse:
+    type: object
+    properties:
+      tx_response:
+        type: object
+        properties:
+          height:
+            type: string
+            format: int64
+            title: The block height
+          txhash:
+            type: string
+            description: The transaction hash.
+          codespace:
+            type: string
+            title: Namespace for the Code
+          code:
+            type: integer
+            format: int64
+            description: Response code.
+          data:
+            type: string
+            description: 'Result bytes, if any.'
+          raw_log:
+            type: string
+            description: |-
+              The output of the application's logger (raw string). May be
+              non-deterministic.
+          logs:
+            type: array
+            items:
+              type: object
+              properties:
+                msg_index:
+                  type: integer
+                  format: int64
+                log:
+                  type: string
+                events:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          description: >-
+                            Attribute defines an attribute wrapper where the key
+                            and value are
+
+                            strings instead of raw bytes.
+                    description: >-
+                      StringEvent defines en Event object wrapper where all the
+                      attributes
+
+                      contain key/value pairs that are strings instead of raw
+                      bytes.
+                  description: >-
+                    Events contains a slice of Event objects that were emitted
+                    during some
+
+                    execution.
+              description: >-
+                ABCIMessageLog defines a structure containing an indexed tx ABCI
+                message log.
+            description: >-
+              The output of the application's logger (typed). May be
+              non-deterministic.
+          info:
+            type: string
+            description: Additional information. May be non-deterministic.
+          gas_wanted:
+            type: string
+            format: int64
+            description: Amount of gas requested for transaction.
+          gas_used:
+            type: string
+            format: int64
+            description: Amount of gas consumed by transaction.
+          tx:
+            type: object
+            properties:
+              type_url:
+                type: string
+                description: >-
+                  A URL/resource name that uniquely identifies the type of the
+                  serialized
+
+                  protocol buffer message. This string must contain at least
+
+                  one "/" character. The last segment of the URL's path must
+                  represent
+
+                  the fully qualified name of the type (as in
+
+                  `path/google.protobuf.Duration`). The name should be in a
+                  canonical form
+
+                  (e.g., leading "." is not accepted).
+
+
+                  In practice, teams usually precompile into the binary all
+                  types that they
+
+                  expect it to use in the context of Any. However, for URLs
+                  which use the
+
+                  scheme `http`, `https`, or no scheme, one can optionally set
+                  up a type
+
+                  server that maps type URLs to message definitions as follows:
+
+
+                  * If no scheme is provided, `https` is assumed.
+
+                  * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                    value in binary format, or produce an error.
+                  * Applications are allowed to cache lookup results based on
+                  the
+                    URL, or have them precompiled into a binary to avoid any
+                    lookup. Therefore, binary compatibility needs to be preserved
+                    on changes to types. (Use versioned type names to manage
+                    breaking changes.)
+
+                  Note: this functionality is not currently available in the
+                  official
+
+                  protobuf release, and it is not used for type URLs beginning
+                  with
+
+                  type.googleapis.com.
+
+
+                  Schemes other than `http`, `https` (or the empty scheme) might
+                  be
+
+                  used with implementation specific semantics.
+              value:
+                type: string
+                format: byte
+                description: >-
+                  Must be a valid serialized protocol buffer of the above
+                  specified type.
+            description: >-
+              `Any` contains an arbitrary serialized protocol buffer message
+              along with a
+
+              URL that describes the type of the serialized message.
+
+
+              Protobuf library provides support to pack/unpack Any values in the
+              form
+
+              of utility functions or additional generated methods of the Any
+              type.
+
+
+              Example 1: Pack and unpack a message in C++.
+
+                  Foo foo = ...;
+                  Any any;
+                  any.PackFrom(foo);
+                  ...
+                  if (any.UnpackTo(&foo)) {
+                    ...
+                  }
+
+              Example 2: Pack and unpack a message in Java.
+
+                  Foo foo = ...;
+                  Any any = Any.pack(foo);
+                  ...
+                  if (any.is(Foo.class)) {
+                    foo = any.unpack(Foo.class);
+                  }
+
+               Example 3: Pack and unpack a message in Python.
+
+                  foo = Foo(...)
+                  any = Any()
+                  any.Pack(foo)
+                  ...
+                  if any.Is(Foo.DESCRIPTOR):
+                    any.Unpack(foo)
+                    ...
+
+               Example 4: Pack and unpack a message in Go
+
+                   foo := &pb.Foo{...}
+                   any, err := ptypes.MarshalAny(foo)
+                   ...
+                   foo := &pb.Foo{}
+                   if err := ptypes.UnmarshalAny(any, foo); err != nil {
+                     ...
+                   }
+
+              The pack methods provided by protobuf library will by default use
+
+              'type.googleapis.com/full.type.name' as the type URL and the
+              unpack
+
+              methods only use the fully qualified type name after the last '/'
+
+              in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+              name "y.z".
+
+
+
+              JSON
+
+              ====
+
+              The JSON representation of an `Any` value uses the regular
+
+              representation of the deserialized, embedded message, with an
+
+              additional field `@type` which contains the type URL. Example:
+
+                  package google.profile;
+                  message Person {
+                    string first_name = 1;
+                    string last_name = 2;
+                  }
+
+                  {
+                    "@type": "type.googleapis.com/google.profile.Person",
+                    "firstName": <string>,
+                    "lastName": <string>
+                  }
+
+              If the embedded message type is well-known and has a custom JSON
+
+              representation, that representation will be embedded adding a
+              field
+
+              `value` which holds the custom JSON in addition to the `@type`
+
+              field. Example (for message [google.protobuf.Duration][]):
+
+                  {
+                    "@type": "type.googleapis.com/google.protobuf.Duration",
+                    "value": "1.212s"
+                  }
+          timestamp:
+            type: string
+            description: >-
+              Time of the previous block. For heights > 1, it's the weighted
+              median of
+
+              the timestamps of the valid votes in the block.LastCommit. For
+              height == 1,
+
+              it's genesis time.
+        description: >-
+          TxResponse defines a structure containing relevant tx data and
+          metadata. The
+
+          tags are stringified and the log is JSON decoded.
+    description: GetTxResponse is the response type for the Service.GetTx method.

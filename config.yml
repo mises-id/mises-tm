@@ -14,3 +14,10 @@ client:
 faucet:
   name: bob
   coins: ["5token", "100000stake"]
+build:
+  binary: "misestmd"
+init:
+  app:
+    minimum-gas-prices: "0token"
+    api:
+      swagger: true

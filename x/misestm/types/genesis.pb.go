@@ -24,6 +24,16 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the misestm module's genesis state.
 type GenesisState struct {
+	MisesAccountList []*MisesAccount `protobuf:"bytes,9,rep,name=MisesAccountList,proto3" json:"MisesAccountList,omitempty"`
+	// this line is used by starport scaffolding # genesis/proto/state
+	UserInfoList      []*UserInfo     `protobuf:"bytes,7,rep,name=UserInfoList,proto3" json:"UserInfoList,omitempty"`
+	UserInfoCount     uint64          `protobuf:"varint,8,opt,name=UserInfoCount,proto3" json:"UserInfoCount,omitempty"`
+	UserRelationList  []*UserRelation `protobuf:"bytes,5,rep,name=UserRelationList,proto3" json:"UserRelationList,omitempty"`
+	UserRelationCount uint64          `protobuf:"varint,6,opt,name=UserRelationCount,proto3" json:"UserRelationCount,omitempty"`
+	AppInfoList       []*AppInfo      `protobuf:"bytes,3,rep,name=AppInfoList,proto3" json:"AppInfoList,omitempty"`
+	AppInfoCount      uint64          `protobuf:"varint,4,opt,name=AppInfoCount,proto3" json:"AppInfoCount,omitempty"`
+	DidRegistryList   []*DidRegistry  `protobuf:"bytes,1,rep,name=DidRegistryList,proto3" json:"DidRegistryList,omitempty"`
+	DidRegistryCount  uint64          `protobuf:"varint,2,opt,name=DidRegistryCount,proto3" json:"DidRegistryCount,omitempty"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -59,6 +69,69 @@ func (m *GenesisState) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisState proto.InternalMessageInfo
 
+func (m *GenesisState) GetMisesAccountList() []*MisesAccount {
+	if m != nil {
+		return m.MisesAccountList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetUserInfoList() []*UserInfo {
+	if m != nil {
+		return m.UserInfoList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetUserInfoCount() uint64 {
+	if m != nil {
+		return m.UserInfoCount
+	}
+	return 0
+}
+
+func (m *GenesisState) GetUserRelationList() []*UserRelation {
+	if m != nil {
+		return m.UserRelationList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetUserRelationCount() uint64 {
+	if m != nil {
+		return m.UserRelationCount
+	}
+	return 0
+}
+
+func (m *GenesisState) GetAppInfoList() []*AppInfo {
+	if m != nil {
+		return m.AppInfoList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetAppInfoCount() uint64 {
+	if m != nil {
+		return m.AppInfoCount
+	}
+	return 0
+}
+
+func (m *GenesisState) GetDidRegistryList() []*DidRegistry {
+	if m != nil {
+		return m.DidRegistryList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetDidRegistryCount() uint64 {
+	if m != nil {
+		return m.DidRegistryCount
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*GenesisState)(nil), "misesid.misestm.misestm.GenesisState")
 }
@@ -66,16 +139,30 @@ func init() {
 func init() { proto.RegisterFile("misestm/genesis.proto", fileDescriptor_365876779ad468c0) }
 
 var fileDescriptor_365876779ad468c0 = []byte{
-	// 134 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xcd, 0xcd, 0x2c, 0x4e,
-	0x2d, 0x2e, 0xc9, 0xd5, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d, 0xce, 0x2c, 0xd6, 0x2b, 0x28, 0xca, 0x2f,
-	0xc9, 0x17, 0x12, 0x07, 0x0b, 0x67, 0xa6, 0xe8, 0x41, 0xa5, 0x61, 0xb4, 0x12, 0x1f, 0x17, 0x8f,
-	0x3b, 0x44, 0x65, 0x70, 0x49, 0x62, 0x49, 0xaa, 0x93, 0xdb, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e,
-	0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7, 0x72, 0x0c, 0x37,
-	0x1e, 0xcb, 0x31, 0x44, 0xe9, 0xa4, 0x67, 0x96, 0x64, 0x94, 0x26, 0xe9, 0x25, 0xe7, 0xe7, 0xea,
-	0x83, 0x75, 0xeb, 0x66, 0xa6, 0x40, 0x19, 0x25, 0xb9, 0xfa, 0x15, 0xfa, 0x30, 0x8b, 0x4b, 0x2a,
-	0x0b, 0x52, 0x8b, 0x93, 0xd8, 0xc0, 0xf6, 0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0xe0, 0x93,
-	0x5e, 0xa3, 0x90, 0x00, 0x00, 0x00,
+	// 359 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x92, 0xcd, 0x4a, 0x3b, 0x31,
+	0x14, 0xc5, 0x3b, 0xff, 0xf6, 0x5f, 0x35, 0xad, 0x58, 0x03, 0x6a, 0xed, 0x22, 0xd4, 0x52, 0xa1,
+	0x48, 0x9d, 0x01, 0x7d, 0x82, 0xd6, 0x2f, 0x04, 0x15, 0x8c, 0xb8, 0x71, 0xd7, 0x8f, 0x58, 0x03,
+	0xce, 0x64, 0x68, 0x52, 0xb0, 0x6f, 0xe1, 0xbb, 0xf8, 0x12, 0x2e, 0xbb, 0x74, 0x29, 0xed, 0x8b,
+	0x48, 0x6f, 0x12, 0xc9, 0x74, 0x18, 0x5c, 0x65, 0x72, 0xee, 0x3d, 0xe7, 0x77, 0x33, 0x09, 0xda,
+	0x09, 0xb9, 0x64, 0x52, 0x85, 0xc1, 0x88, 0x45, 0x4c, 0x72, 0xe9, 0xc7, 0x63, 0xa1, 0x04, 0xde,
+	0x03, 0x99, 0x0f, 0x7d, 0x53, 0xb6, 0x6b, 0x6d, 0xd7, 0xf6, 0x3f, 0x4a, 0x36, 0xbe, 0x8e, 0x9e,
+	0x85, 0x36, 0xd4, 0x6a, 0xae, 0x4e, 0xd9, 0x6b, 0x4f, 0x71, 0x11, 0x99, 0xda, 0x2f, 0xa3, 0x13,
+	0xc7, 0x8e, 0x65, 0xdf, 0xca, 0xe7, 0x7c, 0x48, 0xd9, 0x88, 0x4b, 0x35, 0x9e, 0xae, 0xa6, 0xdd,
+	0x2e, 0xd7, 0xce, 0x60, 0x20, 0x26, 0x91, 0xd2, 0xb5, 0xc6, 0x47, 0x01, 0x95, 0xaf, 0xf4, 0xb0,
+	0x0f, 0xaa, 0xa7, 0x18, 0xbe, 0x47, 0x15, 0xb7, 0xed, 0x86, 0x4b, 0x55, 0xdd, 0xa8, 0xe7, 0x5b,
+	0xa5, 0x93, 0x43, 0x3f, 0xe3, 0x18, 0xbe, 0x6b, 0xa0, 0x29, 0x3b, 0xbe, 0x40, 0x65, 0x7b, 0x3e,
+	0x88, 0x5b, 0x83, 0xb8, 0x83, 0xcc, 0x38, 0xdb, 0x4c, 0x13, 0x36, 0xdc, 0x44, 0x9b, 0x76, 0x7f,
+	0xb6, 0xcc, 0xae, 0xae, 0xd7, 0xbd, 0x56, 0x81, 0x26, 0xc5, 0xe5, 0xfc, 0xee, 0x4f, 0x03, 0xe0,
+	0xff, 0x3f, 0xe6, 0x77, 0x0d, 0x34, 0x65, 0xc7, 0x6d, 0xb4, 0xed, 0x6a, 0x1a, 0x5e, 0x04, 0x78,
+	0xba, 0x80, 0xbb, 0xa8, 0x64, 0x6e, 0x06, 0xd8, 0x79, 0x60, 0xd7, 0x33, 0xd9, 0xa6, 0x97, 0xba,
+	0x26, 0xdc, 0x40, 0x65, 0xb3, 0xd5, 0xb0, 0x02, 0xc0, 0x12, 0x1a, 0xbe, 0x43, 0x5b, 0xce, 0x55,
+	0x03, 0xcb, 0x03, 0x56, 0x33, 0x93, 0xe5, 0xf4, 0xd3, 0x55, 0x33, 0x3e, 0x42, 0x15, 0x47, 0xd2,
+	0xdc, 0x7f, 0xc0, 0x4d, 0xe9, 0xdd, 0xcb, 0xcf, 0x39, 0xf1, 0x66, 0x73, 0xe2, 0x7d, 0xcf, 0x89,
+	0xf7, 0xbe, 0x20, 0xb9, 0xd9, 0x82, 0xe4, 0xbe, 0x16, 0x24, 0xf7, 0xd4, 0x1e, 0x71, 0xf5, 0x32,
+	0xe9, 0xfb, 0x03, 0x11, 0x06, 0x80, 0x3d, 0xe6, 0x43, 0xf3, 0xa1, 0xc2, 0xe0, 0x2d, 0xb0, 0x4f,
+	0x51, 0x4d, 0x63, 0x26, 0xfb, 0x45, 0x78, 0x84, 0xa7, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x86,
+	0xa5, 0xdc, 0xa7, 0x38, 0x03, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -98,6 +185,96 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.MisesAccountList) > 0 {
+		for iNdEx := len(m.MisesAccountList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.MisesAccountList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x4a
+		}
+	}
+	if m.UserInfoCount != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.UserInfoCount))
+		i--
+		dAtA[i] = 0x40
+	}
+	if len(m.UserInfoList) > 0 {
+		for iNdEx := len(m.UserInfoList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.UserInfoList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x3a
+		}
+	}
+	if m.UserRelationCount != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.UserRelationCount))
+		i--
+		dAtA[i] = 0x30
+	}
+	if len(m.UserRelationList) > 0 {
+		for iNdEx := len(m.UserRelationList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.UserRelationList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x2a
+		}
+	}
+	if m.AppInfoCount != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.AppInfoCount))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.AppInfoList) > 0 {
+		for iNdEx := len(m.AppInfoList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.AppInfoList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.DidRegistryCount != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.DidRegistryCount))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.DidRegistryList) > 0 {
+		for iNdEx := len(m.DidRegistryList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.DidRegistryList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -118,6 +295,48 @@ func (m *GenesisState) Size() (n int) {
 	}
 	var l int
 	_ = l
+	if len(m.DidRegistryList) > 0 {
+		for _, e := range m.DidRegistryList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if m.DidRegistryCount != 0 {
+		n += 1 + sovGenesis(uint64(m.DidRegistryCount))
+	}
+	if len(m.AppInfoList) > 0 {
+		for _, e := range m.AppInfoList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if m.AppInfoCount != 0 {
+		n += 1 + sovGenesis(uint64(m.AppInfoCount))
+	}
+	if len(m.UserRelationList) > 0 {
+		for _, e := range m.UserRelationList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if m.UserRelationCount != 0 {
+		n += 1 + sovGenesis(uint64(m.UserRelationCount))
+	}
+	if len(m.UserInfoList) > 0 {
+		for _, e := range m.UserInfoList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if m.UserInfoCount != 0 {
+		n += 1 + sovGenesis(uint64(m.UserInfoCount))
+	}
+	if len(m.MisesAccountList) > 0 {
+		for _, e := range m.MisesAccountList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -156,6 +375,252 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: GenesisState: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DidRegistryList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DidRegistryList = append(m.DidRegistryList, &DidRegistry{})
+			if err := m.DidRegistryList[len(m.DidRegistryList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DidRegistryCount", wireType)
+			}
+			m.DidRegistryCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.DidRegistryCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AppInfoList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AppInfoList = append(m.AppInfoList, &AppInfo{})
+			if err := m.AppInfoList[len(m.AppInfoList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AppInfoCount", wireType)
+			}
+			m.AppInfoCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.AppInfoCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserRelationList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserRelationList = append(m.UserRelationList, &UserRelation{})
+			if err := m.UserRelationList[len(m.UserRelationList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserRelationCount", wireType)
+			}
+			m.UserRelationCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.UserRelationCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserInfoList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserInfoList = append(m.UserInfoList, &UserInfo{})
+			if err := m.UserInfoList[len(m.UserInfoList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserInfoCount", wireType)
+			}
+			m.UserInfoCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.UserInfoCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MisesAccountList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MisesAccountList = append(m.MisesAccountList, &MisesAccount{})
+			if err := m.MisesAccountList[len(m.MisesAccountList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenesis(dAtA[iNdEx:])

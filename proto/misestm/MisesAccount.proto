@@ -1,0 +1,12 @@
+syntax = "proto3";
+package misesid.misestm.misestm;
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+import "gogoproto/gogo.proto";
+
+message MisesAccount {
+  string misesID = 1;
+  uint64 didRegistryID = 2;
+  uint64 userInfoID = 3;
+}

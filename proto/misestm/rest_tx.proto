@@ -1,0 +1,86 @@
+syntax = "proto3";
+package misesid.misestm.misestm;
+
+import "google/api/annotations.proto";
+import "cosmos/base/abci/v1beta1/abci.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+import "misestm/DidRegistry.proto";
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+// RestTx defines the gRPC rest service.
+service RestTx {
+
+	// create a did
+	rpc CreateDid(RestCreateDidRequest) returns (RestTxResponse) {
+		option (google.api.http) = {
+      post: "/mises/did"
+      body: "*"
+    };
+	}
+
+	// update a user info
+	rpc UpdateUserInfo(RestUpdateUserInfoRequest) returns (RestTxResponse) {
+		option (google.api.http) = {
+      post: "/mises/user"
+      body: "*"
+    };
+	}
+
+	// update a user relation
+	rpc UpdateUserRelation(RestUpdateUserRelationRequest) returns (RestTxResponse) {
+		option (google.api.http) = {
+      post: "/mises/user/relation"
+      body: "*"
+    };
+	}
+
+		// query a tx result
+	rpc QueryTx(RestQueryTxRequest) returns (RestTxResponse) {
+		option (google.api.http).get = "/mises/tx";
+	}
+}
+
+message RestCreateDidRequest {
+	string mises_id = 1;
+	string pub_key = 2;
+}
+
+message PrivateUserInfo {
+	string enc_data = 1;
+	string iv = 2;
+}
+message PublicUserInfo {
+	string name = 1;
+	string gender = 2;
+	string avatar_did = 3;
+	string avatar_thumb = 4;
+	string home_page = 5;
+	repeated string emails = 6;
+	repeated string telephones = 7;
+	string intro = 8;
+}
+
+message RestUpdateUserInfoRequest {
+	string mises_id = 1;
+	PublicUserInfo pub_info = 2;
+	PrivateUserInfo pri_info = 3;
+}
+
+message RestUpdateUserRelationRequest {
+	string mises_id = 1;
+	string target_id = 2;
+	string action = 3;
+}
+
+
+message RestQueryTxRequest {
+	string  txhash = 1;
+}
+
+message RestTxResponse {
+	// tx_response is the queried TxResponses.
+  cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+	uint32 code = 2;
+}

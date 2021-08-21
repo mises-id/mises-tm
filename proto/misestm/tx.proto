@@ -2,12 +2,157 @@ syntax = "proto3";
 package misesid.misestm.misestm;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "misestm/UserInfo.proto";
+import "misestm/UserRelation.proto";
+import "misestm/AppInfo.proto";
+import "misestm/DidRegistry.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateUserInfo(MsgCreateUserInfo) returns (MsgCreateUserInfoResponse);
+  rpc UpdateUserInfo(MsgUpdateUserInfo) returns (MsgUpdateUserInfoResponse);
+  rpc DeleteUserInfo(MsgDeleteUserInfo) returns (MsgDeleteUserInfoResponse);
+  rpc CreateUserRelation(MsgCreateUserRelation) returns (MsgCreateUserRelationResponse);
+  rpc UpdateUserRelation(MsgUpdateUserRelation) returns (MsgUpdateUserRelationResponse);
+  rpc DeleteUserRelation(MsgDeleteUserRelation) returns (MsgDeleteUserRelationResponse);
+  rpc CreateAppInfo(MsgCreateAppInfo) returns (MsgCreateAppInfoResponse);
+  rpc UpdateAppInfo(MsgUpdateAppInfo) returns (MsgUpdateAppInfoResponse);
+  rpc DeleteAppInfo(MsgDeleteAppInfo) returns (MsgDeleteAppInfoResponse);
+  rpc CreateDidRegistry(MsgCreateDidRegistry) returns (MsgCreateDidRegistryResponse);
+  rpc UpdateDidRegistry(MsgUpdateDidRegistry) returns (MsgUpdateDidRegistryResponse);
+  rpc DeleteDidRegistry(MsgDeleteDidRegistry) returns (MsgDeleteDidRegistryResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateUserInfo {
+  string creator = 1;
+  string uid = 2;
+  string encData = 3;
+  string iv = 4;
+  uint64 version = 5;
+}
+
+message MsgCreateUserInfoResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateUserInfo {
+  string creator = 1;
+  uint64 id = 2;
+  string uid = 3;
+  string encData = 4;
+  string iv = 5;
+  uint64 version = 6;
+}
+
+message MsgUpdateUserInfoResponse { }
+
+message MsgDeleteUserInfo {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteUserInfoResponse { }
+
+message MsgCreateUserRelation {
+  string creator = 1;
+  string uidFrom = 2;
+  string uidTo = 3;
+  uint64 relType = 4;
+  uint64 version = 5;
+}
+
+message MsgCreateUserRelationResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateUserRelation {
+  string creator = 1;
+  uint64 id = 2;
+  string uidFrom = 3;
+  string uidTo = 4;
+  uint64 relType = 5;
+  uint64 version = 6;
+}
+
+message MsgUpdateUserRelationResponse { }
+
+message MsgDeleteUserRelation {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteUserRelationResponse { }
+
+message MsgCreateAppInfo {
+  string creator = 1;
+  string appid = 2;
+  string domain = 3;
+  string name = 4;
+  string developer = 5;
+  string iconDid = 6;
+  string iconThumb = 7;
+  uint64 quota = 8;
+  uint64 version = 9;
+}
+
+message MsgCreateAppInfoResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateAppInfo {
+  string creator = 1;
+  uint64 id = 2;
+  string appid = 3;
+  string domain = 4;
+  string name = 5;
+  string developer = 6;
+  string iconDid = 7;
+  string iconThumb = 8;
+  uint64 quota = 9;
+  uint64 version = 10;
+}
+
+message MsgUpdateAppInfoResponse { }
+
+message MsgDeleteAppInfo {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteAppInfoResponse { }
+
+message MsgCreateDidRegistry {
+  string creator = 1;
+  string did = 2;
+  string pkeyDid = 3;
+  string pkeyType = 4;
+  string pkeyMultibase = 5;
+  uint64 version = 6;
+}
+
+message MsgCreateDidRegistryResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateDidRegistry {
+  string creator = 1;
+  uint64 id = 2;
+  string did = 3;
+  string pkeyDid = 4;
+  string pkeyType = 5;
+  string pkeyMultibase = 6;
+  uint64 version = 7;
+}
+
+message MsgUpdateDidRegistryResponse { }
+
+message MsgDeleteDidRegistry {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteDidRegistryResponse { }
