@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/btcsuite/btcutil/base58"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/mises-id/mises-tm/x/misestm/types"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/btcsuite/btcutil/base58"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 )
@@ -47,7 +46,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	var acc authtypes.AccountI
 	acc = baseAccount
 	pubKeyBytes := base58.Decode(DidRegistry.PkeyMultibase)
-	pubKey := secp256k1.PubKey{Key:pubKeyBytes}
+	pubKey := secp256k1.PubKey{Key: pubKeyBytes}
 	acc.SetPubKey(&pubKey)
 	ak.SetAccount(ctx, acc)
 
@@ -60,8 +59,10 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		DidRegistry,
 	)
 
-	info := types.UserInfo{}
-	info.Creator = DidRegistry.Creator
+	info := types.UserInfo{
+		Creator: DidRegistry.Creator,
+		Uid:     DidRegistry.Did,
+	}
 
 	infoID := k.AppendUserInfo(
 		ctx,

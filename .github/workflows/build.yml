@@ -4,7 +4,9 @@ name: misestm
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
-on: [pull_request]
+on:
+  release:
+    types: [published]
 
 # This workflow makes x86_64 binaries for mac, windows, and linux.
 
