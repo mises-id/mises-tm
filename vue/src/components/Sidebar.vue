@@ -5,11 +5,11 @@
 	>
 		<template v-slot:default>
 			<SpLinkIcon link="/" text="Dashboard" icon="Dashboard" />
-			<SpLinkIcon link="/types" text="Custom Type" icon="Form" />
-			<SpLinkIcon link="/relayers" text="Relayers" icon="Transactions" />
+			<SpLinkIcon link="/types" text="Mises Social Data" icon="Form" />
+			<SpLinkIcon link="/latestblocks" text="Latest Blocks" icon="Transactions" />
 			<div class="sp-dash"></div>
 			<SpLinkIcon
-				href="https://github.com/tendermint/starport"
+				href="https://github.com/mises-id/doc"
 				target="_blank"
 				text="Documentation"
 				icon="Docs"
