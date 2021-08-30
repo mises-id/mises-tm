@@ -7,29 +7,26 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-	name: 'Blocks',
-	computed: {
-		block() {
-			if (this._depsLoaded) {
-				return this.$store.getters['common/blocks/getBlockByHeight'](this.$route.params.block)
-			} else {
-				return []
-			}
-		},
-		depsLoaded() {
-			return this._depsLoaded
+	data() {
+		return {
+			block: null
 		}
 	},
-	beforeCreate() {
-		const module = ['common', 'blocks'];
-		for (let i = 1; i <= module.length; i++) {
-			let submod = module.slice(0, i)
-			if (!this.$store.hasModule(submod)) {
-				console.log('Module `common.blocks` has not been registered!')
-				this._depsLoaded = false
-				break
-			}
+	async created() {
+		const blockDetails = await axios.get(this.$store.getters['common/env/apiTendermint'] + '/block?height=' + this.$route.params.block)
+		const txDecoded = blockDetails.data.result.block.data.txs.map(async (x) => {
+			const dec = await this.$store.getters['common/env/apiClient'].decodeTx(x)
+			return dec
+		})
+		const txs = await Promise.all(txDecoded)
+		this.block = {
+			height: blockDetails.data.result.block.header.height,
+			timestamp: blockDetails.data.result.block.header.time,
+			hash: blockDetails.data.result.block_id.hash,
+			details: blockDetails.data.result.block,
+			txDecoded: [...txs]
 		}
 	}
 }

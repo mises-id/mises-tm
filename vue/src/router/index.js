@@ -5,6 +5,7 @@ import Relayers from '@/views/Relayers.vue'
 import LatestBlocks from '@/views/LatestBlocks.vue'
 import Blocks from '@/views/Blocks.vue'
 import Block from '@/views/Block.vue'
+import Validators from '@/views/Validators.vue'
 
 const routerHistory = createWebHistory()
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
 	{ path: '/relayers', component: Relayers },
 	{ path: '/latestblocks', component: LatestBlocks },
 	{ path: '/blocks/:page?', component: Blocks },
-	{ path: '/block/:block', component: Block }
+	{ path: '/block/:block', component: Block },
+	{ path: '/validators/:page?', component: Validators },
 ]
 
 const router = createRouter({

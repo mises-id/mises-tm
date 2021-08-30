@@ -1,1 +1,48 @@
 //Your custom styles here
+
+
+.SpPagination {
+  text-align: center;
+  .SpPaginationTitle {
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 10px;
+  }
+  .SpPaginationItem {
+    display: inline-block;
+    padding: 0px 5px;
+    color: black;
+    text-decoration: underline;
+    &.active {
+      text-decoration: none;
+      color: gray;
+    }
+  }
+}
+
+.SpTable {
+  font-size: 12px;
+  width: 100%;
+  margin-bottom: 10px;
+  thead {
+    tr {
+      vertical-align: middle;
+      text-align: center;
+      th {
+        padding: 8px 5px;
+        border-bottom: 0px solid black;
+        margin: 0;
+      }
+    }
+  }
+  tr {
+    vertical-align: middle;
+    text-align: center;
+    td {
+      padding: 8px 5px;
+      border-bottom: 1px solid lightgray;
+      margin: 0;
+    }
+  }
+}
