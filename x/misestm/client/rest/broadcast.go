@@ -52,7 +52,7 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) tx.Factory {
 func calculateGas(
 	clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg,
 ) (*sdk.Result, uint64, error) {
-	txBytes, err := tx.BuildSimTx(txf, msgs...)
+	txBytes, err := txf.BuildSimTx(msgs...)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -79,7 +79,7 @@ func broadcastTx(clientCtx client.Context, txf tx.Factory, msgs ...sdk.Msg) (*sd
 		return nil, nil
 	}
 
-	txb, err := tx.BuildUnsignedTx(txf, msgs...)
+	txb, err := txf.BuildUnsignedTx(msgs...)
 	if err != nil {
 		return nil, err
 	}
