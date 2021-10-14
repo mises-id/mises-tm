@@ -7604,6 +7604,7 @@ definitions:
                repeated Bar results = 1;
                PageResponse page = 2;
        }
+    title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
   google.protobuf.Any:
     type: object
     properties:
@@ -12003,6 +12004,913 @@ definitions:
     description: >-
       MsgCreateVestingAccountResponse defines the Msg/CreateVestingAccount
       response type.
+  gravity.v1.BatchTx:
+    type: object
+    properties:
+      batchNonce:
+        type: string
+        format: uint64
+      timeout:
+        type: string
+        format: uint64
+      transactions:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uint64
+            sender:
+              type: string
+            ethereumRecipient:
+              type: string
+            erc20Token:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+            erc20Fee:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+          title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+      tokenContract:
+        type: string
+      height:
+        type: string
+        format: uint64
+    title: "BatchTx represents a batch of transactions going from Cosmos to Ethereum.\r\nBatch txs are are identified by a unique hash and the token contract that is\r\nshared by all the SendToEthereum"
+  gravity.v1.BatchTxConfirmation:
+    type: object
+    properties:
+      tokenContract:
+        type: string
+      batchNonce:
+        type: string
+        format: uint64
+      ethereumSigner:
+        type: string
+      signature:
+        type: string
+        format: byte
+    description: BatchTxConfirmation is a signature on behalf of a validator for a BatchTx.
+  gravity.v1.BatchTxConfirmationsResponse:
+    type: object
+    properties:
+      signatures:
+        type: array
+        items:
+          type: object
+          properties:
+            tokenContract:
+              type: string
+            batchNonce:
+              type: string
+              format: uint64
+            ethereumSigner:
+              type: string
+            signature:
+              type: string
+              format: byte
+          description: >-
+            BatchTxConfirmation is a signature on behalf of a validator for a
+            BatchTx.
+  gravity.v1.BatchTxFeesResponse:
+    type: object
+    properties:
+      fees:
+        type: array
+        items:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: "Coin defines a token with a denomination and an amount.\r\n\r\nNOTE: The amount field is an Int which implements the custom method\r\nsignatures required by gogoproto."
+  gravity.v1.BatchTxResponse:
+    type: object
+    properties:
+      batch:
+        type: object
+        properties:
+          batchNonce:
+            type: string
+            format: uint64
+          timeout:
+            type: string
+            format: uint64
+          transactions:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uint64
+                sender:
+                  type: string
+                ethereumRecipient:
+                  type: string
+                erc20Token:
+                  type: object
+                  properties:
+                    contract:
+                      type: string
+                    amount:
+                      type: string
+                erc20Fee:
+                  type: object
+                  properties:
+                    contract:
+                      type: string
+                    amount:
+                      type: string
+              title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+          tokenContract:
+            type: string
+          height:
+            type: string
+            format: uint64
+        title: "BatchTx represents a batch of transactions going from Cosmos to Ethereum.\r\nBatch txs are are identified by a unique hash and the token contract that is\r\nshared by all the SendToEthereum"
+  gravity.v1.BatchTxsResponse:
+    type: object
+    properties:
+      batches:
+        type: array
+        items:
+          type: object
+          properties:
+            batchNonce:
+              type: string
+              format: uint64
+            timeout:
+              type: string
+              format: uint64
+            transactions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                  sender:
+                    type: string
+                  ethereumRecipient:
+                    type: string
+                  erc20Token:
+                    type: object
+                    properties:
+                      contract:
+                        type: string
+                      amount:
+                        type: string
+                  erc20Fee:
+                    type: object
+                    properties:
+                      contract:
+                        type: string
+                      amount:
+                        type: string
+                title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+            tokenContract:
+              type: string
+            height:
+              type: string
+              format: uint64
+          title: "BatchTx represents a batch of transactions going from Cosmos to Ethereum.\r\nBatch txs are are identified by a unique hash and the token contract that is\r\nshared by all the SendToEthereum"
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  gravity.v1.BatchedSendToEthereumsResponse:
+    type: object
+    properties:
+      sendToEthereums:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uint64
+            sender:
+              type: string
+            ethereumRecipient:
+              type: string
+            erc20Token:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+            erc20Fee:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+          title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+  gravity.v1.ContractCallTx:
+    type: object
+    properties:
+      invalidationNonce:
+        type: string
+        format: uint64
+      invalidationScope:
+        type: string
+        format: byte
+      address:
+        type: string
+      payload:
+        type: string
+        format: byte
+      timeout:
+        type: string
+        format: uint64
+      tokens:
+        type: array
+        items:
+          type: object
+          properties:
+            contract:
+              type: string
+            amount:
+              type: string
+      fees:
+        type: array
+        items:
+          type: object
+          properties:
+            contract:
+              type: string
+            amount:
+              type: string
+      height:
+        type: string
+        format: uint64
+    description: "ContractCallTx represents an individual arbitrary logic call transaction\r\nfrom Cosmos to Ethereum."
+  gravity.v1.ContractCallTxConfirmation:
+    type: object
+    properties:
+      invalidationScope:
+        type: string
+        format: byte
+      invalidationNonce:
+        type: string
+        format: uint64
+      ethereumSigner:
+        type: string
+      signature:
+        type: string
+        format: byte
+    description: "ContractCallTxConfirmation is a signature on behalf of a validator for a\r\nContractCallTx."
+  gravity.v1.ContractCallTxConfirmationsResponse:
+    type: object
+    properties:
+      signatures:
+        type: array
+        items:
+          type: object
+          properties:
+            invalidationScope:
+              type: string
+              format: byte
+            invalidationNonce:
+              type: string
+              format: uint64
+            ethereumSigner:
+              type: string
+            signature:
+              type: string
+              format: byte
+          description: "ContractCallTxConfirmation is a signature on behalf of a validator for a\r\nContractCallTx."
+  gravity.v1.ContractCallTxResponse:
+    type: object
+    properties:
+      logicCall:
+        type: object
+        properties:
+          invalidationNonce:
+            type: string
+            format: uint64
+          invalidationScope:
+            type: string
+            format: byte
+          address:
+            type: string
+          payload:
+            type: string
+            format: byte
+          timeout:
+            type: string
+            format: uint64
+          tokens:
+            type: array
+            items:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+          fees:
+            type: array
+            items:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+          height:
+            type: string
+            format: uint64
+        description: "ContractCallTx represents an individual arbitrary logic call transaction\r\nfrom Cosmos to Ethereum."
+  gravity.v1.ContractCallTxsResponse:
+    type: object
+    properties:
+      calls:
+        type: array
+        items:
+          type: object
+          properties:
+            invalidationNonce:
+              type: string
+              format: uint64
+            invalidationScope:
+              type: string
+              format: byte
+            address:
+              type: string
+            payload:
+              type: string
+              format: byte
+            timeout:
+              type: string
+              format: uint64
+            tokens:
+              type: array
+              items:
+                type: object
+                properties:
+                  contract:
+                    type: string
+                  amount:
+                    type: string
+            fees:
+              type: array
+              items:
+                type: object
+                properties:
+                  contract:
+                    type: string
+                  amount:
+                    type: string
+            height:
+              type: string
+              format: uint64
+          description: "ContractCallTx represents an individual arbitrary logic call transaction\r\nfrom Cosmos to Ethereum."
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  gravity.v1.DelegateKeysByEthereumSignerResponse:
+    type: object
+    properties:
+      validatorAddress:
+        type: string
+      orchestratorAddress:
+        type: string
+  gravity.v1.DelegateKeysByOrchestratorResponse:
+    type: object
+    properties:
+      validatorAddress:
+        type: string
+      ethereumSigner:
+        type: string
+  gravity.v1.DelegateKeysByValidatorResponse:
+    type: object
+    properties:
+      ethAddress:
+        type: string
+      orchestratorAddress:
+        type: string
+  gravity.v1.DelegateKeysResponse:
+    type: object
+    properties:
+      delegateKeys:
+        type: array
+        items:
+          type: object
+          properties:
+            validatorAddress:
+              type: string
+            orchestratorAddress:
+              type: string
+            ethereumAddress:
+              type: string
+            ethSignature:
+              type: string
+              format: byte
+          description: "MsgDelegateKey allows validators to delegate their voting responsibilities\r\nto a given orchestrator address. This key is then used as an optional\r\nauthentication method for attesting events from Ethereum."
+  gravity.v1.DenomToERC20ParamsResponse:
+    type: object
+    properties:
+      baseDenom:
+        type: string
+      erc20Name:
+        type: string
+      erc20Symbol:
+        type: string
+      erc20Decimals:
+        type: string
+        format: uint64
+  gravity.v1.DenomToERC20Response:
+    type: object
+    properties:
+      erc20:
+        type: string
+      cosmosOriginated:
+        type: boolean
+  gravity.v1.ERC20ToDenomResponse:
+    type: object
+    properties:
+      denom:
+        type: string
+      cosmosOriginated:
+        type: boolean
+  gravity.v1.ERC20Token:
+    type: object
+    properties:
+      contract:
+        type: string
+      amount:
+        type: string
+  gravity.v1.EthereumSigner:
+    type: object
+    properties:
+      power:
+        type: string
+        format: uint64
+      ethereumAddress:
+        type: string
+    description: "EthereumSigner represents a cosmos validator with its corresponding bridge\r\noperator ethereum address and its staking consensus power."
+  gravity.v1.LastSubmittedEthereumEventResponse:
+    type: object
+    properties:
+      eventNonce:
+        type: string
+        format: uint64
+  gravity.v1.MsgCancelSendToEthereumResponse:
+    type: object
+  gravity.v1.MsgDelegateKeys:
+    type: object
+    properties:
+      validatorAddress:
+        type: string
+      orchestratorAddress:
+        type: string
+      ethereumAddress:
+        type: string
+      ethSignature:
+        type: string
+        format: byte
+    description: "MsgDelegateKey allows validators to delegate their voting responsibilities\r\nto a given orchestrator address. This key is then used as an optional\r\nauthentication method for attesting events from Ethereum."
+  gravity.v1.MsgDelegateKeysResponse:
+    type: object
+  gravity.v1.MsgRequestBatchTxResponse:
+    type: object
+  gravity.v1.MsgSendToEthereumResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+    description: "MsgSendToEthereumResponse returns the SendToEthereum transaction ID which\r\nwill be included in the batch tx."
+  gravity.v1.MsgSubmitEthereumEventResponse:
+    type: object
+  gravity.v1.MsgSubmitEthereumTxConfirmationResponse:
+    type: object
+  gravity.v1.Params:
+    type: object
+    properties:
+      gravityId:
+        type: string
+      contractSourceHash:
+        type: string
+      bridgeEthereumAddress:
+        type: string
+      bridgeChainId:
+        type: string
+        format: uint64
+      signedSignerSetTxsWindow:
+        type: string
+        format: uint64
+      signedBatchesWindow:
+        type: string
+        format: uint64
+      ethereumSignaturesWindow:
+        type: string
+        format: uint64
+      targetEthTxTimeout:
+        type: string
+        format: uint64
+      averageBlockTime:
+        type: string
+        format: uint64
+      averageEthereumBlockTime:
+        type: string
+        format: uint64
+      slashFractionSignerSetTx:
+        type: string
+        format: byte
+        title: 'TODO: slash fraction for contract call txs too'
+      slashFractionBatch:
+        type: string
+        format: byte
+      slashFractionEthereumSignature:
+        type: string
+        format: byte
+      slashFractionConflictingEthereumSignature:
+        type: string
+        format: byte
+      unbondSlashingSignerSetTxsWindow:
+        type: string
+        format: uint64
+    title: "Params represent the Gravity genesis and store parameters\r\ngravity_id:\r\na random 32 byte value to prevent signature reuse, for example if the\r\ncosmos validators decided to use the same Ethereum keys for another chain\r\nalso running Gravity we would not want it to be possible to play a deposit\r\nfrom chain A back on chain B's Gravity. This value IS USED ON ETHEREUM so\r\nit must be set in your genesis.json before launch and not changed after\r\ndeploying Gravity\r\n\r\ncontract_hash:\r\nthe code hash of a known good version of the Gravity contract\r\nsolidity code. This can be used to verify the correct version\r\nof the contract has been deployed. This is a reference value for\r\ngoernance action only it is never read by any Gravity code\r\n\r\nbridge_ethereum_address:\r\nis address of the bridge contract on the Ethereum side, this is a\r\nreference value for governance only and is not actually used by any\r\nGravity code\r\n\r\nbridge_chain_id:\r\nthe unique identifier of the Ethereum chain, this is a reference value\r\nonly and is not actually used by any Gravity code\r\n\r\nThese reference values may be used by future Gravity client implemetnations\r\nto allow for saftey features or convenience features like the Gravity address\r\nin your relayer. A relayer would require a configured Gravity address if\r\ngovernance had not set the address on the chain it was relaying for.\r\n\r\nsigned_signer_set_txs_window\r\nsigned_batches_window\r\nsigned_ethereum_signatures_window\r\n\r\nThese values represent the time in blocks that a validator has to submit\r\na signature for a batch or valset, or to submit a ethereum_signature for a\r\nparticular attestation nonce. In the case of attestations this clock starts\r\nwhen the attestation is created, but only allows for slashing once the event\r\nhas passed\r\n\r\ntarget_eth_tx_timeout:\r\n\r\nThis is the 'target' value for when ethereum transactions time out, this is a target\r\nbecause Ethereum is a probabilistic chain and you can't say for sure what the\r\nblock frequency is ahead of time.\r\n\r\naverage_block_time\r\naverage_ethereum_block_time\r\n\r\nThese values are the average Cosmos block time and Ethereum block time\r\nrespectively and they are used to compute what the target batch timeout is. It\r\nis important that governance updates these in case of any major, prolonged\r\nchange in the time it takes to produce a block\r\n\r\nslash_fraction_signer_set_tx\r\nslash_fraction_batch\r\nslash_fraction_ethereum_signature\r\nslash_fraction_conflicting_ethereum_signature\r\n\r\nThe slashing fractions for the various gravity related slashing conditions.\r\nThe first three refer to not submitting a particular message, the third for\r\nsubmitting a different ethereum_signature for the same Ethereum event"
+  gravity.v1.ParamsResponse:
+    type: object
+    properties:
+      params:
+        type: object
+        properties:
+          gravityId:
+            type: string
+          contractSourceHash:
+            type: string
+          bridgeEthereumAddress:
+            type: string
+          bridgeChainId:
+            type: string
+            format: uint64
+          signedSignerSetTxsWindow:
+            type: string
+            format: uint64
+          signedBatchesWindow:
+            type: string
+            format: uint64
+          ethereumSignaturesWindow:
+            type: string
+            format: uint64
+          targetEthTxTimeout:
+            type: string
+            format: uint64
+          averageBlockTime:
+            type: string
+            format: uint64
+          averageEthereumBlockTime:
+            type: string
+            format: uint64
+          slashFractionSignerSetTx:
+            type: string
+            format: byte
+            title: 'TODO: slash fraction for contract call txs too'
+          slashFractionBatch:
+            type: string
+            format: byte
+          slashFractionEthereumSignature:
+            type: string
+            format: byte
+          slashFractionConflictingEthereumSignature:
+            type: string
+            format: byte
+          unbondSlashingSignerSetTxsWindow:
+            type: string
+            format: uint64
+        title: "Params represent the Gravity genesis and store parameters\r\ngravity_id:\r\na random 32 byte value to prevent signature reuse, for example if the\r\ncosmos validators decided to use the same Ethereum keys for another chain\r\nalso running Gravity we would not want it to be possible to play a deposit\r\nfrom chain A back on chain B's Gravity. This value IS USED ON ETHEREUM so\r\nit must be set in your genesis.json before launch and not changed after\r\ndeploying Gravity\r\n\r\ncontract_hash:\r\nthe code hash of a known good version of the Gravity contract\r\nsolidity code. This can be used to verify the correct version\r\nof the contract has been deployed. This is a reference value for\r\ngoernance action only it is never read by any Gravity code\r\n\r\nbridge_ethereum_address:\r\nis address of the bridge contract on the Ethereum side, this is a\r\nreference value for governance only and is not actually used by any\r\nGravity code\r\n\r\nbridge_chain_id:\r\nthe unique identifier of the Ethereum chain, this is a reference value\r\nonly and is not actually used by any Gravity code\r\n\r\nThese reference values may be used by future Gravity client implemetnations\r\nto allow for saftey features or convenience features like the Gravity address\r\nin your relayer. A relayer would require a configured Gravity address if\r\ngovernance had not set the address on the chain it was relaying for.\r\n\r\nsigned_signer_set_txs_window\r\nsigned_batches_window\r\nsigned_ethereum_signatures_window\r\n\r\nThese values represent the time in blocks that a validator has to submit\r\na signature for a batch or valset, or to submit a ethereum_signature for a\r\nparticular attestation nonce. In the case of attestations this clock starts\r\nwhen the attestation is created, but only allows for slashing once the event\r\nhas passed\r\n\r\ntarget_eth_tx_timeout:\r\n\r\nThis is the 'target' value for when ethereum transactions time out, this is a target\r\nbecause Ethereum is a probabilistic chain and you can't say for sure what the\r\nblock frequency is ahead of time.\r\n\r\naverage_block_time\r\naverage_ethereum_block_time\r\n\r\nThese values are the average Cosmos block time and Ethereum block time\r\nrespectively and they are used to compute what the target batch timeout is. It\r\nis important that governance updates these in case of any major, prolonged\r\nchange in the time it takes to produce a block\r\n\r\nslash_fraction_signer_set_tx\r\nslash_fraction_batch\r\nslash_fraction_ethereum_signature\r\nslash_fraction_conflicting_ethereum_signature\r\n\r\nThe slashing fractions for the various gravity related slashing conditions.\r\nThe first three refer to not submitting a particular message, the third for\r\nsubmitting a different ethereum_signature for the same Ethereum event"
+  gravity.v1.SendToEthereum:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      sender:
+        type: string
+      ethereumRecipient:
+        type: string
+      erc20Token:
+        type: object
+        properties:
+          contract:
+            type: string
+          amount:
+            type: string
+      erc20Fee:
+        type: object
+        properties:
+          contract:
+            type: string
+          amount:
+            type: string
+    title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+  gravity.v1.SignerSetTx:
+    type: object
+    properties:
+      nonce:
+        type: string
+        format: uint64
+      height:
+        type: string
+        format: uint64
+      signers:
+        type: array
+        items:
+          type: object
+          properties:
+            power:
+              type: string
+              format: uint64
+            ethereumAddress:
+              type: string
+          description: "EthereumSigner represents a cosmos validator with its corresponding bridge\r\noperator ethereum address and its staking consensus power."
+    description: "SignerSetTx is the Ethereum Bridge multisig set that relays\r\ntransactions the two chains. The staking validators keep ethereum keys which\r\nare used to check signatures on Ethereum in order to get significant gas\r\nsavings."
+  gravity.v1.SignerSetTxConfirmation:
+    type: object
+    properties:
+      signerSetNonce:
+        type: string
+        format: uint64
+      ethereumSigner:
+        type: string
+      signature:
+        type: string
+        format: byte
+    title: "SignerSetTxConfirmation is a signature on behalf of a validator for a\r\nSignerSetTx"
+  gravity.v1.SignerSetTxConfirmationsResponse:
+    type: object
+    properties:
+      signatures:
+        type: array
+        items:
+          type: object
+          properties:
+            signerSetNonce:
+              type: string
+              format: uint64
+            ethereumSigner:
+              type: string
+            signature:
+              type: string
+              format: byte
+          title: "SignerSetTxConfirmation is a signature on behalf of a validator for a\r\nSignerSetTx"
+  gravity.v1.SignerSetTxResponse:
+    type: object
+    properties:
+      signerSet:
+        type: object
+        properties:
+          nonce:
+            type: string
+            format: uint64
+          height:
+            type: string
+            format: uint64
+          signers:
+            type: array
+            items:
+              type: object
+              properties:
+                power:
+                  type: string
+                  format: uint64
+                ethereumAddress:
+                  type: string
+              description: "EthereumSigner represents a cosmos validator with its corresponding bridge\r\noperator ethereum address and its staking consensus power."
+        description: "SignerSetTx is the Ethereum Bridge multisig set that relays\r\ntransactions the two chains. The staking validators keep ethereum keys which\r\nare used to check signatures on Ethereum in order to get significant gas\r\nsavings."
+  gravity.v1.SignerSetTxsResponse:
+    type: object
+    properties:
+      signerSets:
+        type: array
+        items:
+          type: object
+          properties:
+            nonce:
+              type: string
+              format: uint64
+            height:
+              type: string
+              format: uint64
+            signers:
+              type: array
+              items:
+                type: object
+                properties:
+                  power:
+                    type: string
+                    format: uint64
+                  ethereumAddress:
+                    type: string
+                description: "EthereumSigner represents a cosmos validator with its corresponding bridge\r\noperator ethereum address and its staking consensus power."
+          description: "SignerSetTx is the Ethereum Bridge multisig set that relays\r\ntransactions the two chains. The staking validators keep ethereum keys which\r\nare used to check signatures on Ethereum in order to get significant gas\r\nsavings."
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  gravity.v1.UnbatchedSendToEthereumsResponse:
+    type: object
+    properties:
+      sendToEthereums:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uint64
+            sender:
+              type: string
+            ethereumRecipient:
+              type: string
+            erc20Token:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+            erc20Fee:
+              type: object
+              properties:
+                contract:
+                  type: string
+                amount:
+                  type: string
+          title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+      pagination:
+        type: object
+        properties:
+          nextKey:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  gravity.v1.UnsignedBatchTxsResponse:
+    type: object
+    properties:
+      batches:
+        type: array
+        items:
+          type: object
+          properties:
+            batchNonce:
+              type: string
+              format: uint64
+            timeout:
+              type: string
+              format: uint64
+            transactions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                  sender:
+                    type: string
+                  ethereumRecipient:
+                    type: string
+                  erc20Token:
+                    type: object
+                    properties:
+                      contract:
+                        type: string
+                      amount:
+                        type: string
+                  erc20Fee:
+                    type: object
+                    properties:
+                      contract:
+                        type: string
+                      amount:
+                        type: string
+                title: "SendToEthereum represents an individual SendToEthereum from Cosmos to\r\nEthereum"
+            tokenContract:
+              type: string
+            height:
+              type: string
+              format: uint64
+          title: "BatchTx represents a batch of transactions going from Cosmos to Ethereum.\r\nBatch txs are are identified by a unique hash and the token contract that is\r\nshared by all the SendToEthereum"
+        title: Note these are returned with the signature empty
+  gravity.v1.UnsignedContractCallTxsResponse:
+    type: object
+    properties:
+      calls:
+        type: array
+        items:
+          type: object
+          properties:
+            invalidationNonce:
+              type: string
+              format: uint64
+            invalidationScope:
+              type: string
+              format: byte
+            address:
+              type: string
+            payload:
+              type: string
+              format: byte
+            timeout:
+              type: string
+              format: uint64
+            tokens:
+              type: array
+              items:
+                type: object
+                properties:
+                  contract:
+                    type: string
+                  amount:
+                    type: string
+            fees:
+              type: array
+              items:
+                type: object
+                properties:
+                  contract:
+                    type: string
+                  amount:
+                    type: string
+            height:
+              type: string
+              format: uint64
+          description: "ContractCallTx represents an individual arbitrary logic call transaction\r\nfrom Cosmos to Ethereum."
+  gravity.v1.UnsignedSignerSetTxsResponse:
+    type: object
+    properties:
+      signerSets:
+        type: array
+        items:
+          type: object
+          properties:
+            nonce:
+              type: string
+              format: uint64
+            height:
+              type: string
+              format: uint64
+            signers:
+              type: array
+              items:
+                type: object
+                properties:
+                  power:
+                    type: string
+                    format: uint64
+                  ethereumAddress:
+                    type: string
+                description: "EthereumSigner represents a cosmos validator with its corresponding bridge\r\noperator ethereum address and its staking consensus power."
+          description: "SignerSetTx is the Ethereum Bridge multisig set that relays\r\ntransactions the two chains. The staking validators keep ethereum keys which\r\nare used to check signatures on Ethereum in order to get significant gas\r\nsavings."
   ibc.applications.transfer.v1.DenomTrace:
     type: object
     properties:

@@ -33,6 +33,9 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+
+	gravitycli "github.com/cosmos/gravity-bridge/module/cmd/gravity/cmd"
+
 	"github.com/mises-id/mises-tm/app"
 	// this line is used by starport scaffolding # stargate/root/import
 )
@@ -117,7 +120,7 @@ func initAppConfig() (string, interface{}) {
 	//   own app.toml to override, or use this default value.
 	//
 	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0stake"
+	srvCfg.MinGasPrices = "0umis"
 
 	customAppConfig := CustomAppConfig{
 		Config: *srvCfg,
@@ -165,6 +168,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		queryCommand(),
 		txCommand(),
 		keys.Commands(app.DefaultNodeHome),
+		gravitycli.Commands(app.DefaultNodeHome),
 	)
 
 	// add rosetta
