@@ -38,4 +38,6 @@ replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.202108
 
 replace github.com/cosmos/iavl => ../iavl
 
+replace github.com/tendermint/tendermint => ../tendermint
+
 replace github.com/cosmos/gravity-bridge/module => ../gravity-bridge/module

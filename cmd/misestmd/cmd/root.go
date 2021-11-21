@@ -156,6 +156,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		testnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		config.Cmd(),
+		LightCmd(),
+		RestCmd(),
 		// this line is used by starport scaffolding # stargate/root/commands
 	)
 
