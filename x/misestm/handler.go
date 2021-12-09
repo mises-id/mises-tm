@@ -17,6 +17,25 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 		switch msg := msg.(type) {
+		case *types.MsgNewDenom:
+			res, err := msgServer.NewDenom(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgNewNFTClass:
+			res, err := msgServer.NewNFTClass(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgUpdateNFTClass:
+			res, err := msgServer.UpdateNFTClass(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgMintNFT:
+			res, err := msgServer.MintNFT(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgUpdateNFT:
+			res, err := msgServer.UpdateNFT(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgBurnNFT:
+			res, err := msgServer.BurnNFT(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+
 		// this line is used by starport scaffolding # 1
 
 		case *types.MsgCreateUserInfo:

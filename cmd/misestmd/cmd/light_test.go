@@ -15,7 +15,7 @@ import (
 )
 
 func Test_LightCmd(t *testing.T) {
-	home := "/home/tendermint/.misestm"
+	home := app.DefaultNodeHome
 	app.SetConfig()
 	encodingConfig := app.MakeEncodingConfig()
 	logger := log.NewNopLogger()

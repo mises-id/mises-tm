@@ -46,8 +46,8 @@ message RestQueryUserRequest {
 }
 
 message RestQueryUserResponse {
-	PublicUserInfo pub_info = 1;
-	PrivateUserInfo pri_info = 2;
+	misesid.misestm.misestm.PublicUserInfo pub_info = 1;
+	misesid.misestm.misestm.PrivateUserInfo pri_info = 2;
 }
 
 message RestQueryUserRelationRequest {

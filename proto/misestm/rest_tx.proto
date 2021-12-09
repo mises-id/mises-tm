@@ -36,10 +36,13 @@ service RestTx {
     };
 	}
 
-		// query a tx result
+	// query a tx result
 	rpc QueryTx(RestQueryTxRequest) returns (RestTxResponse) {
 		option (google.api.http).get = "/mises/tx";
 	}
+
+
+
 }
 
 message RestCreateDidRequest {
@@ -84,3 +87,8 @@ message RestTxResponse {
   cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
 	uint32 code = 2;
 }
+
+
+
+
+

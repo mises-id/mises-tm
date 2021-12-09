@@ -8,6 +8,13 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
+	cdc.RegisterConcrete(&MsgNewDenom{}, "misestm/NewDenom", nil)
+	cdc.RegisterConcrete(&MsgNewNFTClass{}, "misestm/NewNFTClass", nil)
+	cdc.RegisterConcrete(&MsgUpdateNFTClass{}, "misestm/UpdateNFTClass", nil)
+	cdc.RegisterConcrete(&MsgMintNFT{}, "misestm/MintNFT", nil)
+	cdc.RegisterConcrete(&MsgUpdateNFT{}, "misestm/UpdateNFT", nil)
+	cdc.RegisterConcrete(&MsgBurnNFT{}, "misestm/BurnNFT", nil)
+
 	// this line is used by starport scaffolding # 2
 
 	cdc.RegisterConcrete(&MsgCreateUserInfo{}, "misestm/CreateUserInfo", nil)

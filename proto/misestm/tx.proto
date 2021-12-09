@@ -1,17 +1,38 @@
 syntax = "proto3";
 package misesid.misestm.misestm;
 
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+import "cosmos/bank/v1beta1/bank.proto";
+
 // this line is used by starport scaffolding # proto/tx/import
 import "misestm/UserInfo.proto";
 import "misestm/UserRelation.proto";
 import "misestm/AppInfo.proto";
 import "misestm/DidRegistry.proto";
 
+
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+
+	// NewDenom defines a method for create a new denom.
+	rpc NewDenom(MsgNewDenom) returns (MsgNewDenomResponse);
+	rpc NewNFTClass(MsgNewNFTClass) returns (MsgNewNFTClassResponse);
+	rpc UpdateNFTClass(MsgUpdateNFTClass) returns (MsgUpdateNFTClassResponse);
+
+	// MintNFT defines a method for mint a new nft
+	rpc MintNFT(MsgMintNFT) returns (MsgMintNFTResponse);
+
+	// UpdateNFT defines a method for editing a nft.
+	rpc UpdateNFT(MsgUpdateNFT) returns (MsgUpdateNFTResponse);
+
+	// BurnNFT defines a method for burning a nft.
+	rpc BurnNFT(MsgBurnNFT) returns (MsgBurnNFTResponse);
+
+
+  // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateUserInfo(MsgCreateUserInfo) returns (MsgCreateUserInfoResponse);
   rpc UpdateUserInfo(MsgUpdateUserInfo) returns (MsgUpdateUserInfoResponse);
   rpc DeleteUserInfo(MsgDeleteUserInfo) returns (MsgDeleteUserInfoResponse);
@@ -156,3 +177,98 @@ message MsgDeleteDidRegistry {
 }
 
 message MsgDeleteDidRegistryResponse { }
+
+
+
+// MsgNewDenom defines an SDK message for creating a new denom.
+message MsgNewDenom {
+  string id = 1;
+  string amount = 2 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  cosmos.bank.v1beta1.Metadata denom_meta = 3;
+  string sender = 4;
+  string recipient = 5;
+}
+
+// MsgNewDenomResponse defines the MsgNewDenom response type.
+message MsgNewDenomResponse {}
+
+
+
+// MsgNewNFTClass defines an SDK message for creating a new NFTClass.
+message MsgNewNFTClass {
+  option (gogoproto.equal) = true;
+
+  string id = 1;
+  string name = 2;
+  string uri = 3;
+  string schema = 4;
+  string symbol = 5;
+  google.protobuf.Any data = 6;
+  string sender = 7;
+}
+
+// MsgNewNFTClassResponse defines the MsgNewNFTClass response type.
+message MsgNewNFTClassResponse {}
+
+
+
+// MsgUpdateNFTClass defines an SDK message for editing a nft class.
+message MsgUpdateNFTClass {
+  option (gogoproto.equal) = true;
+
+  string id = 1;
+  string class_id = 2;
+  string name = 3;
+  string uri = 4;
+  google.protobuf.Any data = 5;
+  string sender = 6;
+}
+
+// MsgUpdateNFTClassResponse defines the MsgUpdateNFTClass response type.
+message MsgUpdateNFTClassResponse {}
+
+
+// MsgMintNFT defines an SDK message for creating a new NFT.
+message MsgMintNFT {
+  option (gogoproto.equal) = true;
+
+  string id = 1;
+  string class_id = 2;
+  string name = 3;
+  string uri = 4 ;
+  google.protobuf.Any data = 5;
+  string sender = 6;
+  string recipient = 7;
+}
+
+// MsgMintNFTResponse defines the Msg/MintNFT response type.
+message MsgMintNFTResponse {}
+
+
+// MsgUpdateNFT defines an SDK message for update a NFT.
+message MsgUpdateNFT {
+  option (gogoproto.equal) = true;
+
+  string id = 1;
+  string class_id = 2;
+  string uri = 3 ;
+  google.protobuf.Any data = 4;
+  string sender = 5;
+}
+
+// MsgUpdateNFTResponse defines the MsgUpdateNFT response type.
+message MsgUpdateNFTResponse {}
+
+
+// MsgBurnNFT defines an SDK message for burning a NFT.
+message MsgBurnNFT {
+  option (gogoproto.equal) = true;
+
+  string id = 1;
+  string class_id = 2;
+  string sender = 3;
+}
+
+// MsgBurnNFTResponse defines the Msg/BurnNFT response type.
+message MsgBurnNFTResponse {}
+

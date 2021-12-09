@@ -29,6 +29,9 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdCreateNFTClass())
+	cmd.AddCommand(CmdMintNFT())
+
 	// this line is used by starport scaffolding # 1
 
 	cmd.AddCommand(CmdCreateUserInfo())

@@ -66,7 +66,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 			cmd.SetOut(cmd.OutOrStdout())
 			cmd.SetErr(cmd.ErrOrStderr())
 
-			initClientCtx = client.ReadHomeFlag(initClientCtx, cmd)
+			initClientCtx = readHomeFlag(initClientCtx, cmd)
 
 			if err := client.SetCmdClientContextHandler(initClientCtx, cmd); err != nil {
 				return err
@@ -83,6 +83,15 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	})
 
 	return rootCmd, encodingConfig
+}
+
+func readHomeFlag(clientCtx client.Context, cmd *cobra.Command) client.Context {
+	if cmd.Flags().Changed(flags.FlagHome) {
+		rootDir, _ := cmd.Flags().GetString(flags.FlagHome)
+		clientCtx = clientCtx.WithHomeDir(rootDir)
+	}
+
+	return clientCtx
 }
 
 // initAppConfig helps to override default appConfig template and configs.

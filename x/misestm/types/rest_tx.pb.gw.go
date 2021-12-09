@@ -394,13 +394,13 @@ func RegisterRestTxHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_RestTx_CreateDid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "did"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestTx_CreateDid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "did"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_RestTx_UpdateUserInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "user"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestTx_UpdateUserInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "user"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_RestTx_UpdateUserRelation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"mises", "user", "relation"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestTx_UpdateUserRelation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"mises", "user", "relation"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_RestTx_QueryTx_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "tx"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestTx_QueryTx_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "tx"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

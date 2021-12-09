@@ -321,11 +321,11 @@ func RegisterRestQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 }
 
 var (
-	pattern_RestQuery_QueryDid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "did"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestQuery_QueryDid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "did"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_RestQuery_QueryUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "user"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestQuery_QueryUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"mises", "user"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_RestQuery_QueryUserRelation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"mises", "user", "relation"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_RestQuery_QueryUserRelation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"mises", "user", "relation"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

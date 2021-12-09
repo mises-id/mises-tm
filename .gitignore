@@ -5,3 +5,5 @@ secret.yml
 /.vscode
 /build
 /vue/src/store/mises-store/generated
+main
+.misestm

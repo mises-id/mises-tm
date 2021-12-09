@@ -17,7 +17,7 @@ import (
 )
 
 func Test_RestCmd(t *testing.T) {
-	home := "/home/tendermint/.misestm"
+	home := app.DefaultNodeHome
 	app.SetConfig()
 	encodingConfig := app.MakeEncodingConfig()
 	logger := log.NewNopLogger()

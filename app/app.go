@@ -102,6 +102,10 @@ import (
 	gravitykeeper "github.com/cosmos/gravity-bridge/module/x/gravity/keeper"
 	gravitytypes "github.com/cosmos/gravity-bridge/module/x/gravity/types"
 
+	"github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
+	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	misescodec "github.com/mises-id/mises-tm/codec"
 	"github.com/mises-id/mises-tm/docs"
@@ -160,6 +164,7 @@ var (
 		gravity.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		misestm.AppModuleBasic{},
+		nftmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -172,6 +177,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+		nft.ModuleName:                 nil,
 	}
 )
 
@@ -231,6 +237,8 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
+	NFTKeeper nftkeeper.Keeper
+
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	MisestmKeeper misestmkeeper.Keeper
@@ -269,7 +277,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		authzkeeper.StoreKey, gravitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		misestmtypes.StoreKey, feegrant.StoreKey,
+		misestmtypes.StoreKey, feegrant.StoreKey, nftkeeper.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -386,6 +394,8 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
+	app.NFTKeeper = nftkeeper.NewKeeper(keys[nftkeeper.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
@@ -395,6 +405,7 @@ func New(
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
 		app.AccountKeeper,
+		app.NFTKeeper,
 		mongodb.(dbm.RawDB),
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
@@ -446,6 +457,7 @@ func New(
 			app.GravityKeeper,
 			app.BankKeeper,
 		),
+		nftmodule.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 		misestmModule,
 	)
@@ -493,6 +505,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		gravitytypes.ModuleName,
+		nft.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		misestmtypes.ModuleName,
 	)
