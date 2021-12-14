@@ -35,7 +35,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	if err != nil {
 		return nil, err
 	}
-	addr, err := types.AddrFormDid(DidRegistry.Did)
+	addr, didType, err := types.AddrFormDid(DidRegistry.Did)
 	if err != nil {
 		return nil, err
 	}
@@ -59,20 +59,33 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		DidRegistry,
 	)
 
-	info := types.UserInfo{
-		Creator: DidRegistry.Creator,
-		Uid:     DidRegistry.Did,
-	}
+	var infoID uint64
+	if didType == types.DIDTypeUser {
+		infoID = k.AppendUserInfo(
+			ctx,
+			types.UserInfo{
+				Creator: DidRegistry.Creator,
+				Uid:     DidRegistry.Did,
+			},
+		)
 
-	infoID := k.AppendUserInfo(
-		ctx,
-		info,
-	)
+	} else if didType == types.DIDTypeApp {
+		infoID = k.AppendAppInfo(
+			ctx,
+			types.AppInfo{
+				Creator: DidRegistry.Creator,
+				Appid:   DidRegistry.Did,
+			},
+		)
+	} else {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "did %s not supported", msg.Did)
+	}
 
 	newMisesAcc := types.MisesAccount{
 		MisesID:       DidRegistry.Did,
 		DidRegistryID: regID,
-		UserInfoID:    infoID,
+		InfoID:        infoID,
+		DidType:       didType,
 	}
 	k.SetMisesAccount(ctx, newMisesAcc)
 

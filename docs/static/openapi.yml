@@ -12577,7 +12577,7 @@ paths:
   /mises-id/misestm/misestm/AppInfo:
     get:
       summary: Queries a list of AppInfo items.
-      operationId: MisesidMisestmMisestmAppInfoAll
+      operationId: MisesidMisestmV1Beta1AppInfoAll
       responses:
         '200':
           description: A successful response.
@@ -12596,19 +12596,18 @@ paths:
                       format: uint64
                     appid:
                       type: string
-                    domain:
-                      type: string
                     name:
                       type: string
+                    domains:
+                      type: array
+                      items:
+                        type: string
                     developer:
                       type: string
-                    iconDid:
+                    homeUrl:
                       type: string
-                    iconThumb:
+                    iconUrl:
                       type: string
-                    quota:
-                      type: string
-                      format: uint64
                     version:
                       type: string
                       format: uint64
@@ -12886,7 +12885,7 @@ paths:
   '/mises-id/misestm/misestm/AppInfo/{id}':
     get:
       summary: Queries a AppInfo by id.
-      operationId: MisesidMisestmMisestmAppInfo
+      operationId: MisesidMisestmV1Beta1AppInfo
       responses:
         '200':
           description: A successful response.
@@ -12903,19 +12902,18 @@ paths:
                     format: uint64
                   appid:
                     type: string
-                  domain:
-                    type: string
                   name:
                     type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
                   developer:
                     type: string
-                  iconDid:
+                  homeUrl:
                     type: string
-                  iconThumb:
+                  iconUrl:
                     type: string
-                  quota:
-                    type: string
-                    format: uint64
                   version:
                     type: string
                     format: uint64
@@ -13115,7 +13113,7 @@ paths:
   /mises-id/misestm/misestm/DidRegistry:
     get:
       summary: Queries a list of DidRegistry items.
-      operationId: MisesidMisestmMisestmDidRegistryAll
+      operationId: MisesidMisestmV1Beta1DidRegistryAll
       responses:
         '200':
           description: A successful response.
@@ -13417,7 +13415,7 @@ paths:
   '/mises-id/misestm/misestm/DidRegistry/{id}':
     get:
       summary: Queries a DidRegistry by id.
-      operationId: MisesidMisestmMisestmDidRegistry
+      operationId: MisesidMisestmV1Beta1DidRegistry
       responses:
         '200':
           description: A successful response.
@@ -13639,7 +13637,7 @@ paths:
   /mises-id/misestm/misestm/UserInfo:
     get:
       summary: Queries a list of UserInfo items.
-      operationId: MisesidMisestmMisestmUserInfoAll
+      operationId: MisesidMisestmV1Beta1UserInfoAll
       responses:
         '200':
           description: A successful response.
@@ -13939,7 +13937,7 @@ paths:
   '/mises-id/misestm/misestm/UserInfo/{id}':
     get:
       summary: Queries a UserInfo by id.
-      operationId: MisesidMisestmMisestmUserInfo
+      operationId: MisesidMisestmV1Beta1UserInfo
       responses:
         '200':
           description: A successful response.
@@ -14159,7 +14157,7 @@ paths:
   /mises-id/misestm/misestm/UserRelation:
     get:
       summary: Queries a list of UserRelation items.
-      operationId: MisesidMisestmMisestmUserRelationAll
+      operationId: MisesidMisestmV1Beta1UserRelationAll
       responses:
         '200':
           description: A successful response.
@@ -14180,9 +14178,12 @@ paths:
                       type: string
                     uidTo:
                       type: string
-                    relType:
-                      type: string
-                      format: uint64
+                    isFollowing:
+                      type: boolean
+                    isBlocking:
+                      type: boolean
+                    isReferredBy:
+                      type: boolean
                     version:
                       type: string
                       format: uint64
@@ -14460,7 +14461,7 @@ paths:
   '/mises-id/misestm/misestm/UserRelation/{id}':
     get:
       summary: Queries a UserRelation by id.
-      operationId: MisesidMisestmMisestmUserRelation
+      operationId: MisesidMisestmV1Beta1UserRelation
       responses:
         '200':
           description: A successful response.
@@ -14479,9 +14480,12 @@ paths:
                     type: string
                   uidTo:
                     type: string
-                  relType:
-                    type: string
-                    format: uint64
+                  isFollowing:
+                    type: boolean
+                  isBlocking:
+                    type: boolean
+                  isReferredBy:
+                    type: boolean
                   version:
                     type: string
                     format: uint64
@@ -14678,31 +14682,30 @@ paths:
           format: uint64
       tags:
         - Query
-  /mises/did:
+  /mises/app:
     get:
-      summary: query a did
-      operationId: MisesidMisestmMisestmQueryDid
+      summary: query app info
+      operationId: MisesidMisestmV1Beta1QueryApp
       responses:
         '200':
           description: A successful response.
           schema:
             type: object
             properties:
-              didRegistry:
+              pubInfo:
                 type: object
                 properties:
-                  creator:
+                  name:
                     type: string
-                  id:
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                  developer:
                     type: string
-                    format: uint64
-                  did:
+                  homeUrl:
                     type: string
-                  pkeyDid:
-                    type: string
-                  pkeyType:
-                    type: string
-                  pkeyMultibase:
+                  iconUrl:
                     type: string
                   version:
                     type: string
@@ -14893,15 +14896,15 @@ paths:
                           "value": "1.212s"
                         }
       parameters:
-        - name: misesId
+        - name: misesAppid
           in: query
           required: false
           type: string
       tags:
         - RestQuery
     post:
-      summary: create a did
-      operationId: MisesidMisestmMisestmCreateDid
+      summary: update an app info
+      operationId: MisesidMisestmV1Beta1UpdateAppInfo
       responses:
         '200':
           description: A successful response.
@@ -15419,6 +15422,1551 @@ paths:
           schema:
             type: object
             properties:
+              misesAppid:
+                type: string
+              pubInfo:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                  developer:
+                    type: string
+                  homeUrl:
+                    type: string
+                  iconUrl:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+      tags:
+        - RestTx
+  /mises/app/feegrant:
+    get:
+      summary: query app info
+      operationId: MisesidMisestmV1Beta1QueryAppFeeGrant
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              grant:
+                type: object
+                properties:
+                  spendLimit:
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  period:
+                    type: string
+                  expiration:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: misesAppid
+          in: query
+          required: false
+          type: string
+        - name: misesUid
+          in: query
+          required: false
+          type: string
+      tags:
+        - RestQuery
+    post:
+      summary: update the gas fee a app granted for a user
+      operationId: MisesidMisestmV1Beta1UpdateAppFeeGrant
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              txResponse:
+                description: tx_response is the queried TxResponses.
+                type: object
+                properties:
+                  height:
+                    type: string
+                    format: int64
+                    title: The block height
+                  txhash:
+                    type: string
+                    description: The transaction hash.
+                  codespace:
+                    type: string
+                    title: Namespace for the Code
+                  code:
+                    type: integer
+                    format: int64
+                    description: Response code.
+                  data:
+                    type: string
+                    description: 'Result bytes, if any.'
+                  rawLog:
+                    type: string
+                    description: >-
+                      The output of the application's logger (raw string). May
+                      be
+
+                      non-deterministic.
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        msgIndex:
+                          type: integer
+                          format: int64
+                        log:
+                          type: string
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                              attributes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    value:
+                                      type: string
+                                  description: >-
+                                    Attribute defines an attribute wrapper where
+                                    the key and value are
+
+                                    strings instead of raw bytes.
+                            description: >-
+                              StringEvent defines en Event object wrapper where
+                              all the attributes
+
+                              contain key/value pairs that are strings instead
+                              of raw bytes.
+                          description: >-
+                            Events contains a slice of Event objects that were
+                            emitted during some
+
+                            execution.
+                      description: >-
+                        ABCIMessageLog defines a structure containing an indexed
+                        tx ABCI message log.
+                    description: >-
+                      The output of the application's logger (typed). May be
+                      non-deterministic.
+                  info:
+                    type: string
+                    description: Additional information. May be non-deterministic.
+                  gasWanted:
+                    type: string
+                    format: int64
+                    description: Amount of gas requested for transaction.
+                  gasUsed:
+                    type: string
+                    format: int64
+                    description: Amount of gas consumed by transaction.
+                  tx:
+                    type: object
+                    properties:
+                      '@type':
+                        type: string
+                        description: >-
+                          A URL/resource name that uniquely identifies the type
+                          of the serialized
+
+                          protocol buffer message. This string must contain at
+                          least
+
+                          one "/" character. The last segment of the URL's path
+                          must represent
+
+                          the fully qualified name of the type (as in
+
+                          `path/google.protobuf.Duration`). The name should be
+                          in a canonical form
+
+                          (e.g., leading "." is not accepted).
+
+
+                          In practice, teams usually precompile into the binary
+                          all types that they
+
+                          expect it to use in the context of Any. However, for
+                          URLs which use the
+
+                          scheme `http`, `https`, or no scheme, one can
+                          optionally set up a type
+
+                          server that maps type URLs to message definitions as
+                          follows:
+
+
+                          * If no scheme is provided, `https` is assumed.
+
+                          * An HTTP GET on the URL must yield a
+                          [google.protobuf.Type][]
+                            value in binary format, or produce an error.
+                          * Applications are allowed to cache lookup results
+                          based on the
+                            URL, or have them precompiled into a binary to avoid any
+                            lookup. Therefore, binary compatibility needs to be preserved
+                            on changes to types. (Use versioned type names to manage
+                            breaking changes.)
+
+                          Note: this functionality is not currently available in
+                          the official
+
+                          protobuf release, and it is not used for type URLs
+                          beginning with
+
+                          type.googleapis.com.
+
+
+                          Schemes other than `http`, `https` (or the empty
+                          scheme) might be
+
+                          used with implementation specific semantics.
+                    additionalProperties: {}
+                    description: >-
+                      `Any` contains an arbitrary serialized protocol buffer
+                      message along with a
+
+                      URL that describes the type of the serialized message.
+
+
+                      Protobuf library provides support to pack/unpack Any
+                      values in the form
+
+                      of utility functions or additional generated methods of
+                      the Any type.
+
+
+                      Example 1: Pack and unpack a message in C++.
+
+                          Foo foo = ...;
+                          Any any;
+                          any.PackFrom(foo);
+                          ...
+                          if (any.UnpackTo(&foo)) {
+                            ...
+                          }
+
+                      Example 2: Pack and unpack a message in Java.
+
+                          Foo foo = ...;
+                          Any any = Any.pack(foo);
+                          ...
+                          if (any.is(Foo.class)) {
+                            foo = any.unpack(Foo.class);
+                          }
+
+                       Example 3: Pack and unpack a message in Python.
+
+                          foo = Foo(...)
+                          any = Any()
+                          any.Pack(foo)
+                          ...
+                          if any.Is(Foo.DESCRIPTOR):
+                            any.Unpack(foo)
+                            ...
+
+                       Example 4: Pack and unpack a message in Go
+
+                           foo := &pb.Foo{...}
+                           any, err := anypb.New(foo)
+                           if err != nil {
+                             ...
+                           }
+                           ...
+                           foo := &pb.Foo{}
+                           if err := any.UnmarshalTo(foo); err != nil {
+                             ...
+                           }
+
+                      The pack methods provided by protobuf library will by
+                      default use
+
+                      'type.googleapis.com/full.type.name' as the type URL and
+                      the unpack
+
+                      methods only use the fully qualified type name after the
+                      last '/'
+
+                      in the type URL, for example "foo.bar.com/x/y.z" will
+                      yield type
+
+                      name "y.z".
+
+
+
+                      JSON
+
+                      ====
+
+                      The JSON representation of an `Any` value uses the regular
+
+                      representation of the deserialized, embedded message, with
+                      an
+
+                      additional field `@type` which contains the type URL.
+                      Example:
+
+                          package google.profile;
+                          message Person {
+                            string first_name = 1;
+                            string last_name = 2;
+                          }
+
+                          {
+                            "@type": "type.googleapis.com/google.profile.Person",
+                            "firstName": <string>,
+                            "lastName": <string>
+                          }
+
+                      If the embedded message type is well-known and has a
+                      custom JSON
+
+                      representation, that representation will be embedded
+                      adding a field
+
+                      `value` which holds the custom JSON in addition to the
+                      `@type`
+
+                      field. Example (for message [google.protobuf.Duration][]):
+
+                          {
+                            "@type": "type.googleapis.com/google.protobuf.Duration",
+                            "value": "1.212s"
+                          }
+                  timestamp:
+                    type: string
+                    description: >-
+                      Time of the previous block. For heights > 1, it's the
+                      weighted median of
+
+                      the timestamps of the valid votes in the block.LastCommit.
+                      For height == 1,
+
+                      it's genesis time.
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        attributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                format: byte
+                              value:
+                                type: string
+                                format: byte
+                              index:
+                                type: boolean
+                            description: >-
+                              EventAttribute is a single key-value pair,
+                              associated with an event.
+                      description: >-
+                        Event allows application developers to attach additional
+                        information to
+
+                        ResponseBeginBlock, ResponseEndBlock, ResponseCheckTx
+                        and ResponseDeliverTx.
+
+                        Later, transactions may be queried using these events.
+                    description: >-
+                      Events defines all the events emitted by processing a
+                      transaction. Note,
+
+                      these events include those emitted by processing all the
+                      messages and those
+
+                      emitted from the ante handler. Whereas Logs contains the
+                      events, with
+
+                      additional metadata, emitted only by processing the
+                      messages.
+
+
+                      Since: cosmos-sdk 0.42.11, 0.44.5, 0.45
+              code:
+                type: integer
+                format: int64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              misesAppid:
+                type: string
+              misesUid:
+                type: string
+              grant:
+                type: object
+                properties:
+                  spendLimit:
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  period:
+                    type: string
+                  expiration:
+                    type: string
+                    format: date-time
+              revoke:
+                type: boolean
+      tags:
+        - RestTx
+  /mises/did:
+    get:
+      summary: query a did
+      operationId: MisesidMisestmV1Beta1QueryDid
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              didRegistry:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                  id:
+                    type: string
+                    format: uint64
+                  did:
+                    type: string
+                  pkeyDid:
+                    type: string
+                  pkeyType:
+                    type: string
+                  pkeyMultibase:
+                    type: string
+                  version:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: misesId
+          in: query
+          required: false
+          type: string
+      tags:
+        - RestQuery
+    post:
+      summary: create a did for user or app
+      operationId: MisesidMisestmV1Beta1CreateDid
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              txResponse:
+                description: tx_response is the queried TxResponses.
+                type: object
+                properties:
+                  height:
+                    type: string
+                    format: int64
+                    title: The block height
+                  txhash:
+                    type: string
+                    description: The transaction hash.
+                  codespace:
+                    type: string
+                    title: Namespace for the Code
+                  code:
+                    type: integer
+                    format: int64
+                    description: Response code.
+                  data:
+                    type: string
+                    description: 'Result bytes, if any.'
+                  rawLog:
+                    type: string
+                    description: >-
+                      The output of the application's logger (raw string). May
+                      be
+
+                      non-deterministic.
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        msgIndex:
+                          type: integer
+                          format: int64
+                        log:
+                          type: string
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                              attributes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    value:
+                                      type: string
+                                  description: >-
+                                    Attribute defines an attribute wrapper where
+                                    the key and value are
+
+                                    strings instead of raw bytes.
+                            description: >-
+                              StringEvent defines en Event object wrapper where
+                              all the attributes
+
+                              contain key/value pairs that are strings instead
+                              of raw bytes.
+                          description: >-
+                            Events contains a slice of Event objects that were
+                            emitted during some
+
+                            execution.
+                      description: >-
+                        ABCIMessageLog defines a structure containing an indexed
+                        tx ABCI message log.
+                    description: >-
+                      The output of the application's logger (typed). May be
+                      non-deterministic.
+                  info:
+                    type: string
+                    description: Additional information. May be non-deterministic.
+                  gasWanted:
+                    type: string
+                    format: int64
+                    description: Amount of gas requested for transaction.
+                  gasUsed:
+                    type: string
+                    format: int64
+                    description: Amount of gas consumed by transaction.
+                  tx:
+                    type: object
+                    properties:
+                      '@type':
+                        type: string
+                        description: >-
+                          A URL/resource name that uniquely identifies the type
+                          of the serialized
+
+                          protocol buffer message. This string must contain at
+                          least
+
+                          one "/" character. The last segment of the URL's path
+                          must represent
+
+                          the fully qualified name of the type (as in
+
+                          `path/google.protobuf.Duration`). The name should be
+                          in a canonical form
+
+                          (e.g., leading "." is not accepted).
+
+
+                          In practice, teams usually precompile into the binary
+                          all types that they
+
+                          expect it to use in the context of Any. However, for
+                          URLs which use the
+
+                          scheme `http`, `https`, or no scheme, one can
+                          optionally set up a type
+
+                          server that maps type URLs to message definitions as
+                          follows:
+
+
+                          * If no scheme is provided, `https` is assumed.
+
+                          * An HTTP GET on the URL must yield a
+                          [google.protobuf.Type][]
+                            value in binary format, or produce an error.
+                          * Applications are allowed to cache lookup results
+                          based on the
+                            URL, or have them precompiled into a binary to avoid any
+                            lookup. Therefore, binary compatibility needs to be preserved
+                            on changes to types. (Use versioned type names to manage
+                            breaking changes.)
+
+                          Note: this functionality is not currently available in
+                          the official
+
+                          protobuf release, and it is not used for type URLs
+                          beginning with
+
+                          type.googleapis.com.
+
+
+                          Schemes other than `http`, `https` (or the empty
+                          scheme) might be
+
+                          used with implementation specific semantics.
+                    additionalProperties: {}
+                    description: >-
+                      `Any` contains an arbitrary serialized protocol buffer
+                      message along with a
+
+                      URL that describes the type of the serialized message.
+
+
+                      Protobuf library provides support to pack/unpack Any
+                      values in the form
+
+                      of utility functions or additional generated methods of
+                      the Any type.
+
+
+                      Example 1: Pack and unpack a message in C++.
+
+                          Foo foo = ...;
+                          Any any;
+                          any.PackFrom(foo);
+                          ...
+                          if (any.UnpackTo(&foo)) {
+                            ...
+                          }
+
+                      Example 2: Pack and unpack a message in Java.
+
+                          Foo foo = ...;
+                          Any any = Any.pack(foo);
+                          ...
+                          if (any.is(Foo.class)) {
+                            foo = any.unpack(Foo.class);
+                          }
+
+                       Example 3: Pack and unpack a message in Python.
+
+                          foo = Foo(...)
+                          any = Any()
+                          any.Pack(foo)
+                          ...
+                          if any.Is(Foo.DESCRIPTOR):
+                            any.Unpack(foo)
+                            ...
+
+                       Example 4: Pack and unpack a message in Go
+
+                           foo := &pb.Foo{...}
+                           any, err := anypb.New(foo)
+                           if err != nil {
+                             ...
+                           }
+                           ...
+                           foo := &pb.Foo{}
+                           if err := any.UnmarshalTo(foo); err != nil {
+                             ...
+                           }
+
+                      The pack methods provided by protobuf library will by
+                      default use
+
+                      'type.googleapis.com/full.type.name' as the type URL and
+                      the unpack
+
+                      methods only use the fully qualified type name after the
+                      last '/'
+
+                      in the type URL, for example "foo.bar.com/x/y.z" will
+                      yield type
+
+                      name "y.z".
+
+
+
+                      JSON
+
+                      ====
+
+                      The JSON representation of an `Any` value uses the regular
+
+                      representation of the deserialized, embedded message, with
+                      an
+
+                      additional field `@type` which contains the type URL.
+                      Example:
+
+                          package google.profile;
+                          message Person {
+                            string first_name = 1;
+                            string last_name = 2;
+                          }
+
+                          {
+                            "@type": "type.googleapis.com/google.profile.Person",
+                            "firstName": <string>,
+                            "lastName": <string>
+                          }
+
+                      If the embedded message type is well-known and has a
+                      custom JSON
+
+                      representation, that representation will be embedded
+                      adding a field
+
+                      `value` which holds the custom JSON in addition to the
+                      `@type`
+
+                      field. Example (for message [google.protobuf.Duration][]):
+
+                          {
+                            "@type": "type.googleapis.com/google.protobuf.Duration",
+                            "value": "1.212s"
+                          }
+                  timestamp:
+                    type: string
+                    description: >-
+                      Time of the previous block. For heights > 1, it's the
+                      weighted median of
+
+                      the timestamps of the valid votes in the block.LastCommit.
+                      For height == 1,
+
+                      it's genesis time.
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        attributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                format: byte
+                              value:
+                                type: string
+                                format: byte
+                              index:
+                                type: boolean
+                            description: >-
+                              EventAttribute is a single key-value pair,
+                              associated with an event.
+                      description: >-
+                        Event allows application developers to attach additional
+                        information to
+
+                        ResponseBeginBlock, ResponseEndBlock, ResponseCheckTx
+                        and ResponseDeliverTx.
+
+                        Later, transactions may be queried using these events.
+                    description: >-
+                      Events defines all the events emitted by processing a
+                      transaction. Note,
+
+                      these events include those emitted by processing all the
+                      messages and those
+
+                      emitted from the ante handler. Whereas Logs contains the
+                      events, with
+
+                      additional metadata, emitted only by processing the
+                      messages.
+
+
+                      Since: cosmos-sdk 0.42.11, 0.44.5, 0.45
+              code:
+                type: integer
+                format: int64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              misesAppid:
+                type: string
               misesId:
                 type: string
               pubKey:
@@ -15428,7 +16976,7 @@ paths:
   /mises/tx:
     get:
       summary: query a tx result
-      operationId: MisesidMisestmMisestmQueryTx
+      operationId: MisesidMisestmV1Beta1QueryTx
       responses:
         '200':
           description: A successful response.
@@ -15949,7 +17497,7 @@ paths:
   /mises/user:
     get:
       summary: query a user info
-      operationId: MisesidMisestmMisestmQueryUser
+      operationId: MisesidMisestmV1Beta1QueryUser
       responses:
         '200':
           description: A successful response.
@@ -16172,7 +17720,7 @@ paths:
                           "value": "1.212s"
                         }
       parameters:
-        - name: misesId
+        - name: misesUid
           in: query
           required: false
           type: string
@@ -16180,7 +17728,7 @@ paths:
         - RestQuery
     post:
       summary: update a user info
-      operationId: MisesidMisestmMisestmUpdateUserInfo
+      operationId: MisesidMisestmV1Beta1UpdateUserInfo
       responses:
         '200':
           description: A successful response.
@@ -16698,7 +18246,9 @@ paths:
           schema:
             type: object
             properties:
-              misesId:
+              misesAppid:
+                type: string
+              misesUid:
                 type: string
               pubInfo:
                 type: object
@@ -16735,7 +18285,7 @@ paths:
   /mises/user/relation:
     get:
       summary: query user relations
-      operationId: MisesidMisestmMisestmQueryUserRelation
+      operationId: MisesidMisestmV1Beta1QueryUserRelation
       responses:
         '200':
           description: A successful response.
@@ -16962,7 +18512,7 @@ paths:
                           "value": "1.212s"
                         }
       parameters:
-        - name: misesId
+        - name: misesUid
           in: query
           required: false
           type: string
@@ -17030,7 +18580,7 @@ paths:
         - RestQuery
     post:
       summary: update a user relation
-      operationId: MisesidMisestmMisestmUpdateUserRelation
+      operationId: MisesidMisestmV1Beta1UpdateUserRelation
       responses:
         '200':
           description: A successful response.
@@ -17548,7 +19098,9 @@ paths:
           schema:
             type: object
             properties:
-              misesId:
+              misesAppid:
+                type: string
+              misesUid:
                 type: string
               targetId:
                 type: string
@@ -26615,7 +28167,27 @@ definitions:
       The
 
       tags are stringified and the log is JSON decoded.
-  misesid.misestm.misestm.AppInfo:
+  misesid.misestm.v1beta1.AppFeeGrant:
+    type: object
+    properties:
+      spendLimit:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      period:
+        type: string
+      expiration:
+        type: string
+        format: date-time
+  misesid.misestm.v1beta1.AppInfo:
     type: object
     properties:
       creator:
@@ -26625,23 +28197,22 @@ definitions:
         format: uint64
       appid:
         type: string
-      domain:
-        type: string
       name:
         type: string
+      domains:
+        type: array
+        items:
+          type: string
       developer:
         type: string
-      iconDid:
+      homeUrl:
         type: string
-      iconThumb:
+      iconUrl:
         type: string
-      quota:
-        type: string
-        format: uint64
       version:
         type: string
         format: uint64
-  misesid.misestm.misestm.DidRegistry:
+  misesid.misestm.v1beta1.DidRegistry:
     type: object
     properties:
       creator:
@@ -26660,77 +28231,95 @@ definitions:
       version:
         type: string
         format: uint64
-  misesid.misestm.misestm.MisesID:
+  misesid.misestm.v1beta1.MisesID:
     type: object
     properties:
       misesId:
         type: string
-  misesid.misestm.misestm.MsgBurnNFTResponse:
+  misesid.misestm.v1beta1.MsgBurnNFTResponse:
     type: object
     description: MsgBurnNFTResponse defines the Msg/BurnNFT response type.
-  misesid.misestm.misestm.MsgCreateAppInfoResponse:
+  misesid.misestm.v1beta1.MsgCreateAppInfoResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
-  misesid.misestm.misestm.MsgCreateDidRegistryResponse:
+  misesid.misestm.v1beta1.MsgCreateDidRegistryResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
-  misesid.misestm.misestm.MsgCreateUserInfoResponse:
+  misesid.misestm.v1beta1.MsgCreateUserInfoResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
-  misesid.misestm.misestm.MsgCreateUserRelationResponse:
+  misesid.misestm.v1beta1.MsgCreateUserRelationResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
-  misesid.misestm.misestm.MsgDeleteAppInfoResponse:
+  misesid.misestm.v1beta1.MsgDeleteAppInfoResponse:
     type: object
-  misesid.misestm.misestm.MsgDeleteDidRegistryResponse:
+  misesid.misestm.v1beta1.MsgDeleteDidRegistryResponse:
     type: object
-  misesid.misestm.misestm.MsgDeleteUserInfoResponse:
+  misesid.misestm.v1beta1.MsgDeleteUserInfoResponse:
     type: object
-  misesid.misestm.misestm.MsgDeleteUserRelationResponse:
+  misesid.misestm.v1beta1.MsgDeleteUserRelationResponse:
     type: object
-  misesid.misestm.misestm.MsgMintNFTResponse:
+  misesid.misestm.v1beta1.MsgMintNFTResponse:
     type: object
     description: MsgMintNFTResponse defines the Msg/MintNFT response type.
-  misesid.misestm.misestm.MsgNewDenomResponse:
+  misesid.misestm.v1beta1.MsgNewDenomResponse:
     type: object
     description: MsgNewDenomResponse defines the MsgNewDenom response type.
-  misesid.misestm.misestm.MsgNewNFTClassResponse:
+  misesid.misestm.v1beta1.MsgNewNFTClassResponse:
     type: object
     description: MsgNewNFTClassResponse defines the MsgNewNFTClass response type.
-  misesid.misestm.misestm.MsgUpdateAppInfoResponse:
+  misesid.misestm.v1beta1.MsgUpdateAppInfoResponse:
     type: object
-  misesid.misestm.misestm.MsgUpdateDidRegistryResponse:
+  misesid.misestm.v1beta1.MsgUpdateDidRegistryResponse:
     type: object
-  misesid.misestm.misestm.MsgUpdateNFTClassResponse:
+  misesid.misestm.v1beta1.MsgUpdateNFTClassResponse:
     type: object
     description: MsgUpdateNFTClassResponse defines the MsgUpdateNFTClass response type.
-  misesid.misestm.misestm.MsgUpdateNFTResponse:
+  misesid.misestm.v1beta1.MsgUpdateNFTResponse:
     type: object
     description: MsgUpdateNFTResponse defines the MsgUpdateNFT response type.
-  misesid.misestm.misestm.MsgUpdateUserInfoResponse:
+  misesid.misestm.v1beta1.MsgUpdateUserInfoResponse:
     type: object
-  misesid.misestm.misestm.MsgUpdateUserRelationResponse:
+  misesid.misestm.v1beta1.MsgUpdateUserRelationResponse:
     type: object
-  misesid.misestm.misestm.PrivateUserInfo:
+  misesid.misestm.v1beta1.PrivateUserInfo:
     type: object
     properties:
       encData:
         type: string
       iv:
         type: string
-  misesid.misestm.misestm.PublicUserInfo:
+  misesid.misestm.v1beta1.PublicAppInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      domains:
+        type: array
+        items:
+          type: string
+      developer:
+        type: string
+      homeUrl:
+        type: string
+      iconUrl:
+        type: string
+      version:
+        type: string
+        format: uint64
+  misesid.misestm.v1beta1.PublicUserInfo:
     type: object
     properties:
       name:
@@ -26753,7 +28342,7 @@ definitions:
           type: string
       intro:
         type: string
-  misesid.misestm.misestm.QueryAllAppInfoResponse:
+  misesid.misestm.v1beta1.QueryAllAppInfoResponse:
     type: object
     properties:
       AppInfo:
@@ -26768,19 +28357,18 @@ definitions:
               format: uint64
             appid:
               type: string
-            domain:
-              type: string
             name:
               type: string
+            domains:
+              type: array
+              items:
+                type: string
             developer:
               type: string
-            iconDid:
+            homeUrl:
               type: string
-            iconThumb:
+            iconUrl:
               type: string
-            quota:
-              type: string
-              format: uint64
             version:
               type: string
               format: uint64
@@ -26809,7 +28397,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  misesid.misestm.misestm.QueryAllDidRegistryResponse:
+  misesid.misestm.v1beta1.QueryAllDidRegistryResponse:
     type: object
     properties:
       DidRegistry:
@@ -26858,7 +28446,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  misesid.misestm.misestm.QueryAllUserInfoResponse:
+  misesid.misestm.v1beta1.QueryAllUserInfoResponse:
     type: object
     properties:
       UserInfo:
@@ -26905,7 +28493,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  misesid.misestm.misestm.QueryAllUserRelationResponse:
+  misesid.misestm.v1beta1.QueryAllUserRelationResponse:
     type: object
     properties:
       UserRelation:
@@ -26922,9 +28510,12 @@ definitions:
               type: string
             uidTo:
               type: string
-            relType:
-              type: string
-              format: uint64
+            isFollowing:
+              type: boolean
+            isBlocking:
+              type: boolean
+            isReferredBy:
+              type: boolean
             version:
               type: string
               format: uint64
@@ -26953,7 +28544,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  misesid.misestm.misestm.QueryGetAppInfoResponse:
+  misesid.misestm.v1beta1.QueryGetAppInfoResponse:
     type: object
     properties:
       AppInfo:
@@ -26966,23 +28557,22 @@ definitions:
             format: uint64
           appid:
             type: string
-          domain:
-            type: string
           name:
             type: string
+          domains:
+            type: array
+            items:
+              type: string
           developer:
             type: string
-          iconDid:
+          homeUrl:
             type: string
-          iconThumb:
+          iconUrl:
             type: string
-          quota:
-            type: string
-            format: uint64
           version:
             type: string
             format: uint64
-  misesid.misestm.misestm.QueryGetDidRegistryResponse:
+  misesid.misestm.v1beta1.QueryGetDidRegistryResponse:
     type: object
     properties:
       DidRegistry:
@@ -27004,7 +28594,7 @@ definitions:
           version:
             type: string
             format: uint64
-  misesid.misestm.misestm.QueryGetUserInfoResponse:
+  misesid.misestm.v1beta1.QueryGetUserInfoResponse:
     type: object
     properties:
       UserInfo:
@@ -27024,7 +28614,7 @@ definitions:
           version:
             type: string
             format: uint64
-  misesid.misestm.misestm.QueryGetUserRelationResponse:
+  misesid.misestm.v1beta1.QueryGetUserRelationResponse:
     type: object
     properties:
       UserRelation:
@@ -27039,20 +28629,72 @@ definitions:
             type: string
           uidTo:
             type: string
-          relType:
-            type: string
-            format: uint64
+          isFollowing:
+            type: boolean
+          isBlocking:
+            type: boolean
+          isReferredBy:
+            type: boolean
           version:
             type: string
             format: uint64
-  misesid.misestm.misestm.RestCreateDidRequest:
+  misesid.misestm.v1beta1.RestCreateDidRequest:
     type: object
     properties:
+      misesAppid:
+        type: string
       misesId:
         type: string
       pubKey:
         type: string
-  misesid.misestm.misestm.RestQueryDidResponse:
+  misesid.misestm.v1beta1.RestQueryAppFeeGrantResponse:
+    type: object
+    properties:
+      grant:
+        type: object
+        properties:
+          spendLimit:
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          period:
+            type: string
+          expiration:
+            type: string
+            format: date-time
+  misesid.misestm.v1beta1.RestQueryAppResponse:
+    type: object
+    properties:
+      pubInfo:
+        type: object
+        properties:
+          name:
+            type: string
+          domains:
+            type: array
+            items:
+              type: string
+          developer:
+            type: string
+          homeUrl:
+            type: string
+          iconUrl:
+            type: string
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.v1beta1.RestQueryDidResponse:
     type: object
     properties:
       didRegistry:
@@ -27074,7 +28716,7 @@ definitions:
           version:
             type: string
             format: uint64
-  misesid.misestm.misestm.RestQueryUserRelationResponse:
+  misesid.misestm.v1beta1.RestQueryUserRelationResponse:
     type: object
     properties:
       misesList:
@@ -27109,7 +28751,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  misesid.misestm.misestm.RestQueryUserResponse:
+  misesid.misestm.v1beta1.RestQueryUserResponse:
     type: object
     properties:
       pubInfo:
@@ -27142,7 +28784,7 @@ definitions:
             type: string
           iv:
             type: string
-  misesid.misestm.misestm.RestTxResponse:
+  misesid.misestm.v1beta1.RestTxResponse:
     type: object
     properties:
       txResponse:
@@ -27451,10 +29093,67 @@ definitions:
       code:
         type: integer
         format: int64
-  misesid.misestm.misestm.RestUpdateUserInfoRequest:
+  misesid.misestm.v1beta1.RestUpdateAppFeeGrantRequest:
     type: object
     properties:
-      misesId:
+      misesAppid:
+        type: string
+      misesUid:
+        type: string
+      grant:
+        type: object
+        properties:
+          spendLimit:
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          period:
+            type: string
+          expiration:
+            type: string
+            format: date-time
+      revoke:
+        type: boolean
+  misesid.misestm.v1beta1.RestUpdateAppInfoRequest:
+    type: object
+    properties:
+      misesAppid:
+        type: string
+      pubInfo:
+        type: object
+        properties:
+          name:
+            type: string
+          domains:
+            type: array
+            items:
+              type: string
+          developer:
+            type: string
+          homeUrl:
+            type: string
+          iconUrl:
+            type: string
+          version:
+            type: string
+            format: uint64
+  misesid.misestm.v1beta1.RestUpdateUserInfoRequest:
+    type: object
+    properties:
+      misesAppid:
+        type: string
+      misesUid:
         type: string
       pubInfo:
         type: object
@@ -27486,16 +29185,18 @@ definitions:
             type: string
           iv:
             type: string
-  misesid.misestm.misestm.RestUpdateUserRelationRequest:
+  misesid.misestm.v1beta1.RestUpdateUserRelationRequest:
     type: object
     properties:
-      misesId:
+      misesAppid:
+        type: string
+      misesUid:
         type: string
       targetId:
         type: string
       action:
         type: string
-  misesid.misestm.misestm.UserInfo:
+  misesid.misestm.v1beta1.UserInfo:
     type: object
     properties:
       creator:
@@ -27512,7 +29213,7 @@ definitions:
       version:
         type: string
         format: uint64
-  misesid.misestm.misestm.UserRelation:
+  misesid.misestm.v1beta1.UserRelation:
     type: object
     properties:
       creator:
@@ -27524,9 +29225,12 @@ definitions:
         type: string
       uidTo:
         type: string
-      relType:
-        type: string
-        format: uint64
+      isFollowing:
+        type: boolean
+      isBlocking:
+        type: boolean
+      isReferredBy:
+        type: boolean
       version:
         type: string
         format: uint64

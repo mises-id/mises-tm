@@ -104,12 +104,16 @@ func RegisterRoutes(clientCtx client.Context, rtr *mux.Router, withQuery bool) {
 	r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
 	r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
 	r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
+	r.HandleFunc("/mises/app", HandleUpdateAppInfoRequest(clientCtx)).Methods(MethodPost)
+	r.HandleFunc("/mises/app/feegrant", HandleUpdateAppFeeGrantRequest(clientCtx)).Methods(MethodPost)
 	r.HandleFunc("/mises/tx", HandleQueryTxRequest(clientCtx)).Methods(MethodGet)
 
 	if withQuery {
 		r.HandleFunc("/mises/did", HandleQueryDidRequest(clientCtx)).Methods(MethodGet)
 		r.HandleFunc("/mises/user", HandleQueryUserRequest(clientCtx)).Methods(MethodGet)
 		r.HandleFunc("/mises/user/relation", HandleQueryUserRelationRequest(clientCtx)).Methods(MethodGet)
+		r.HandleFunc("/mises/app", HandleQueryAppRequest(clientCtx)).Methods(MethodGet)
+		r.HandleFunc("/mises/app/feegrant", HandleQueryAppFeeGrantRequest(clientCtx)).Methods(MethodGet)
 	}
 
 }

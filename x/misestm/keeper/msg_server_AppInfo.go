@@ -15,12 +15,11 @@ func (k msgServer) CreateAppInfo(goCtx context.Context, msg *types.MsgCreateAppI
 	var AppInfo = types.AppInfo{
 		Creator:   msg.Creator,
 		Appid:     msg.Appid,
-		Domain:    msg.Domain,
 		Name:      msg.Name,
+		Domains:   msg.Domains,
 		Developer: msg.Developer,
-		IconDid:   msg.IconDid,
-		IconThumb: msg.IconThumb,
-		Quota:     msg.Quota,
+		HomeUrl:   msg.HomeUrl,
+		IconUrl:   msg.IconUrl,
 		Version:   msg.Version,
 	}
 
@@ -41,12 +40,11 @@ func (k msgServer) UpdateAppInfo(goCtx context.Context, msg *types.MsgUpdateAppI
 		Creator:   msg.Creator,
 		Id:        msg.Id,
 		Appid:     msg.Appid,
-		Domain:    msg.Domain,
 		Name:      msg.Name,
+		Domains:   msg.Domains,
 		Developer: msg.Developer,
-		IconDid:   msg.IconDid,
-		IconThumb: msg.IconThumb,
-		Quota:     msg.Quota,
+		HomeUrl:   msg.HomeUrl,
+		IconUrl:   msg.IconUrl,
 		Version:   msg.Version,
 	}
 

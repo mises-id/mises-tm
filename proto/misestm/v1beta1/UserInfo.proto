@@ -1,15 +1,15 @@
 syntax = "proto3";
-package misesid.misestm.misestm;
+package misesid.misestm.v1beta1;
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 import "gogoproto/gogo.proto";
 
-message UserRelation {
+message UserInfo {
   string creator = 1;
   uint64 id = 2;
-  string uidFrom = 3; 
-  string uidTo = 4; 
-  uint64 relType = 5; 
+  string uid = 3; 
+  string encData = 4; 
+  string iv = 5; 
   uint64 version = 6;
 }

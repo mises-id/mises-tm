@@ -9,11 +9,13 @@ var _ sdk.Msg = &MsgCreateUserRelation{}
 
 func NewMsgCreateUserRelation(creator string, uidFrom string, uidTo string, relType uint64, version uint64) *MsgCreateUserRelation {
 	return &MsgCreateUserRelation{
-		Creator: creator,
-		UidFrom: uidFrom,
-		UidTo:   uidTo,
-		RelType: relType,
-		Version: version,
+		Creator:      creator,
+		UidFrom:      uidFrom,
+		UidTo:        uidTo,
+		IsFollowing:  relType&RelTypeBitFollow != 0,
+		IsBlocking:   relType&RelTypeBitBlock != 0,
+		IsReferredBy: relType&RelTypeBitReferredBy != 0,
+		Version:      version,
 	}
 }
 
@@ -50,12 +52,14 @@ var _ sdk.Msg = &MsgUpdateUserRelation{}
 
 func NewMsgUpdateUserRelation(creator string, id uint64, uidFrom string, uidTo string, relType uint64, version uint64) *MsgUpdateUserRelation {
 	return &MsgUpdateUserRelation{
-		Id:      id,
-		Creator: creator,
-		UidFrom: uidFrom,
-		UidTo:   uidTo,
-		RelType: relType,
-		Version: version,
+		Id:           id,
+		Creator:      creator,
+		UidFrom:      uidFrom,
+		UidTo:        uidTo,
+		IsFollowing:  relType&RelTypeBitFollow != 0,
+		IsBlocking:   relType&RelTypeBitBlock != 0,
+		IsReferredBy: relType&RelTypeBitReferredBy != 0,
+		Version:      version,
 	}
 }
 

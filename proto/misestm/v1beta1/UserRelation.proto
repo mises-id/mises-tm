@@ -1,0 +1,17 @@
+syntax = "proto3";
+package misesid.misestm.v1beta1;
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+import "gogoproto/gogo.proto";
+
+message UserRelation {
+  string creator = 1;
+  uint64 id = 2;
+  string uidFrom = 3; 
+  string uidTo = 4; 
+  bool isFollowing = 5; 
+  bool isBlocking = 6; 
+  bool isReferredBy = 7;
+  uint64 version = 8;
+}

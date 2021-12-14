@@ -42,7 +42,7 @@ func (k msgServer) UpdateUserInfo(goCtx context.Context, msg *types.MsgUpdateUse
 		if err != nil {
 			return nil, err
 		}
-		msg.Id = misesAcc.UserInfoID
+		msg.Id = misesAcc.InfoID
 	} else {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "update by ID not supported")
 	}

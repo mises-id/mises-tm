@@ -1,3 +1,5 @@
+// +build cgo,tests
+
 package rest_test
 
 import (
@@ -27,8 +29,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	bankcli "github.com/cosmos/cosmos-sdk/x/bank/client/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/mises-id/mises-tm/app"
-	"github.com/mises-id/mises-tm/app/params"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	dbm "github.com/tendermint/tm-db"
 	_ "github.com/tendermint/tm-db/metadb"
@@ -119,7 +119,7 @@ func (s *IntegrationTestSuite) TestCreateDid() {
 
 	req := &types.MsgCreateMisesID{
 		MsgReqBase: types.MsgReqBase{
-			MisesID: "did:mises:" + account.GetAddress().String(),
+			MisesID: types.DIDPrefixForUser + account.GetAddress().String(),
 		},
 		PubKey: hex.EncodeToString(account.GetPubKey().Bytes()),
 	}

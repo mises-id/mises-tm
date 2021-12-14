@@ -1,15 +1,15 @@
 syntax = "proto3";
-package misesid.misestm.misestm;
+package misesid.misestm.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "cosmos/bank/v1beta1/bank.proto";
 
 // this line is used by starport scaffolding # proto/tx/import
-import "misestm/UserInfo.proto";
-import "misestm/UserRelation.proto";
-import "misestm/AppInfo.proto";
-import "misestm/DidRegistry.proto";
+import "misestm/v1beta1/UserInfo.proto";
+import "misestm/v1beta1/UserRelation.proto";
+import "misestm/v1beta1/AppInfo.proto";
+import "misestm/v1beta1/DidRegistry.proto";
 
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
@@ -82,8 +82,10 @@ message MsgCreateUserRelation {
   string creator = 1;
   string uidFrom = 2;
   string uidTo = 3;
-  uint64 relType = 4;
-  uint64 version = 5;
+  bool isFollowing = 4; 
+  bool isBlocking = 5; 
+  bool isReferredBy = 6;
+  uint64 version = 7;
 }
 
 message MsgCreateUserRelationResponse {
@@ -95,8 +97,10 @@ message MsgUpdateUserRelation {
   uint64 id = 2;
   string uidFrom = 3;
   string uidTo = 4;
-  uint64 relType = 5;
-  uint64 version = 6;
+  bool isFollowing = 5; 
+  bool isBlocking = 6; 
+  bool isReferredBy = 7;
+  uint64 version = 8;
 }
 
 message MsgUpdateUserRelationResponse { }
@@ -108,16 +112,16 @@ message MsgDeleteUserRelation {
 
 message MsgDeleteUserRelationResponse { }
 
+
 message MsgCreateAppInfo {
   string creator = 1;
   string appid = 2;
-  string domain = 3;
-  string name = 4;
+  string name = 3;
+  repeated string domains = 4;
   string developer = 5;
-  string iconDid = 6;
-  string iconThumb = 7;
-  uint64 quota = 8;
-  uint64 version = 9;
+  string home_url = 6;
+  string icon_url = 7;
+  uint64 version = 8;
 }
 
 message MsgCreateAppInfoResponse {
@@ -128,13 +132,12 @@ message MsgUpdateAppInfo {
   string creator = 1;
   uint64 id = 2;
   string appid = 3;
-  string domain = 4;
-  string name = 5;
+  string name = 4;
+  repeated string domains = 5;
   string developer = 6;
-  string iconDid = 7;
-  string iconThumb = 8;
-  uint64 quota = 9;
-  uint64 version = 10;
+  string home_url = 7;
+  string icon_url = 8;
+  uint64 version = 9;
 }
 
 message MsgUpdateAppInfoResponse { }

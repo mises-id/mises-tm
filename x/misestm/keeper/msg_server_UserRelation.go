@@ -16,33 +16,17 @@ func (k msgServer) CreateUserRelation(goCtx context.Context, msg *types.MsgCreat
 	if err != nil {
 		return nil, err
 	}
-	action := msg.RelType
-	var relType uint64
-	if oldRelation != nil {
-		relType = oldRelation.RelType
-	} else {
-		relType = 0
-	}
-	switch action {
-	case 0:
-		relType |= types.RelTypeBitFollow
-	case 1:
-		relType &= ^types.RelTypeBitFollow
-	case 2:
-		relType |= types.RelTypeBitBlock
-	case 3:
-		relType |= ^types.RelTypeBitBlock
-
-	}
 	var newRelation types.UserRelation
 	if oldRelation == nil {
 
 		newRelation = types.UserRelation{
-			Creator: msg.Creator,
-			UidFrom: msg.UidFrom,
-			UidTo:   msg.UidTo,
-			RelType: relType,
-			Version: 0,
+			Creator:      msg.Creator,
+			UidFrom:      msg.UidFrom,
+			UidTo:        msg.UidTo,
+			IsFollowing:  msg.IsFollowing,
+			IsBlocking:   msg.IsBlocking,
+			IsReferredBy: msg.IsReferredBy,
+			Version:      0,
 		}
 
 		id := k.AppendUserRelation(
@@ -52,7 +36,8 @@ func (k msgServer) CreateUserRelation(goCtx context.Context, msg *types.MsgCreat
 		newRelation.Id = id
 	} else {
 		newRelation = *oldRelation
-		newRelation.RelType = relType
+		newRelation.IsFollowing = msg.IsFollowing
+		newRelation.IsBlocking = msg.IsBlocking
 		newRelation.Version++
 		k.SetUserRelation(
 			ctx,

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil/base58"
@@ -20,6 +21,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authclient "github.com/cosmos/cosmos-sdk/x/auth/client"
+	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 )
 
@@ -219,7 +221,7 @@ func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid boo
 		if err != nil {
 			return nil, err
 		}
-		addr, err := types.AddrFormDid(msgReq.MisesID)
+		addr, _, err := types.AddrFormDid(msgReq.MisesID)
 		if err != nil {
 			return nil, err
 		}
@@ -237,12 +239,12 @@ func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid boo
 		if err != nil {
 			return nil, err
 		}
-		addr, err := types.AddrFormDid(msgReq.MisesID)
+		addr, _, err := types.AddrFormDid(msgReq.MisesID)
 		if err != nil {
 			return nil, err
 		}
 		if err := clientCtx.AccountRetriever.EnsureExists(clientCtx, addr); err == nil {
-			return nil, errors.New("user already exsit")
+			return nil, errors.New("addr already exsit")
 		}
 		key, err := hex.DecodeString(msgReq.PubKey)
 		if err != nil {
@@ -292,7 +294,7 @@ func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 		msg := types.NewMsgUpdateUserInfo(
 			clientCtx.FromAddress.String(),
 			types.InvalidID,
-			req.MisesId,
+			req.MisesUid,
 			req.PriInfo.EncData,
 			req.PriInfo.Iv,
 			0,
@@ -345,11 +347,125 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 
 		msg := types.NewMsgCreateUserRelation(
 			clientCtx.FromAddress.String(),
-			req.MisesId,
+			req.MisesUid,
 			req.TargetId,
 			action,
 			0,
 		)
+		if err := msg.ValidateBasic(); err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+		txf := tx.Factory{}
+		txf = prepareFactory(clientCtx, txf)
+
+		res, err := broadcastTx(clientCtx, txf, msg)
+		postBroadcastTx(clientCtx, res, err, w)
+	}
+}
+
+// HandleUpdateAppInfoRequest the UpdateAppInfoRequest http handler
+func HandleUpdateAppInfoRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.RestUpdateAppInfoRequest
+		reqMsg, err := ParseReqeustBody(clientCtx, r, false)
+		if rest.CheckBadRequestError(w, err) {
+			return
+		}
+		err = clientCtx.Codec.UnmarshalJSON(reqMsg, &req)
+		if err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+
+		clientCtx, err = prepareSigner(clientCtx)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		msg := types.NewMsgUpdateAppInfo(
+			clientCtx.FromAddress.String(),
+			types.InvalidID,
+			req.MisesAppid,
+			req.PubInfo.Name,
+			req.PubInfo.Domains,
+			req.PubInfo.Developer,
+			req.PubInfo.HomeUrl,
+			req.PubInfo.IconUrl,
+			req.PubInfo.Version,
+		)
+		if err := msg.ValidateBasic(); err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+		txf := tx.Factory{}
+		txf = prepareFactory(clientCtx, txf)
+
+		res, err := broadcastTx(clientCtx, txf, msg)
+		postBroadcastTx(clientCtx, res, err, w)
+	}
+}
+
+// HandleUpdateAppFeeGrantRequest the UpdateAppFeeGrantRequest http handler
+func HandleUpdateAppFeeGrantRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var req types.RestUpdateAppFeeGrantRequest
+		reqMsg, err := ParseReqeustBody(clientCtx, r, false)
+		if rest.CheckBadRequestError(w, err) {
+			return
+		}
+		// NOTE: amino is used intentionally here, don't migrate it!
+		err = clientCtx.Codec.UnmarshalJSON(reqMsg, &req)
+		if err != nil {
+			if rest.CheckBadRequestError(w, err) {
+				return
+			}
+		}
+
+		clientCtx, err = prepareSigner(clientCtx)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		basic := feegrant.BasicAllowance{}
+
+		periodLimit := []sdk.Coin{*req.Grant.SpendLimit}
+		periodic := feegrant.PeriodicAllowance{
+			Basic:            basic,
+			Period:           req.Grant.Period,
+			PeriodReset:      time.Now().Add(req.Grant.Period),
+			PeriodSpendLimit: periodLimit,
+			PeriodCanSpend:   periodLimit,
+		}
+
+		var grant feegrant.FeeAllowanceI
+		grant = &periodic
+
+		allowedMsgs := []string{""}
+
+		grant, err = feegrant.NewAllowedMsgAllowance(grant, allowedMsgs)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		appAddr, _, err := types.AddrFormDid(req.MisesAppid)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+		userAddr, _, err := types.AddrFormDid(req.MisesUid)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
+		msg, err := feegrant.NewMsgGrantAllowance(grant, appAddr, userAddr)
+		if rest.CheckInternalServerError(w, err) {
+			return
+		}
+
 		if err := msg.ValidateBasic(); err != nil {
 			if rest.CheckBadRequestError(w, err) {
 				return

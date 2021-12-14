@@ -3,10 +3,10 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,7 +15,7 @@ import (
 var _ types.RestQueryServer = Keeper{}
 
 func (k Keeper) QueryDid(c context.Context, req *types.RestQueryDidRequest) (*types.RestQueryDidResponse, error) {
- 	if req == nil {
+	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	var DidRegistry types.DidRegistry
@@ -42,26 +42,25 @@ func (k Keeper) QueryUser(c context.Context, req *types.RestQueryUserRequest) (*
 	var UserInfo types.UserInfo
 	ctx := sdk.UnwrapSDKContext(c)
 	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
+	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesUid)
 	if err != nil {
 		return nil, err
 	}
 
 	if misesAcc == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesUid)
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(misesAcc.UserInfoID)), &UserInfo)
+	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(misesAcc.InfoID)), &UserInfo)
 
-	pubInfo := types.PublicUserInfo{
-	}
+	pubInfo := types.PublicUserInfo{}
 	priInfo := types.PrivateUserInfo{
 		EncData: UserInfo.EncData,
-		Iv:   UserInfo.Iv,
+		Iv:      UserInfo.Iv,
 	}
 
-	return &types.RestQueryUserResponse{PubInfo: &pubInfo, PriInfo:&priInfo}, nil
+	return &types.RestQueryUserResponse{PubInfo: &pubInfo, PriInfo: &priInfo}, nil
 }
 
 // query user relations
@@ -71,18 +70,18 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
+	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesUid)
 	if err != nil {
 		return nil, err
 	}
 
 	if misesAcc == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesUid)
 	}
-	pagination := req.Pagination 
+	pagination := req.Pagination
 	if pagination == nil {
 		pagination = &query.PageRequest{
-			Key: []byte(""),
+			Key:   []byte(""),
 			Limit: 100,
 		}
 	}
@@ -90,7 +89,10 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 	if req.Filter == "following" {
 		relType = types.RelTypeBitFollow
 	}
-	UserRelations, err := userMgr.GetUserRelations(ctx, relType, req.MisesId, string(pagination.Key), int(pagination.Limit))
+	if req.Filter == "blocking" {
+		relType = types.RelTypeBitBlock
+	}
+	UserRelations, err := userMgr.GetUserRelations(ctx, relType, req.MisesUid, string(pagination.Key), int(pagination.Limit))
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +107,56 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 	pageRes := &query.PageResponse{NextKey: []byte(nextKey)}
 
 	resp := types.RestQueryUserRelationResponse{
-		MisesList: misesList,
-		Pagination:   pageRes,
+		MisesList:  misesList,
+		Pagination: pageRes,
 	}
 	return &resp, nil
+}
+
+func (k Keeper) QueryApp(c context.Context, req *types.RestQueryAppRequest) (*types.RestQueryAppResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	var AppInfo types.AppInfo
+	ctx := sdk.UnwrapSDKContext(c)
+	appMgr := NewAppMgrImpl(k)
+	misesAcc, err := appMgr.GetAppAccount(ctx, req.MisesAppid)
+	if err != nil {
+		return nil, err
+	}
+
+	if misesAcc == nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesAppid)
+	}
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
+	k.cdc.Unmarshal(store.Get(GetAppInfoIDBytes(misesAcc.InfoID)), &AppInfo)
+
+	pubInfo := types.PublicAppInfo{
+		Name:      AppInfo.Name,
+		Domains:   AppInfo.Domains,
+		Developer: AppInfo.Developer,
+		HomeUrl:   AppInfo.HomeUrl,
+		IconUrl:   AppInfo.IconUrl,
+		Version:   AppInfo.Version,
+	}
+
+	return &types.RestQueryAppResponse{PubInfo: &pubInfo}, nil
+}
+
+func (k Keeper) QueryAppFeeGrant(c context.Context, req *types.RestQueryAppFeeGrantRequest) (*types.RestQueryAppFeeGrantResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+	appMgr := NewAppMgrImpl(k)
+	fg, err := appMgr.GetAppFeeGrant(ctx, req.MisesAppid, req.MisesUid)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.RestQueryAppFeeGrantResponse{
+		Grant: fg,
+	}, nil
+
 }

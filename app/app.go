@@ -405,6 +405,7 @@ func New(
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
 		app.AccountKeeper,
+		app.FeeGrantKeeper,
 		app.NFTKeeper,
 		mongodb.(dbm.RawDB),
 	)

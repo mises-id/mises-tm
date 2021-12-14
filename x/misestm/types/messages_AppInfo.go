@@ -7,16 +7,15 @@ import (
 
 var _ sdk.Msg = &MsgCreateAppInfo{}
 
-func NewMsgCreateAppInfo(creator string, appid string, domain string, name string, developer string, iconDid string, iconThumb string, quota uint64, version uint64) *MsgCreateAppInfo {
+func NewMsgCreateAppInfo(creator string, appid string, name string, domains []string, developer string, homeUrl string, iconUrl string, version uint64) *MsgCreateAppInfo {
 	return &MsgCreateAppInfo{
 		Creator:   creator,
 		Appid:     appid,
-		Domain:    domain,
 		Name:      name,
+		Domains:   domains,
 		Developer: developer,
-		IconDid:   iconDid,
-		IconThumb: iconThumb,
-		Quota:     quota,
+		HomeUrl:   homeUrl,
+		IconUrl:   iconUrl,
 		Version:   version,
 	}
 }
@@ -52,17 +51,16 @@ func (msg *MsgCreateAppInfo) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgUpdateAppInfo{}
 
-func NewMsgUpdateAppInfo(creator string, id uint64, appid string, domain string, name string, developer string, iconDid string, iconThumb string, quota uint64, version uint64) *MsgUpdateAppInfo {
+func NewMsgUpdateAppInfo(creator string, id uint64, appid string, name string, domains []string, developer string, homeUrl string, iconUrl string, version uint64) *MsgUpdateAppInfo {
 	return &MsgUpdateAppInfo{
 		Id:        id,
 		Creator:   creator,
 		Appid:     appid,
-		Domain:    domain,
 		Name:      name,
+		Domains:   domains,
 		Developer: developer,
-		IconDid:   iconDid,
-		IconThumb: iconThumb,
-		Quota:     quota,
+		HomeUrl:   homeUrl,
+		IconUrl:   iconUrl,
 		Version:   version,
 	}
 }

@@ -82,7 +82,7 @@ func HandleQueryUserRequest(clientCtx client.Context) http.HandlerFunc {
 		queryClient := types.NewRestQueryClient(clientCtx)
 
 		params := &types.RestQueryUserRequest{
-			MisesId: misesIDStr,
+			MisesUid: misesIDStr,
 		}
 
 		resp, err := queryClient.QueryUser(context.Background(), params)
@@ -121,8 +121,8 @@ func HandleQueryUserRelationRequest(clientCtx client.Context) http.HandlerFunc {
 		queryClient := types.NewRestQueryClient(clientCtx)
 
 		params := &types.RestQueryUserRelationRequest{
-			MisesId: misesIDStr,
-			Filter:  filterStr,
+			MisesUid: misesIDStr,
+			Filter:   filterStr,
 			Pagination: &query.PageRequest{
 				Key:        []byte(keyStr),
 				Offset:     uint64(offset),
@@ -132,6 +132,59 @@ func HandleQueryUserRelationRequest(clientCtx client.Context) http.HandlerFunc {
 		}
 
 		resp, err := queryClient.QueryUserRelation(context.Background(), params)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		PostProcessResponseBare(w, clientCtx, resp)
+	}
+}
+
+// HandleQueryAppRequest the QueryAppRequest http handler
+func HandleQueryAppRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		misesIDStr := r.Form.Get("mises_appid")
+
+		queryClient := types.NewRestQueryClient(clientCtx)
+
+		params := &types.RestQueryAppRequest{
+			MisesAppid: misesIDStr,
+		}
+
+		resp, err := queryClient.QueryApp(context.Background(), params)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		PostProcessResponseBare(w, clientCtx, resp)
+	}
+}
+
+// HandleQueryAppFeeGrantRequest the QueryAppFeeGrantRequest http handler
+func HandleQueryAppFeeGrantRequest(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		misesAppIDStr := r.Form.Get("mises_appid")
+		misesUIDStr := r.Form.Get("mises_uid")
+		queryClient := types.NewRestQueryClient(clientCtx)
+
+		params := &types.RestQueryAppFeeGrantRequest{
+			MisesAppid: misesAppIDStr,
+			MisesUid:   misesUIDStr,
+		}
+
+		resp, err := queryClient.QueryAppFeeGrant(context.Background(), params)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
