@@ -114,17 +114,20 @@ func prepareSigner(clientCtx client.Context) (client.Context, error) {
 	if clientCtx.ChainID == "" {
 		clientCtx = clientCtx.WithChainID("mises")
 	}
-	keyring, key, err := getLocalSignerKey(clientCtx)
-	if err != nil {
-		panic(err)
-	}
-	keyname := key.GetName()
-	keyaddr := key.GetAddress()
+	if clientCtx.Keyring == nil {
+		keyring, key, err := getTestSignerKey(clientCtx)
+		if err != nil {
+			panic(err)
+		}
+		keyname := key.GetName()
+		keyaddr := key.GetAddress()
 
-	clientCtx = clientCtx.WithKeyring(keyring).
-		WithFromAddress(keyaddr).
-		WithFromName(keyname).
-		WithBroadcastMode(flags.BroadcastSync)
+		clientCtx = clientCtx.WithKeyring(keyring).
+			WithFromAddress(keyaddr).
+			WithFromName(keyname)
+	}
+
+	clientCtx = clientCtx.WithBroadcastMode(flags.BroadcastSync)
 	return clientCtx, nil
 }
 

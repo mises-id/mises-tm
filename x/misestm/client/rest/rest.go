@@ -32,7 +32,7 @@ var (
 	LocalKey     keyring.Info
 )
 
-func getLocalSignerKey(clientCtx client.Context) (keyring.Keyring, keyring.Info, error) {
+func getTestSignerKey(clientCtx client.Context) (keyring.Keyring, keyring.Info, error) {
 
 	if LocalKeyring == nil || LocalKey == nil {
 		var err error
@@ -53,18 +53,23 @@ func getLocalSignerKey(clientCtx client.Context) (keyring.Keyring, keyring.Info,
 	return LocalKeyring, LocalKey, nil
 }
 
-func starSeqGenerator(clientCtx client.Context) (chan SeqInfo, chan int, error) {
+func StarSeqGenerator(clientCtx client.Context) error {
 
 	seqChan := make(chan SeqInfo, 1)
 	cmdChan := make(chan int, 1)
 	ar := clientCtx.AccountRetriever
-
-	_, key, err := getLocalSignerKey(clientCtx)
-	if err != nil {
-		panic(err)
+	var key keyring.Info
+	var err error
+	if clientCtx.Keyring != nil {
+		key, err = clientCtx.Keyring.KeyByAddress(clientCtx.FromAddress)
+	} else {
+		_, key, err = getTestSignerKey(clientCtx)
 	}
-
+	if err != nil {
+		return err
+	}
 	keyaddr := key.GetAddress()
+
 	go func() {
 		var num, seq uint64
 		for {
@@ -89,31 +94,32 @@ func starSeqGenerator(clientCtx client.Context) (chan SeqInfo, chan int, error) 
 		}
 
 	}()
-	return seqChan, cmdChan, nil
+	SeqInfoChan = seqChan
+	SeqCmdChan = cmdChan
+	return nil
 }
 
 // RegisterRoutes registers all transaction routes on the provided router.
-func RegisterRoutes(clientCtx client.Context, rtr *mux.Router, withQuery bool) {
-	var err error
-	SeqInfoChan, SeqCmdChan, err = starSeqGenerator(clientCtx)
-	if err != nil {
-		panic(err)
-	}
+func RegisterRoutes(clientCtx client.Context, rtr *mux.Router, postapi bool) {
 
 	r := clientrest.WithHTTPDeprecationHeaders(rtr)
-	r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/app", HandleUpdateAppInfoRequest(clientCtx)).Methods(MethodPost)
-	r.HandleFunc("/mises/app/feegrant", HandleUpdateAppFeeGrantRequest(clientCtx)).Methods(MethodPost)
+
+	r.HandleFunc("/mises/did", HandleQueryDidRequest(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/mises/user", HandleQueryUserRequest(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/mises/user/relation", HandleQueryUserRelationRequest(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/mises/app", HandleQueryAppRequest(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/mises/app/feegrant", HandleQueryAppFeeGrantRequest(clientCtx)).Methods(MethodGet)
+
 	r.HandleFunc("/mises/tx", HandleQueryTxRequest(clientCtx)).Methods(MethodGet)
 
-	if withQuery {
-		r.HandleFunc("/mises/did", HandleQueryDidRequest(clientCtx)).Methods(MethodGet)
-		r.HandleFunc("/mises/user", HandleQueryUserRequest(clientCtx)).Methods(MethodGet)
-		r.HandleFunc("/mises/user/relation", HandleQueryUserRelationRequest(clientCtx)).Methods(MethodGet)
-		r.HandleFunc("/mises/app", HandleQueryAppRequest(clientCtx)).Methods(MethodGet)
-		r.HandleFunc("/mises/app/feegrant", HandleQueryAppFeeGrantRequest(clientCtx)).Methods(MethodGet)
+	if postapi {
+		// post apis is used in LCD/ClientSDK only
+		_ = StarSeqGenerator(clientCtx)
+		r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
+		r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
+		r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
+		r.HandleFunc("/mises/app", HandleUpdateAppInfoRequest(clientCtx)).Methods(MethodPost)
+		r.HandleFunc("/mises/app/feegrant", HandleUpdateAppFeeGrantRequest(clientCtx)).Methods(MethodPost)
 	}
 
 }

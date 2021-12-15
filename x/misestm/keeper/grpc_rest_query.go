@@ -30,7 +30,10 @@ func (k Keeper) QueryDid(c context.Context, req *types.RestQueryDidRequest) (*ty
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
-	k.cdc.Unmarshal(store.Get(GetDidRegistryIDBytes(misesAcc.DidRegistryID)), &DidRegistry)
+
+	if err := k.cdc.Unmarshal(store.Get(GetDidRegistryIDBytes(misesAcc.DidRegistryID)), &DidRegistry); err != nil {
+		return nil, err
+	}
 
 	return &types.RestQueryDidResponse{DidRegistry: &DidRegistry}, nil
 }
@@ -52,7 +55,10 @@ func (k Keeper) QueryUser(c context.Context, req *types.RestQueryUserRequest) (*
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(misesAcc.InfoID)), &UserInfo)
+
+	if err := k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(misesAcc.InfoID)), &UserInfo); err != nil {
+		return nil, err
+	}
 
 	pubInfo := types.PublicUserInfo{}
 	priInfo := types.PrivateUserInfo{
@@ -130,7 +136,10 @@ func (k Keeper) QueryApp(c context.Context, req *types.RestQueryAppRequest) (*ty
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AppInfoKey))
-	k.cdc.Unmarshal(store.Get(GetAppInfoIDBytes(misesAcc.InfoID)), &AppInfo)
+
+	if err := k.cdc.Unmarshal(store.Get(GetAppInfoIDBytes(misesAcc.InfoID)), &AppInfo); err != nil {
+		return nil, err
+	}
 
 	pubInfo := types.PublicAppInfo{
 		Name:      AppInfo.Name,

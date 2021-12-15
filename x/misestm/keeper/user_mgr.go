@@ -235,12 +235,8 @@ func (k *userMgr) setLatestUserRelation(rel *types.UserRelation) (err error) {
 	return nil
 }
 func (k *userMgr) setLatestTag(filter bson.M, isLatest uint8) (err error) {
-	bsonval := bson.D{
-		{"isLatest", isLatest},
-	}
-	update := bson.D{
-		{"$set", bsonval},
-	}
+	bsonval := bson.M{"isLatest": isLatest}
+	update := bson.M{"$set": bsonval}
 
 	opts := &options.UpdateOptions{}
 	opts.SetUpsert(false)

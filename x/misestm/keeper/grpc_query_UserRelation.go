@@ -53,7 +53,10 @@ func (k Keeper) UserRelation(c context.Context, req *types.QueryGetUserRelationR
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	k.cdc.Unmarshal(store.Get(GetUserRelationIDBytes(req.Id)), &UserRelation)
+
+	if err := k.cdc.Unmarshal(store.Get(GetUserRelationIDBytes(req.Id)), &UserRelation); err != nil {
+		return nil, err
+	}
 
 	return &types.QueryGetUserRelationResponse{UserRelation: &UserRelation}, nil
 }

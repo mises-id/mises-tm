@@ -53,7 +53,10 @@ func (k Keeper) UserInfo(c context.Context, req *types.QueryGetUserInfoRequest) 
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserInfoKey))
-	k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(req.Id)), &UserInfo)
+
+	if err := k.cdc.Unmarshal(store.Get(GetUserInfoIDBytes(req.Id)), &UserInfo); err != nil {
+		return nil, err
+	}
 
 	return &types.QueryGetUserInfoResponse{UserInfo: &UserInfo}, nil
 }

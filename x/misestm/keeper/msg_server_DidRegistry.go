@@ -43,11 +43,13 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	if _, ok := baseAccount.(*authtypes.BaseAccount); !ok {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid account type; expected: BaseAccount, got: %T", baseAccount)
 	}
-	var acc authtypes.AccountI
-	acc = baseAccount
+	var acc authtypes.AccountI = baseAccount
 	pubKeyBytes := base58.Decode(DidRegistry.PkeyMultibase)
 	pubKey := secp256k1.PubKey{Key: pubKeyBytes}
-	acc.SetPubKey(&pubKey)
+	err = acc.SetPubKey(&pubKey)
+	if err != nil {
+		return nil, err
+	}
 	ak.SetAccount(ctx, acc)
 
 	defer func() {
