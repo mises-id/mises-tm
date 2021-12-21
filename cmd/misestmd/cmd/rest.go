@@ -58,7 +58,7 @@ func runRest(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	rest.RegisterRoutes(clientCtx, rtr, true)
+	rest.RegisterRoutes(clientCtx, rtr)
 	rtr.Handle("/static/mises.yml", http.FileServer(http.FS(docs.Docs)))
 	rtr.HandleFunc("/", openapiconsole.Handler("mises light", "/static/mises.yml"))
 

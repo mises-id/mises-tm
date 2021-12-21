@@ -114,20 +114,19 @@ message NFT {
 
 We use a new class of NFT called NamingNFT to record the naming registry.
 
-First we introduce some roles in  MNS system:
+First we introduce some definitions in  MNS system:
 
-- The MNS Admin, who build the MSN system
-- The MNS Operator, who mint/create a NamingNFT for the system.
-- The owner of the NamingNFT, who buy name from operator, and  change the naming resolution entries of a NamingNFT.
+- the MNS module account, owns a MIS token pool that operate the whole system
+- The MNS Admin, who build the MSN system. Who can withdraw MIS from the MNS module account
+- The owner of the NamingNFT, who mint/create a NamingNFT, and send MIS the MNS module account to activate the NamingNFT a period, and  change the naming resolution entries of a NamingNFT.
 - The resolver, who read the NamingNFT  to resolve a name.
 
 
 
 Some NamingNFT class related info MUST included in the class.data field , including:
 
-- The MNS operator addresses, NamingNFT SHOULD be mint ,issue and burn by the MNS operators.
-- The regexp rule of name and subnames of any NameNFT can be minted by the operator.Each operator SHALL have different rule.
-- The regexp rule of the target address that reserved suffix resolution entry can accept. For example: name.eth MUST map to an eth address,  name.mis MUST map to an miss address, name.home MUST map to an URL .
+- The prices rules: to calculate the prices of a given name.
+- The reserved suffix rules : regexp rules of reserved suffix  that a resolution entry can accept. For example: name.eth MUST map to an eth address,  name.mis MUST map to an miss address, name.home MUST map to an URL .
 
 The NamingNFT nft class will be created using a msg in genesis.json. And the class owner will be the MNS admin. Only MNS admin can modify the NamingNFT class.
 
@@ -139,33 +138,33 @@ And some NamingNFT  related info MUST included in the nft.data field , including
 
 - The Naming registry, including many name/subname ->  address/url mapping.This field can only be modified by the current owner of this NamingNFT.
 - The Minter/Operator address who mint this NFT.This field is readonly.
-- The expiring block height of the nft, any MNS resolve should stop resolve this entry after this block. This field can only be modified by the minter or MNS admin
+- The TTL(represented by a block height) of the nft, any MNS resolve should stop resolve this entry after this block. This field can only be modified by the minter by send MIS to the MNS module account.
 
 
 
 We  need some new Msgs type to create and modify    Naming NFT class by the MNS admin:
 
 ```protobuf
-message AddressRule {
+message SuffixRule {
   string suffix;
   string address_regex_rule;
 }
-
-message Operator {
-  string address;
+message PriceRule {
+  Coin price;
   string name_regex_rule;
   string suffix_regex_rule;
-  uint64 nft_mint_limit;
+  uint64 ttl;
+  uint64 max_subname_count;
 }
 
 message MsgCreateNamingNFTClass {
   string naming_nft_class_id;
-  repeat AddressRule reserved_suffix_rules ;
-  repeat Operator operators;
+  repeat SuffixRule reserved_suffix;
+  repeat PriceRule prices;
 }
-message MsgEditOperator {
-	Operator operator;
-	bool is_remove;
+message MsgEditMNSRules {
+  repeat SuffixRule reserved_suffix;
+  repeat PriceRule prices;
 }
 ```
 
@@ -176,6 +175,7 @@ We also need some new Msgs type to mint and modify  a NFT will be owned by an ac
 ```protobuf
 message MsgMintNamingNFT {
   string naming_nft_id;
+  PriceRule price;
 }
 message NamingEntry {
   string suffix;
@@ -185,9 +185,9 @@ message MsgEditNamingNFTResolution {
 	string naming_nft_id；
   repeat NamingEntry entries;
 }
-message MsgEditNamingNFTExpiration {
+message MsgRenewNamingNFT{
 	string naming_nft_id；
-  uint64 expiring_block_height;
+  PriceRule price;
 }
 ```
 
@@ -212,13 +212,12 @@ Not related
 - compatible with the cosmos NFT design, and thus suitable for ibc/gravity transfer in the future
 - Simple and enough for basic usage.
 - Upgradable by changing name and address regex rules.
-- We can authorize many operators to sell diffrent partition of names
 - the name regex rule can be uses to limit the name length, or special chars.
 
 ### Negative
 
 - user may confused it with ENS
-- a admin account is needed so mint process is centralized
+- when and how the admin account use the MNS token pool is not defined
 - No reverse naming resolution is native supported 
 
 ### Neutral
@@ -232,8 +231,7 @@ We may also allow more partner accounts to be able to do the same job later.
 
 ## Test Cases [optional]
 
-- MNS admin  add new operator to the system
-- MNS operator mint new mises name
+- MNS admin  add new rules to the  MNS system
 - Mises user buy mises name for a given period
 - Edit sub name mapings
 - Map and resolve name.eth to an eth address

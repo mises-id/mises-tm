@@ -3,7 +3,6 @@ package rest
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/gorilla/mux"
@@ -53,54 +52,54 @@ func getTestSignerKey(clientCtx client.Context) (keyring.Keyring, keyring.Info, 
 	return LocalKeyring, LocalKey, nil
 }
 
-func StarSeqGenerator(clientCtx client.Context) error {
+// func starSeqGenerator(clientCtx client.Context) error {
 
-	seqChan := make(chan SeqInfo, 1)
-	cmdChan := make(chan int, 1)
-	ar := clientCtx.AccountRetriever
-	var key keyring.Info
-	var err error
-	if clientCtx.Keyring != nil {
-		key, err = clientCtx.Keyring.KeyByAddress(clientCtx.FromAddress)
-	} else {
-		_, key, err = getTestSignerKey(clientCtx)
-	}
-	if err != nil {
-		return err
-	}
-	keyaddr := key.GetAddress()
+// 	seqChan := make(chan SeqInfo, 1)
+// 	cmdChan := make(chan int, 1)
+// 	ar := clientCtx.AccountRetriever
+// 	var key keyring.Info
+// 	var err error
+// 	if clientCtx.Keyring != nil {
+// 		key, err = clientCtx.Keyring.KeyByAddress(clientCtx.FromAddress)
+// 	} else {
+// 		_, key, err = getTestSignerKey(clientCtx)
+// 	}
+// 	if err != nil {
+// 		return err
+// 	}
+// 	keyaddr := key.GetAddress()
 
-	go func() {
-		var num, seq uint64
-		for {
-			if seq == 0 {
-				var err error
-				num, seq, err = ar.GetAccountNumberSequence(clientCtx, keyaddr)
-				if err != nil {
-					time.Sleep(2 * time.Second)
-					continue
-				}
-			}
+// 	go func() {
+// 		var num, seq uint64
+// 		for {
+// 			if seq == 0 {
+// 				var err error
+// 				num, seq, err = ar.GetAccountNumberSequence(clientCtx, keyaddr)
+// 				if err != nil {
+// 					time.Sleep(2 * time.Second)
+// 					continue
+// 				}
+// 			}
 
-			seqChan <- SeqInfo{nextNum: num, nextSeq: seq}
+// 			seqChan <- SeqInfo{nextNum: num, nextSeq: seq}
 
-			next := <-cmdChan
-			if next == 1 {
-				seq = 0
-			} else {
-				seq++
-			}
+// 			next := <-cmdChan
+// 			if next == 1 {
+// 				seq = 0
+// 			} else {
+// 				seq++
+// 			}
 
-		}
+// 		}
 
-	}()
-	SeqInfoChan = seqChan
-	SeqCmdChan = cmdChan
-	return nil
-}
+// 	}()
+// 	SeqInfoChan = seqChan
+// 	SeqCmdChan = cmdChan
+// 	return nil
+// }
 
 // RegisterRoutes registers all transaction routes on the provided router.
-func RegisterRoutes(clientCtx client.Context, rtr *mux.Router, postapi bool) {
+func RegisterRoutes(clientCtx client.Context, rtr *mux.Router) {
 
 	r := clientrest.WithHTTPDeprecationHeaders(rtr)
 
@@ -112,15 +111,15 @@ func RegisterRoutes(clientCtx client.Context, rtr *mux.Router, postapi bool) {
 
 	r.HandleFunc("/mises/tx", HandleQueryTxRequest(clientCtx)).Methods(MethodGet)
 
-	if postapi {
-		// post apis is used in LCD/ClientSDK only
-		_ = StarSeqGenerator(clientCtx)
-		r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
-		r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
-		r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
-		r.HandleFunc("/mises/app", HandleUpdateAppInfoRequest(clientCtx)).Methods(MethodPost)
-		r.HandleFunc("/mises/app/feegrant", HandleUpdateAppFeeGrantRequest(clientCtx)).Methods(MethodPost)
-	}
+	// if postapi {
+	// 	// post apis is used in LCD/ClientSDK only
+	// 	_ = StarSeqGenerator(clientCtx)
+	// 	r.HandleFunc("/mises/did", HandleCreateDidRequest(clientCtx)).Methods(MethodPost)
+	// 	r.HandleFunc("/mises/user", HandleUpdateUserInfoRequest(clientCtx)).Methods(MethodPost)
+	// 	r.HandleFunc("/mises/user/relation", HandleUpdateUserRelationRequest(clientCtx)).Methods(MethodPost)
+	// 	r.HandleFunc("/mises/app", HandleUpdateAppInfoRequest(clientCtx)).Methods(MethodPost)
+	// 	r.HandleFunc("/mises/app/feegrant", HandleUpdateAppFeeGrantRequest(clientCtx)).Methods(MethodPost)
+	// }
 
 }
 

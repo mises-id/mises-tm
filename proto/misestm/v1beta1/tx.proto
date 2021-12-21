@@ -10,6 +10,7 @@ import "misestm/v1beta1/UserInfo.proto";
 import "misestm/v1beta1/UserRelation.proto";
 import "misestm/v1beta1/AppInfo.proto";
 import "misestm/v1beta1/DidRegistry.proto";
+import "misestm/v1beta1/rest_tx.proto";
 
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
