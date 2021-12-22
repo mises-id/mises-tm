@@ -23,23 +23,95 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type PublicAppInfo struct {
+	Name      string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Domains   []string `protobuf:"bytes,2,rep,name=domains,proto3" json:"domains,omitempty"`
+	Developer string   `protobuf:"bytes,3,opt,name=developer,proto3" json:"developer,omitempty"`
+	HomeUrl   string   `protobuf:"bytes,4,opt,name=home_url,json=homeUrl,proto3" json:"home_url,omitempty"`
+	IconUrl   string   `protobuf:"bytes,5,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
+}
+
+func (m *PublicAppInfo) Reset()         { *m = PublicAppInfo{} }
+func (m *PublicAppInfo) String() string { return proto.CompactTextString(m) }
+func (*PublicAppInfo) ProtoMessage()    {}
+func (*PublicAppInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1d7a5e7aca201ac2, []int{0}
+}
+func (m *PublicAppInfo) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PublicAppInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PublicAppInfo.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PublicAppInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PublicAppInfo.Merge(m, src)
+}
+func (m *PublicAppInfo) XXX_Size() int {
+	return m.Size()
+}
+func (m *PublicAppInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_PublicAppInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PublicAppInfo proto.InternalMessageInfo
+
+func (m *PublicAppInfo) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *PublicAppInfo) GetDomains() []string {
+	if m != nil {
+		return m.Domains
+	}
+	return nil
+}
+
+func (m *PublicAppInfo) GetDeveloper() string {
+	if m != nil {
+		return m.Developer
+	}
+	return ""
+}
+
+func (m *PublicAppInfo) GetHomeUrl() string {
+	if m != nil {
+		return m.HomeUrl
+	}
+	return ""
+}
+
+func (m *PublicAppInfo) GetIconUrl() string {
+	if m != nil {
+		return m.IconUrl
+	}
+	return ""
+}
+
 type AppInfo struct {
-	Creator   string   `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Id        uint64   `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
-	Appid     string   `protobuf:"bytes,3,opt,name=appid,proto3" json:"appid,omitempty"`
-	Name      string   `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Domains   []string `protobuf:"bytes,5,rep,name=domains,proto3" json:"domains,omitempty"`
-	Developer string   `protobuf:"bytes,6,opt,name=developer,proto3" json:"developer,omitempty"`
-	HomeUrl   string   `protobuf:"bytes,7,opt,name=home_url,json=homeUrl,proto3" json:"home_url,omitempty"`
-	IconUrl   string   `protobuf:"bytes,8,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
-	Version   uint64   `protobuf:"varint,9,opt,name=version,proto3" json:"version,omitempty"`
+	Creator string         `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Id      uint64         `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Appid   string         `protobuf:"bytes,3,opt,name=appid,proto3" json:"appid,omitempty"`
+	PubInfo *PublicAppInfo `protobuf:"bytes,4,opt,name=pub_info,json=pubInfo,proto3" json:"pub_info,omitempty"`
+	Version uint64         `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
 }
 
 func (m *AppInfo) Reset()         { *m = AppInfo{} }
 func (m *AppInfo) String() string { return proto.CompactTextString(m) }
 func (*AppInfo) ProtoMessage()    {}
 func (*AppInfo) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1d7a5e7aca201ac2, []int{0}
+	return fileDescriptor_1d7a5e7aca201ac2, []int{1}
 }
 func (m *AppInfo) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -89,39 +161,11 @@ func (m *AppInfo) GetAppid() string {
 	return ""
 }
 
-func (m *AppInfo) GetName() string {
+func (m *AppInfo) GetPubInfo() *PublicAppInfo {
 	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *AppInfo) GetDomains() []string {
-	if m != nil {
-		return m.Domains
+		return m.PubInfo
 	}
 	return nil
-}
-
-func (m *AppInfo) GetDeveloper() string {
-	if m != nil {
-		return m.Developer
-	}
-	return ""
-}
-
-func (m *AppInfo) GetHomeUrl() string {
-	if m != nil {
-		return m.HomeUrl
-	}
-	return ""
-}
-
-func (m *AppInfo) GetIconUrl() string {
-	if m != nil {
-		return m.IconUrl
-	}
-	return ""
 }
 
 func (m *AppInfo) GetVersion() uint64 {
@@ -132,32 +176,95 @@ func (m *AppInfo) GetVersion() uint64 {
 }
 
 func init() {
+	proto.RegisterType((*PublicAppInfo)(nil), "misesid.misestm.v1beta1.PublicAppInfo")
 	proto.RegisterType((*AppInfo)(nil), "misesid.misestm.v1beta1.AppInfo")
 }
 
 func init() { proto.RegisterFile("misestm/v1beta1/AppInfo.proto", fileDescriptor_1d7a5e7aca201ac2) }
 
 var fileDescriptor_1d7a5e7aca201ac2 = []byte{
-	// 292 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x44, 0x90, 0xcf, 0x4a, 0xec, 0x30,
-	0x18, 0xc5, 0x27, 0xf3, 0xaf, 0x33, 0x59, 0xdc, 0x45, 0x18, 0xb8, 0x51, 0x34, 0x14, 0x57, 0xb3,
-	0xd0, 0x86, 0xc1, 0x27, 0xd0, 0x85, 0xe0, 0x76, 0xc0, 0x8d, 0x1b, 0x69, 0x9b, 0xd8, 0x09, 0x34,
-	0xfd, 0x42, 0x9a, 0x29, 0xfa, 0x16, 0x3e, 0x96, 0xcb, 0x59, 0xba, 0x94, 0x16, 0xdf, 0x43, 0x92,
-	0xb6, 0xb8, 0x3b, 0xbf, 0x9c, 0x93, 0xc3, 0xc7, 0xc1, 0x97, 0x5a, 0xd5, 0xb2, 0x76, 0x9a, 0x37,
-	0xbb, 0x4c, 0xba, 0x74, 0xc7, 0xef, 0x8c, 0x79, 0xac, 0x5e, 0x21, 0x31, 0x16, 0x1c, 0x90, 0xff,
-	0xc1, 0x56, 0x22, 0x19, 0x62, 0xc9, 0x10, 0x3b, 0xdf, 0x14, 0x50, 0x40, 0xc8, 0x70, 0xaf, 0xfa,
-	0xf8, 0xd5, 0x0f, 0xc2, 0xd1, 0x50, 0x40, 0x28, 0x8e, 0x72, 0x2b, 0x53, 0x07, 0x96, 0xa2, 0x18,
-	0x6d, 0xd7, 0xfb, 0x11, 0xc9, 0x3f, 0x3c, 0x55, 0x82, 0x4e, 0x63, 0xb4, 0x9d, 0xef, 0xa7, 0x4a,
-	0x90, 0x0d, 0x5e, 0xa4, 0xc6, 0x28, 0x41, 0x67, 0x21, 0xd7, 0x03, 0x21, 0x78, 0x5e, 0xa5, 0x5a,
-	0xd2, 0x79, 0x78, 0x0c, 0xda, 0x77, 0x0a, 0xd0, 0xa9, 0xaa, 0x6a, 0xba, 0x88, 0x67, 0xbe, 0x73,
-	0x40, 0x72, 0x81, 0xd7, 0x42, 0x36, 0xb2, 0x04, 0x23, 0x2d, 0x5d, 0x86, 0x2f, 0x7f, 0x0f, 0xe4,
-	0x0c, 0xaf, 0x0e, 0xa0, 0xe5, 0xcb, 0xd1, 0x96, 0x34, 0xea, 0x8f, 0xf1, 0xfc, 0x64, 0x4b, 0x6f,
-	0xa9, 0x1c, 0xaa, 0x60, 0xad, 0x7a, 0xcb, 0xb3, 0xb7, 0x28, 0x8e, 0x1a, 0x69, 0x6b, 0x05, 0x15,
-	0x5d, 0x87, 0x63, 0x47, 0xbc, 0x7f, 0xf8, 0x6c, 0x19, 0x3a, 0xb5, 0x0c, 0x7d, 0xb7, 0x0c, 0x7d,
-	0x74, 0x6c, 0x72, 0xea, 0xd8, 0xe4, 0xab, 0x63, 0x93, 0xe7, 0xeb, 0x42, 0xb9, 0xc3, 0x31, 0x4b,
-	0x72, 0xd0, 0x3c, 0x6c, 0x76, 0xa3, 0xc4, 0x20, 0x9c, 0xe6, 0x6f, 0x7c, 0x9c, 0xdb, 0xbd, 0x1b,
-	0x59, 0x67, 0xcb, 0x30, 0xdb, 0xed, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xa1, 0x5a, 0x77, 0xde,
-	0x86, 0x01, 0x00, 0x00,
+	// 333 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0xb1, 0x4e, 0xf3, 0x30,
+	0x14, 0x85, 0xeb, 0x34, 0xfd, 0xd3, 0xfa, 0x17, 0x0c, 0x56, 0x25, 0x0c, 0x82, 0xa8, 0xea, 0x80,
+	0x3a, 0x40, 0xa2, 0xc2, 0x13, 0x94, 0x01, 0x89, 0x0d, 0x45, 0xea, 0xc2, 0x52, 0x25, 0xb1, 0xdb,
+	0x5a, 0x8a, 0x73, 0x2d, 0xc7, 0xa9, 0xe0, 0x2d, 0xe0, 0x25, 0x78, 0x16, 0xc6, 0x8e, 0x8c, 0xa8,
+	0x7d, 0x11, 0x14, 0x37, 0x16, 0x62, 0x60, 0x3b, 0xc7, 0xe7, 0xd8, 0xfe, 0x74, 0x2f, 0xbe, 0x90,
+	0xa2, 0xe2, 0x95, 0x91, 0xf1, 0x66, 0x9a, 0x71, 0x93, 0x4e, 0xe3, 0x99, 0x52, 0x0f, 0xe5, 0x12,
+	0x22, 0xa5, 0xc1, 0x00, 0x39, 0xb1, 0xb1, 0x60, 0x51, 0x5b, 0x8b, 0xda, 0xda, 0xd9, 0x70, 0x05,
+	0x2b, 0xb0, 0x9d, 0xb8, 0x51, 0x87, 0xfa, 0xf8, 0x0d, 0xe1, 0xa3, 0xc7, 0x3a, 0x2b, 0x44, 0xde,
+	0x3e, 0x43, 0x08, 0xf6, 0xcb, 0x54, 0x72, 0x8a, 0x46, 0x68, 0x32, 0x48, 0xac, 0x26, 0x14, 0x07,
+	0x0c, 0x64, 0x2a, 0xca, 0x8a, 0x7a, 0xa3, 0xee, 0x64, 0x90, 0x38, 0x4b, 0xce, 0xf1, 0x80, 0xf1,
+	0x0d, 0x2f, 0x40, 0x71, 0x4d, 0xbb, 0xf6, 0xca, 0xcf, 0x01, 0x39, 0xc5, 0xfd, 0x35, 0x48, 0xbe,
+	0xa8, 0x75, 0x41, 0x7d, 0x1b, 0x06, 0x8d, 0x9f, 0xeb, 0xa2, 0x89, 0x44, 0x0e, 0xa5, 0x8d, 0x7a,
+	0x87, 0xa8, 0xf1, 0x73, 0x5d, 0x8c, 0xdf, 0x11, 0x0e, 0x1c, 0x0d, 0xc5, 0x41, 0xae, 0x79, 0x6a,
+	0x40, 0xb7, 0x40, 0xce, 0x92, 0x63, 0xec, 0x09, 0x46, 0xbd, 0x11, 0x9a, 0xf8, 0x89, 0x27, 0x18,
+	0x19, 0xe2, 0x5e, 0xaa, 0x94, 0x60, 0x2d, 0xc5, 0xc1, 0x90, 0x19, 0xee, 0xab, 0x3a, 0x5b, 0x88,
+	0x72, 0x09, 0x96, 0xe0, 0xff, 0xcd, 0x65, 0xf4, 0xc7, 0x84, 0xa2, 0x5f, 0x73, 0x48, 0x02, 0x55,
+	0x67, 0x0e, 0x61, 0xc3, 0x75, 0x25, 0xa0, 0xb4, 0xa0, 0x7e, 0xe2, 0xec, 0xdd, 0xfd, 0xc7, 0x2e,
+	0x44, 0xdb, 0x5d, 0x88, 0xbe, 0x76, 0x21, 0x7a, 0xdd, 0x87, 0x9d, 0xed, 0x3e, 0xec, 0x7c, 0xee,
+	0xc3, 0xce, 0xd3, 0xd5, 0x4a, 0x98, 0x75, 0x9d, 0x45, 0x39, 0xc8, 0xd8, 0x7e, 0x73, 0x2d, 0x58,
+	0x2b, 0x8c, 0x8c, 0x9f, 0x63, 0xb7, 0x43, 0xf3, 0xa2, 0x78, 0x95, 0xfd, 0xb3, 0xbb, 0xb8, 0xfd,
+	0x0e, 0x00, 0x00, 0xff, 0xff, 0x7d, 0x82, 0x0f, 0xbb, 0xdb, 0x01, 0x00, 0x00,
+}
+
+func (m *PublicAppInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PublicAppInfo) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PublicAppInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.IconUrl) > 0 {
+		i -= len(m.IconUrl)
+		copy(dAtA[i:], m.IconUrl)
+		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.IconUrl)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.HomeUrl) > 0 {
+		i -= len(m.HomeUrl)
+		copy(dAtA[i:], m.HomeUrl)
+		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.HomeUrl)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Developer) > 0 {
+		i -= len(m.Developer)
+		copy(dAtA[i:], m.Developer)
+		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Developer)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Domains) > 0 {
+		for iNdEx := len(m.Domains) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Domains[iNdEx])
+			copy(dAtA[i:], m.Domains[iNdEx])
+			i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Domains[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *AppInfo) Marshal() (dAtA []byte, err error) {
@@ -183,42 +290,17 @@ func (m *AppInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	if m.Version != 0 {
 		i = encodeVarintAppInfo(dAtA, i, uint64(m.Version))
 		i--
-		dAtA[i] = 0x48
+		dAtA[i] = 0x28
 	}
-	if len(m.IconUrl) > 0 {
-		i -= len(m.IconUrl)
-		copy(dAtA[i:], m.IconUrl)
-		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.IconUrl)))
-		i--
-		dAtA[i] = 0x42
-	}
-	if len(m.HomeUrl) > 0 {
-		i -= len(m.HomeUrl)
-		copy(dAtA[i:], m.HomeUrl)
-		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.HomeUrl)))
-		i--
-		dAtA[i] = 0x3a
-	}
-	if len(m.Developer) > 0 {
-		i -= len(m.Developer)
-		copy(dAtA[i:], m.Developer)
-		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Developer)))
-		i--
-		dAtA[i] = 0x32
-	}
-	if len(m.Domains) > 0 {
-		for iNdEx := len(m.Domains) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.Domains[iNdEx])
-			copy(dAtA[i:], m.Domains[iNdEx])
-			i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Domains[iNdEx])))
-			i--
-			dAtA[i] = 0x2a
+	if m.PubInfo != nil {
+		{
+			size, err := m.PubInfo.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintAppInfo(dAtA, i, uint64(size))
 		}
-	}
-	if len(m.Name) > 0 {
-		i -= len(m.Name)
-		copy(dAtA[i:], m.Name)
-		i = encodeVarintAppInfo(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -255,23 +337,12 @@ func encodeVarintAppInfo(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *AppInfo) Size() (n int) {
+func (m *PublicAppInfo) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovAppInfo(uint64(l))
-	}
-	if m.Id != 0 {
-		n += 1 + sovAppInfo(uint64(m.Id))
-	}
-	l = len(m.Appid)
-	if l > 0 {
-		n += 1 + l + sovAppInfo(uint64(l))
-	}
 	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovAppInfo(uint64(l))
@@ -294,6 +365,30 @@ func (m *AppInfo) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovAppInfo(uint64(l))
 	}
+	return n
+}
+
+func (m *AppInfo) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovAppInfo(uint64(l))
+	}
+	if m.Id != 0 {
+		n += 1 + sovAppInfo(uint64(m.Id))
+	}
+	l = len(m.Appid)
+	if l > 0 {
+		n += 1 + l + sovAppInfo(uint64(l))
+	}
+	if m.PubInfo != nil {
+		l = m.PubInfo.Size()
+		n += 1 + l + sovAppInfo(uint64(l))
+	}
 	if m.Version != 0 {
 		n += 1 + sovAppInfo(uint64(m.Version))
 	}
@@ -305,6 +400,216 @@ func sovAppInfo(x uint64) (n int) {
 }
 func sozAppInfo(x uint64) (n int) {
 	return sovAppInfo(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *PublicAppInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAppInfo
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PublicAppInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PublicAppInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAppInfo
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Domains", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAppInfo
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Domains = append(m.Domains, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Developer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAppInfo
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Developer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HomeUrl", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAppInfo
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.HomeUrl = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IconUrl", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAppInfo
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.IconUrl = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAppInfo(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthAppInfo
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *AppInfo) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -420,9 +725,9 @@ func (m *AppInfo) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PubInfo", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAppInfo
@@ -432,153 +737,29 @@ func (m *AppInfo) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthAppInfo
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthAppInfo
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Name = string(dAtA[iNdEx:postIndex])
+			if m.PubInfo == nil {
+				m.PubInfo = &PublicAppInfo{}
+			}
+			if err := m.PubInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Domains", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAppInfo
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Domains = append(m.Domains, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Developer", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAppInfo
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Developer = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HomeUrl", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAppInfo
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.HomeUrl = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 8:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field IconUrl", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAppInfo
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAppInfo
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.IconUrl = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
 			}

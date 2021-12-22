@@ -5,14 +5,20 @@ option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 import "gogoproto/gogo.proto";
 
+
+message PublicAppInfo {
+	string name = 1; 
+	repeated string domains = 2; 
+	string developer = 3;
+	string home_url = 4; 
+	string icon_url = 5;
+}
+
+
 message AppInfo {
   string creator = 1;
   uint64 id = 2;
   string appid = 3; 
-	string name = 4; 
-	repeated string domains = 5; 
-	string developer = 6;
-	string home_url = 7; 
-	string icon_url = 8; 
-  uint64 version = 9;
+  PublicAppInfo pub_info = 4;
+  uint64 version = 5;
 }

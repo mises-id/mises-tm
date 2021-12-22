@@ -26,7 +26,7 @@ var _ types.UserMgr = &userMgr{}
 
 func (k *userMgr) GetUserAccount(ctx sdk.Context, did string) (*types.MisesAccount, error) {
 	ak := k.ak
-	addr, didtype, err := types.AddrFormDid(did)
+	addr, didtype, err := types.AddrFromDid(did)
 	if err != nil {
 		return nil, err
 	}

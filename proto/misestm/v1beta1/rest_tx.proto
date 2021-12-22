@@ -10,6 +10,8 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/base/abci/v1beta1/abci.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 
+import "misestm/v1beta1/UserInfo.proto";
+import "misestm/v1beta1/AppInfo.proto";
 import "misestm/v1beta1/DidRegistry.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
@@ -71,25 +73,12 @@ message RestCreateDidRequest {
 	string pub_key = 3;
 }
 
-message PrivateUserInfo {
-	string enc_data = 1;
-	string iv = 2;
-}
-message PublicUserInfo {
-	string name = 1;
-	string gender = 2;
-	string avatar_url = 3;
-	string home_page_url = 4;
-	repeated string emails = 5;
-	repeated string telephones = 6;
-	string intro = 7;
-}
 
 message RestUpdateUserInfoRequest {
 	string mises_appid = 1;
 	string mises_uid = 2;
-	PublicUserInfo pub_info = 3;
-	PrivateUserInfo pri_info = 4;
+	misesid.misestm.v1beta1.PublicUserInfo pub_info = 3;
+	misesid.misestm.v1beta1.PrivateUserInfo pri_info = 4;
 }
 
 message RestUpdateUserRelationRequest {
@@ -112,18 +101,9 @@ message RestTxResponse {
 
 
 
-message PublicAppInfo {
-	string name = 1; 
-	repeated string domains = 2; 
-	string developer = 3;
-	string home_url = 4; 
-	string icon_url = 5; 
-	uint64 version = 6;
-}
-
 message RestUpdateAppInfoRequest {
 	string mises_appid = 1;
-	PublicAppInfo pub_info = 2;
+	misesid.misestm.v1beta1.PublicAppInfo  pub_info = 2;
 }
 
 message AppFeeGrant {

@@ -19,7 +19,7 @@ var _ types.AppMgr = &appMgr{}
 
 func (k *appMgr) getAccount(ctx sdk.Context, did string) (*types.MisesAccount, error) {
 	ak := k.ak
-	addr, didtype, err := types.AddrFormDid(did)
+	addr, didtype, err := types.AddrFromDid(did)
 	if err != nil {
 		return nil, err
 	}
@@ -56,11 +56,11 @@ func (k *appMgr) GetAppFeeGrant(ctx sdk.Context, appDID string, userDID string) 
 	if err != nil {
 		return nil, err
 	}
-	appAddr, _, err := types.AddrFormDid(appDID)
+	appAddr, _, err := types.AddrFromDid(appDID)
 	if err != nil {
 		return nil, err
 	}
-	userAddr, _, err := types.AddrFormDid(userDID)
+	userAddr, _, err := types.AddrFromDid(userDID)
 	if err != nil {
 		return nil, err
 	}

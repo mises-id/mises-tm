@@ -12596,18 +12596,21 @@ paths:
                       format: uint64
                     appid:
                       type: string
-                    name:
-                      type: string
-                    domains:
-                      type: array
-                      items:
-                        type: string
-                    developer:
-                      type: string
-                    homeUrl:
-                      type: string
-                    iconUrl:
-                      type: string
+                    pubInfo:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        domains:
+                          type: array
+                          items:
+                            type: string
+                        developer:
+                          type: string
+                        homeUrl:
+                          type: string
+                        iconUrl:
+                          type: string
                     version:
                       type: string
                       format: uint64
@@ -12902,18 +12905,21 @@ paths:
                     format: uint64
                   appid:
                     type: string
-                  name:
-                    type: string
-                  domains:
-                    type: array
-                    items:
-                      type: string
-                  developer:
-                    type: string
-                  homeUrl:
-                    type: string
-                  iconUrl:
-                    type: string
+                  pubInfo:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      domains:
+                        type: array
+                        items:
+                          type: string
+                      developer:
+                        type: string
+                      homeUrl:
+                        type: string
+                      iconUrl:
+                        type: string
                   version:
                     type: string
                     format: uint64
@@ -13656,10 +13662,34 @@ paths:
                       format: uint64
                     uid:
                       type: string
-                    encData:
-                      type: string
-                    iv:
-                      type: string
+                    pubInfo:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        gender:
+                          type: string
+                        avatarUrl:
+                          type: string
+                        homePageUrl:
+                          type: string
+                        emails:
+                          type: array
+                          items:
+                            type: string
+                        telephones:
+                          type: array
+                          items:
+                            type: string
+                        intro:
+                          type: string
+                    priInfo:
+                      type: object
+                      properties:
+                        encData:
+                          type: string
+                        iv:
+                          type: string
                     version:
                       type: string
                       format: uint64
@@ -13954,10 +13984,34 @@ paths:
                     format: uint64
                   uid:
                     type: string
-                  encData:
-                    type: string
-                  iv:
-                    type: string
+                  pubInfo:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      gender:
+                        type: string
+                      avatarUrl:
+                        type: string
+                      homePageUrl:
+                        type: string
+                      emails:
+                        type: array
+                        items:
+                          type: string
+                      telephones:
+                        type: array
+                        items:
+                          type: string
+                      intro:
+                        type: string
+                  priInfo:
+                    type: object
+                    properties:
+                      encData:
+                        type: string
+                      iv:
+                        type: string
                   version:
                     type: string
                     format: uint64
@@ -14707,9 +14761,6 @@ paths:
                     type: string
                   iconUrl:
                     type: string
-                  version:
-                    type: string
-                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -15439,9 +15490,6 @@ paths:
                     type: string
                   iconUrl:
                     type: string
-                  version:
-                    type: string
-                    format: uint64
       tags:
         - RestTx
   /mises/app/feegrant:
@@ -28193,18 +28241,21 @@ definitions:
         format: uint64
       appid:
         type: string
-      name:
-        type: string
-      domains:
-        type: array
-        items:
-          type: string
-      developer:
-        type: string
-      homeUrl:
-        type: string
-      iconUrl:
-        type: string
+      pubInfo:
+        type: object
+        properties:
+          name:
+            type: string
+          domains:
+            type: array
+            items:
+              type: string
+          developer:
+            type: string
+          homeUrl:
+            type: string
+          iconUrl:
+            type: string
       version:
         type: string
         format: uint64
@@ -28235,37 +28286,7 @@ definitions:
   misesid.misestm.v1beta1.MsgBurnNFTResponse:
     type: object
     description: MsgBurnNFTResponse defines the Msg/BurnNFT response type.
-  misesid.misestm.v1beta1.MsgCreateAppInfoResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uint64
   misesid.misestm.v1beta1.MsgCreateDidRegistryResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uint64
-  misesid.misestm.v1beta1.MsgCreateUserInfoResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uint64
-  misesid.misestm.v1beta1.MsgCreateUserRelationResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uint64
-  misesid.misestm.v1beta1.MsgDeleteAppInfoResponse:
-    type: object
-  misesid.misestm.v1beta1.MsgDeleteDidRegistryResponse:
-    type: object
-  misesid.misestm.v1beta1.MsgDeleteUserInfoResponse:
-    type: object
-  misesid.misestm.v1beta1.MsgDeleteUserRelationResponse:
     type: object
   misesid.misestm.v1beta1.MsgMintNFTResponse:
     type: object
@@ -28277,8 +28298,6 @@ definitions:
     type: object
     description: MsgNewNFTClassResponse defines the MsgNewNFTClass response type.
   misesid.misestm.v1beta1.MsgUpdateAppInfoResponse:
-    type: object
-  misesid.misestm.v1beta1.MsgUpdateDidRegistryResponse:
     type: object
   misesid.misestm.v1beta1.MsgUpdateNFTClassResponse:
     type: object
@@ -28312,9 +28331,6 @@ definitions:
         type: string
       iconUrl:
         type: string
-      version:
-        type: string
-        format: uint64
   misesid.misestm.v1beta1.PublicUserInfo:
     type: object
     properties:
@@ -28351,18 +28367,21 @@ definitions:
               format: uint64
             appid:
               type: string
-            name:
-              type: string
-            domains:
-              type: array
-              items:
-                type: string
-            developer:
-              type: string
-            homeUrl:
-              type: string
-            iconUrl:
-              type: string
+            pubInfo:
+              type: object
+              properties:
+                name:
+                  type: string
+                domains:
+                  type: array
+                  items:
+                    type: string
+                developer:
+                  type: string
+                homeUrl:
+                  type: string
+                iconUrl:
+                  type: string
             version:
               type: string
               format: uint64
@@ -28455,10 +28474,34 @@ definitions:
               format: uint64
             uid:
               type: string
-            encData:
-              type: string
-            iv:
-              type: string
+            pubInfo:
+              type: object
+              properties:
+                name:
+                  type: string
+                gender:
+                  type: string
+                avatarUrl:
+                  type: string
+                homePageUrl:
+                  type: string
+                emails:
+                  type: array
+                  items:
+                    type: string
+                telephones:
+                  type: array
+                  items:
+                    type: string
+                intro:
+                  type: string
+            priInfo:
+              type: object
+              properties:
+                encData:
+                  type: string
+                iv:
+                  type: string
             version:
               type: string
               format: uint64
@@ -28551,18 +28594,21 @@ definitions:
             format: uint64
           appid:
             type: string
-          name:
-            type: string
-          domains:
-            type: array
-            items:
-              type: string
-          developer:
-            type: string
-          homeUrl:
-            type: string
-          iconUrl:
-            type: string
+          pubInfo:
+            type: object
+            properties:
+              name:
+                type: string
+              domains:
+                type: array
+                items:
+                  type: string
+              developer:
+                type: string
+              homeUrl:
+                type: string
+              iconUrl:
+                type: string
           version:
             type: string
             format: uint64
@@ -28601,10 +28647,34 @@ definitions:
             format: uint64
           uid:
             type: string
-          encData:
-            type: string
-          iv:
-            type: string
+          pubInfo:
+            type: object
+            properties:
+              name:
+                type: string
+              gender:
+                type: string
+              avatarUrl:
+                type: string
+              homePageUrl:
+                type: string
+              emails:
+                type: array
+                items:
+                  type: string
+              telephones:
+                type: array
+                items:
+                  type: string
+              intro:
+                type: string
+          priInfo:
+            type: object
+            properties:
+              encData:
+                type: string
+              iv:
+                type: string
           version:
             type: string
             format: uint64
@@ -28685,9 +28755,6 @@ definitions:
             type: string
           iconUrl:
             type: string
-          version:
-            type: string
-            format: uint64
   misesid.misestm.v1beta1.RestQueryDidResponse:
     type: object
     properties:
@@ -29137,9 +29204,6 @@ definitions:
             type: string
           iconUrl:
             type: string
-          version:
-            type: string
-            format: uint64
   misesid.misestm.v1beta1.RestUpdateUserInfoRequest:
     type: object
     properties:
@@ -29196,10 +29260,34 @@ definitions:
         format: uint64
       uid:
         type: string
-      encData:
-        type: string
-      iv:
-        type: string
+      pubInfo:
+        type: object
+        properties:
+          name:
+            type: string
+          gender:
+            type: string
+          avatarUrl:
+            type: string
+          homePageUrl:
+            type: string
+          emails:
+            type: array
+            items:
+              type: string
+          telephones:
+            type: array
+            items:
+              type: string
+          intro:
+            type: string
+      priInfo:
+        type: object
+        properties:
+          encData:
+            type: string
+          iv:
+            type: string
       version:
         type: string
         format: uint64

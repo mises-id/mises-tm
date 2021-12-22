@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -35,7 +34,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	if err != nil {
 		return nil, err
 	}
-	addr, didType, err := types.AddrFormDid(DidRegistry.Did)
+	addr, didType, err := types.AddrFromDid(DidRegistry.Did)
 	if err != nil {
 		return nil, err
 	}
@@ -91,50 +90,5 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	}
 	k.SetMisesAccount(ctx, newMisesAcc)
 
-	return &types.MsgCreateDidRegistryResponse{
-		Id: regID,
-	}, nil
-}
-
-func (k msgServer) UpdateDidRegistry(goCtx context.Context, msg *types.MsgUpdateDidRegistry) (*types.MsgUpdateDidRegistryResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	var DidRegistry = types.DidRegistry{
-		Creator:       msg.Creator,
-		Id:            msg.Id,
-		Did:           msg.Did,
-		PkeyDid:       msg.PkeyDid,
-		PkeyType:      msg.PkeyType,
-		PkeyMultibase: msg.PkeyMultibase,
-		Version:       msg.Version,
-	}
-
-	// Checks that the element exists
-	if !k.HasDidRegistry(ctx, msg.Id) {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, fmt.Sprintf("key %d doesn't exist", msg.Id))
-	}
-
-	// Checks if the the msg sender is the same as the current owner
-	if msg.Creator != k.GetDidRegistryOwner(ctx, msg.Id) {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.SetDidRegistry(ctx, DidRegistry)
-
-	return &types.MsgUpdateDidRegistryResponse{}, nil
-}
-
-func (k msgServer) DeleteDidRegistry(goCtx context.Context, msg *types.MsgDeleteDidRegistry) (*types.MsgDeleteDidRegistryResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	if !k.HasDidRegistry(ctx, msg.Id) {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, fmt.Sprintf("key %d doesn't exist", msg.Id))
-	}
-	if msg.Creator != k.GetDidRegistryOwner(ctx, msg.Id) {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveDidRegistry(ctx, msg.Id)
-
-	return &types.MsgDeleteDidRegistryResponse{}, nil
+	return &types.MsgCreateDidRegistryResponse{}, nil
 }

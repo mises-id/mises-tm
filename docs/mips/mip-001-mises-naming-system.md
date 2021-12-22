@@ -226,8 +226,8 @@ Not related
 
 ## Further Discussions
 
-The NamingNFT currently MUST be mint with a special Account called MNS admin, which was set by hand in genesis.json.
-We may also allow more partner accounts to be able to do the same job later.
+The NamingNFT Class currently MUST be created with a special Account called MNS admin, which was set by hand in genesis.json.
+We may need a better way to mint NFT class.
 
 ## Test Cases [optional]
 

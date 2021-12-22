@@ -10,7 +10,6 @@ import "misestm/v1beta1/UserInfo.proto";
 import "misestm/v1beta1/UserRelation.proto";
 import "misestm/v1beta1/AppInfo.proto";
 import "misestm/v1beta1/DidRegistry.proto";
-import "misestm/v1beta1/rest_tx.proto";
 
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
@@ -33,53 +32,24 @@ service Msg {
 	rpc BurnNFT(MsgBurnNFT) returns (MsgBurnNFTResponse);
 
 
-  // this line is used by starport scaffolding # proto/tx/rpc
-  rpc CreateUserInfo(MsgCreateUserInfo) returns (MsgCreateUserInfoResponse);
   rpc UpdateUserInfo(MsgUpdateUserInfo) returns (MsgUpdateUserInfoResponse);
-  rpc DeleteUserInfo(MsgDeleteUserInfo) returns (MsgDeleteUserInfoResponse);
-  rpc CreateUserRelation(MsgCreateUserRelation) returns (MsgCreateUserRelationResponse);
   rpc UpdateUserRelation(MsgUpdateUserRelation) returns (MsgUpdateUserRelationResponse);
-  rpc DeleteUserRelation(MsgDeleteUserRelation) returns (MsgDeleteUserRelationResponse);
-  rpc CreateAppInfo(MsgCreateAppInfo) returns (MsgCreateAppInfoResponse);
   rpc UpdateAppInfo(MsgUpdateAppInfo) returns (MsgUpdateAppInfoResponse);
-  rpc DeleteAppInfo(MsgDeleteAppInfo) returns (MsgDeleteAppInfoResponse);
   rpc CreateDidRegistry(MsgCreateDidRegistry) returns (MsgCreateDidRegistryResponse);
-  rpc UpdateDidRegistry(MsgUpdateDidRegistry) returns (MsgUpdateDidRegistryResponse);
-  rpc DeleteDidRegistry(MsgDeleteDidRegistry) returns (MsgDeleteDidRegistryResponse);
-}
-
-// this line is used by starport scaffolding # proto/tx/message
-message MsgCreateUserInfo {
-  string creator = 1;
-  string uid = 2;
-  string encData = 3;
-  string iv = 4;
-  uint64 version = 5;
-}
-
-message MsgCreateUserInfoResponse {
-  uint64 id = 1;
 }
 
 message MsgUpdateUserInfo {
   string creator = 1;
-  uint64 id = 2;
-  string uid = 3;
-  string encData = 4;
-  string iv = 5;
-  uint64 version = 6;
+  string uid = 2;
+	PublicUserInfo pub_info = 3;
+	PrivateUserInfo pri_info = 4;
+  uint64 version = 5;
 }
 
-message MsgUpdateUserInfoResponse { }
-
-message MsgDeleteUserInfo {
-  string creator = 1;
-  uint64 id = 2;
+message MsgUpdateUserInfoResponse {
 }
 
-message MsgDeleteUserInfoResponse { }
-
-message MsgCreateUserRelation {
+message MsgUpdateUserRelation {
   string creator = 1;
   string uidFrom = 2;
   string uidTo = 3;
@@ -89,32 +59,12 @@ message MsgCreateUserRelation {
   uint64 version = 7;
 }
 
-message MsgCreateUserRelationResponse {
-  uint64 id = 1;
+message MsgUpdateUserRelationResponse {
 }
 
-message MsgUpdateUserRelation {
-  string creator = 1;
-  uint64 id = 2;
-  string uidFrom = 3;
-  string uidTo = 4;
-  bool isFollowing = 5; 
-  bool isBlocking = 6; 
-  bool isReferredBy = 7;
-  uint64 version = 8;
-}
-
-message MsgUpdateUserRelationResponse { }
-
-message MsgDeleteUserRelation {
-  string creator = 1;
-  uint64 id = 2;
-}
-
-message MsgDeleteUserRelationResponse { }
 
 
-message MsgCreateAppInfo {
+message MsgUpdateAppInfo {
   string creator = 1;
   string appid = 2;
   string name = 3;
@@ -125,30 +75,8 @@ message MsgCreateAppInfo {
   uint64 version = 8;
 }
 
-message MsgCreateAppInfoResponse {
-  uint64 id = 1;
+message MsgUpdateAppInfoResponse {
 }
-
-message MsgUpdateAppInfo {
-  string creator = 1;
-  uint64 id = 2;
-  string appid = 3;
-  string name = 4;
-  repeated string domains = 5;
-  string developer = 6;
-  string home_url = 7;
-  string icon_url = 8;
-  uint64 version = 9;
-}
-
-message MsgUpdateAppInfoResponse { }
-
-message MsgDeleteAppInfo {
-  string creator = 1;
-  uint64 id = 2;
-}
-
-message MsgDeleteAppInfoResponse { }
 
 message MsgCreateDidRegistry {
   string creator = 1;
@@ -160,27 +88,8 @@ message MsgCreateDidRegistry {
 }
 
 message MsgCreateDidRegistryResponse {
-  uint64 id = 1;
 }
 
-message MsgUpdateDidRegistry {
-  string creator = 1;
-  uint64 id = 2;
-  string did = 3;
-  string pkeyDid = 4;
-  string pkeyType = 5;
-  string pkeyMultibase = 6;
-  uint64 version = 7;
-}
-
-message MsgUpdateDidRegistryResponse { }
-
-message MsgDeleteDidRegistry {
-  string creator = 1;
-  uint64 id = 2;
-}
-
-message MsgDeleteDidRegistryResponse { }
 
 
 

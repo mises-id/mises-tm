@@ -48,7 +48,17 @@ type UserMgr interface {
 	GetUserRelations(ctx sdk.Context, relType uint64, didFrom string, lastDidTo string, limit int) ([]*UserRelation, error)
 }
 
-func AddrFormDid(did string) (sdk.AccAddress, uint64, error) {
+func CheckDid(did string, didType uint64) (string, bool) {
+	if didType == DIDTypeUser && strings.HasPrefix(did, DIDPrefixForUser) {
+		addrStr := strings.Replace(did, DIDPrefixForUser, "", 1)
+		return addrStr, true
+	} else if didType == DIDTypeApp && strings.HasPrefix(did, DIDPrefixForApp) {
+		addrStr := strings.Replace(did, DIDPrefixForApp, "", 1)
+		return addrStr, true
+	}
+	return "", false
+}
+func AddrFromDid(did string) (sdk.AccAddress, uint64, error) {
 	var addrStr string
 	var didType uint64
 	if strings.HasPrefix(did, DIDPrefixForUser) {

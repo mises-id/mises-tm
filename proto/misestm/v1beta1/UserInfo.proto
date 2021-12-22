@@ -5,11 +5,27 @@ option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 import "gogoproto/gogo.proto";
 
+
+message PrivateUserInfo {
+	string enc_data = 1;
+	string iv = 2;
+}
+message PublicUserInfo {
+	string name = 1;
+	string gender = 2;
+	string avatar_url = 3;
+	string home_page_url = 4;
+	repeated string emails = 5;
+	repeated string telephones = 6;
+	string intro = 7;
+}
+
+
 message UserInfo {
   string creator = 1;
   uint64 id = 2;
   string uid = 3; 
-  string encData = 4; 
-  string iv = 5; 
+	PublicUserInfo pub_info = 4;
+	PrivateUserInfo pri_info = 5;
   uint64 version = 6;
 }

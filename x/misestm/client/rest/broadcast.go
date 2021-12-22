@@ -224,7 +224,7 @@ func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid boo
 		if err != nil {
 			return nil, err
 		}
-		addr, _, err := types.AddrFormDid(msgReq.MisesID)
+		addr, _, err := types.AddrFromDid(msgReq.MisesID)
 		if err != nil {
 			return nil, err
 		}
@@ -242,7 +242,7 @@ func ParseReqeustBody(clientCtx client.Context, r *http.Request, isCreateDid boo
 		if err != nil {
 			return nil, err
 		}
-		addr, _, err := types.AddrFormDid(msgReq.MisesID)
+		addr, _, err := types.AddrFromDid(msgReq.MisesID)
 		if err != nil {
 			return nil, err
 		}
@@ -296,7 +296,6 @@ func HandleUpdateUserInfoRequest(clientCtx client.Context) http.HandlerFunc {
 
 		msg := types.NewMsgUpdateUserInfo(
 			clientCtx.FromAddress.String(),
-			types.InvalidID,
 			req.MisesUid,
 			req.PriInfo.EncData,
 			req.PriInfo.Iv,
@@ -348,7 +347,7 @@ func HandleUpdateUserRelationRequest(clientCtx client.Context) http.HandlerFunc 
 			action = 3
 		}
 
-		msg := types.NewMsgCreateUserRelation(
+		msg := types.NewMsgUpdateUserRelation(
 			clientCtx.FromAddress.String(),
 			req.MisesUid,
 			req.TargetId,
@@ -390,14 +389,13 @@ func HandleUpdateAppInfoRequest(clientCtx client.Context) http.HandlerFunc {
 
 		msg := types.NewMsgUpdateAppInfo(
 			clientCtx.FromAddress.String(),
-			types.InvalidID,
 			req.MisesAppid,
 			req.PubInfo.Name,
 			req.PubInfo.Domains,
 			req.PubInfo.Developer,
 			req.PubInfo.HomeUrl,
 			req.PubInfo.IconUrl,
-			req.PubInfo.Version,
+			0,
 		)
 		if err := msg.ValidateBasic(); err != nil {
 			if rest.CheckBadRequestError(w, err) {
@@ -455,11 +453,11 @@ func HandleUpdateAppFeeGrantRequest(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		appAddr, _, err := types.AddrFormDid(req.MisesAppid)
+		appAddr, _, err := types.AddrFromDid(req.MisesAppid)
 		if rest.CheckInternalServerError(w, err) {
 			return
 		}
-		userAddr, _, err := types.AddrFormDid(req.MisesUid)
+		userAddr, _, err := types.AddrFromDid(req.MisesUid)
 		if rest.CheckInternalServerError(w, err) {
 			return
 		}
