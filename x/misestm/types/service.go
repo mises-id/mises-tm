@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 )
 
 // baseAppSimulateFn is the signature of the Baseapp#Simulate function.
@@ -41,7 +40,8 @@ type AppMgr interface {
 }
 
 type UserMgr interface {
-	dbm.TrackWriteListener
+	//dbm.TrackWriteListener
+	OnWrite(key []byte, value []byte, delete bool) error
 
 	GetUserAccount(ctx sdk.Context, did string) (*MisesAccount, error)
 	GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (*UserRelation, error)
