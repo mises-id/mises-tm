@@ -3,15 +3,13 @@ package keeper
 import (
 	"context"
 
-	"github.com/btcsuite/btcutil/base58"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/mises-id/mises-tm/x/misestm/types"
-
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-
-	"github.com/cosmos/cosmos-sdk/telemetry"
+	"github.com/mises-id/mises-tm/x/misestm/types"
+	"github.com/multiformats/go-multibase"
 )
 
 func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreateDidRegistry) (*types.MsgCreateDidRegistryResponse, error) {
@@ -31,25 +29,39 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	if misesAcc != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "account %s already exists", msg.Did)
 	}
-	if err != nil {
-		return nil, err
-	}
 	addr, didType, err := types.AddrFromDid(DidRegistry.Did)
 	if err != nil {
 		return nil, err
 	}
-	baseAccount := ak.NewAccountWithAddress(ctx, addr)
-	if _, ok := baseAccount.(*authtypes.BaseAccount); !ok {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid account type; expected: BaseAccount, got: %T", baseAccount)
-	}
-	var acc authtypes.AccountI = baseAccount
-	pubKeyBytes := base58.Decode(DidRegistry.PkeyMultibase)
-	pubKey := secp256k1.PubKey{Key: pubKeyBytes}
-	err = acc.SetPubKey(&pubKey)
+
+	_, pubKeyBytes, err := multibase.Decode(DidRegistry.PkeyMultibase)
 	if err != nil {
 		return nil, err
 	}
-	ak.SetAccount(ctx, acc)
+	pubKey := secp256k1.PubKey{Key: pubKeyBytes}
+
+	pubKeyAddr := sdk.AccAddress(pubKey.Address())
+	if !pubKeyAddr.Equals(addr) {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "did and pubKey mismatch")
+	}
+
+	acc := ak.GetAccount(ctx, addr)
+	if acc == nil {
+		baseAccount := ak.NewAccountWithAddress(ctx, addr)
+		if _, ok := baseAccount.(*authtypes.BaseAccount); !ok {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid account type; expected: BaseAccount, got: %T", baseAccount)
+		}
+		var acc authtypes.AccountI = baseAccount
+		err = acc.SetPubKey(&pubKey)
+		if err != nil {
+			return nil, err
+		}
+		ak.SetAccount(ctx, acc)
+	} else {
+		if !acc.GetPubKey().Equals(&pubKey) {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "incorrect pubkey")
+		}
+	}
 
 	defer func() {
 		telemetry.IncrCounter(1, "new", "account")

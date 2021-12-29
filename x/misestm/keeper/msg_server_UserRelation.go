@@ -19,7 +19,7 @@ func (k msgServer) UpdateUserRelation(goCtx context.Context, msg *types.MsgUpdat
 	}
 	_, toOk := types.CheckDid(msg.UidTo, types.DIDTypeUser)
 	if !toOk {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect from")
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect to")
 	}
 
 	oldRelation, err := userMgr.GetUserRelation(ctx, msg.UidFrom, msg.UidTo)

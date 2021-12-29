@@ -20,11 +20,27 @@ func (k Keeper) QueryDid(c context.Context, req *types.RestQueryDidRequest) (*ty
 	}
 	var DidRegistry types.DidRegistry
 	ctx := sdk.UnwrapSDKContext(c)
-	userMgr := NewUserMgrImpl(k)
-	misesAcc, err := userMgr.GetUserAccount(ctx, req.MisesId)
+
+	_, didtype, err := types.AddrFromDid(req.MisesId)
 	if err != nil {
 		return nil, err
 	}
+	var misesAcc *types.MisesAccount = nil
+	if didtype == types.DIDTypeApp {
+		appMgr := NewAppMgrImpl(k)
+		misesAcc, err = appMgr.GetAppAccount(ctx, req.MisesId)
+		if err != nil {
+			return nil, err
+		}
+
+	} else if didtype == types.DIDTypeUser {
+		userMgr := NewUserMgrImpl(k)
+		misesAcc, err = userMgr.GetUserAccount(ctx, req.MisesId)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if misesAcc == nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "mises id %s not exists", req.MisesId)
 	}
