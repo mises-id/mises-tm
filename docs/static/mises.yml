@@ -500,7 +500,7 @@ paths:
                           "value": "1.212s"
                         }
       parameters:
-        - name: misesAppid
+        - name: mises_appid
           in: query
           required: false
           type: string
@@ -520,9 +520,9 @@ paths:
               grant:
                 type: object
                 properties:
-                  misesAppid:
+                  mises_appid:
                     type: string
-                  misesUid:
+                  mises_uid:
                     type: string
                   spendLimit:
                     type: object
@@ -730,11 +730,11 @@ paths:
                           "value": "1.212s"
                         }
       parameters:
-        - name: misesAppid
+        - name: mises_appid
           in: query
           required: false
           type: string
-        - name: misesUid
+        - name: mises_uid
           in: query
           required: false
           type: string

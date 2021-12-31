@@ -77,7 +77,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		infoID = k.AppendUserInfo(
 			ctx,
 			types.UserInfo{
-				Creator: DidRegistry.Creator,
+				Creator: addr.String(),
 				Uid:     DidRegistry.Did,
 			},
 		)
@@ -86,7 +86,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		infoID = k.AppendAppInfo(
 			ctx,
 			types.AppInfo{
-				Creator: DidRegistry.Creator,
+				Creator: addr.String(),
 				Appid:   DidRegistry.Did,
 			},
 		)
