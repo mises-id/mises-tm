@@ -14761,6 +14761,9 @@ paths:
                     type: string
                   iconUrl:
                     type: string
+              version:
+                type: string
+                format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -17580,6 +17583,9 @@ paths:
                     type: string
                   iv:
                     type: string
+              version:
+                type: string
+                format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -28755,6 +28761,9 @@ definitions:
             type: string
           iconUrl:
             type: string
+      version:
+        type: string
+        format: uint64
   misesid.misestm.v1beta1.RestQueryDidResponse:
     type: object
     properties:
@@ -28843,6 +28852,9 @@ definitions:
             type: string
           iv:
             type: string
+      version:
+        type: string
+        format: uint64
   misesid.misestm.v1beta1.RestTxResponse:
     type: object
     properties:

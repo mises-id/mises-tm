@@ -76,10 +76,11 @@ func (k Keeper) QueryUser(c context.Context, req *types.RestQueryUserRequest) (*
 		return nil, err
 	}
 
-	pubInfo := types.PublicUserInfo{}
-	priInfo := UserInfo.PriInfo
-
-	return &types.RestQueryUserResponse{PubInfo: &pubInfo, PriInfo: priInfo}, nil
+	return &types.RestQueryUserResponse{
+		PubInfo: UserInfo.PubInfo,
+		PriInfo: UserInfo.PriInfo,
+		Version: UserInfo.Version,
+	}, nil
 }
 
 // query user relations
@@ -154,9 +155,10 @@ func (k Keeper) QueryApp(c context.Context, req *types.RestQueryAppRequest) (*ty
 		return nil, err
 	}
 
-	pubInfo := AppInfo.PubInfo
-
-	return &types.RestQueryAppResponse{PubInfo: pubInfo}, nil
+	return &types.RestQueryAppResponse{
+		PubInfo: AppInfo.PubInfo,
+		Version: AppInfo.Version,
+	}, nil
 }
 
 func (k Keeper) QueryAppFeeGrant(c context.Context, req *types.RestQueryAppFeeGrantRequest) (*types.RestQueryAppFeeGrantResponse, error) {

@@ -60,6 +60,7 @@ message RestQueryUserRequest {
 message RestQueryUserResponse {
 	misesid.misestm.v1beta1.PublicUserInfo pub_info = 1;
 	misesid.misestm.v1beta1.PrivateUserInfo pri_info = 2;
+	uint64 version = 3;
 }
 
 message RestQueryUserRelationRequest {
@@ -84,6 +85,7 @@ message RestQueryAppRequest {
 
 message RestQueryAppResponse {
 	misesid.misestm.v1beta1.PublicAppInfo pub_info = 1;
+	uint64 version = 2;
 }
 
 message RestQueryAppFeeGrantRequest {

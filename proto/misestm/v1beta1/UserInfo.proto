@@ -22,10 +22,10 @@ message PublicUserInfo {
 
 
 message UserInfo {
-  string creator = 1;
-  uint64 id = 2;
-  string uid = 3; 
+  	string creator = 1;
+  	uint64 id = 2;
+  	string uid = 3; 
 	PublicUserInfo pub_info = 4;
 	PrivateUserInfo pri_info = 5;
-  uint64 version = 6;
+  	uint64 version = 6;
 }

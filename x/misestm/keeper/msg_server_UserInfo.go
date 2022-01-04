@@ -47,6 +47,7 @@ func (k msgServer) UpdateUserInfo(goCtx context.Context, msg *types.MsgUpdateUse
 		Creator: msg.Creator,
 		Id:      misesAcc.InfoID,
 		Uid:     msg.Uid,
+		PubInfo: msg.PubInfo,
 		PriInfo: msg.PriInfo,
 		Version: msg.Version,
 	}
