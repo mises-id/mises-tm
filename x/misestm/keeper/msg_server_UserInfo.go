@@ -43,14 +43,10 @@ func (k msgServer) UpdateUserInfo(goCtx context.Context, msg *types.MsgUpdateUse
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect version")
 	}
 
-	var UserInfo = types.UserInfo{
-		Creator: msg.Creator,
-		Id:      misesAcc.InfoID,
-		Uid:     msg.Uid,
-		PubInfo: msg.PubInfo,
-		PriInfo: msg.PriInfo,
-		Version: msg.Version,
-	}
+	var UserInfo = oldUserInfo
+	UserInfo.PubInfo = msg.PubInfo
+	UserInfo.PriInfo = msg.PriInfo
+	UserInfo.Version = msg.Version
 
 	k.SetUserInfo(ctx, UserInfo)
 

@@ -34,21 +34,15 @@ func (k msgServer) UpdateAppInfo(goCtx context.Context, msg *types.MsgUpdateAppI
 	if msg.Version != oldAppInfo.Version+1 {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect version")
 	}
-
-	var AppInfo = types.AppInfo{
-		Creator: msg.Creator,
-		Appid:   msg.Appid,
-		PubInfo: &types.PublicAppInfo{
-			Name:      msg.Name,
-			Domains:   msg.Domains,
-			Developer: msg.Developer,
-			HomeUrl:   msg.HomeUrl,
-			IconUrl:   msg.IconUrl,
-		},
-
-		Version: msg.Version,
+	var AppInfo = oldAppInfo
+	AppInfo.PubInfo = &types.PublicAppInfo{
+		Name:      msg.Name,
+		Domains:   msg.Domains,
+		Developer: msg.Developer,
+		HomeUrl:   msg.HomeUrl,
+		IconUrl:   msg.IconUrl,
 	}
-
+	AppInfo.Version = msg.Version
 	k.SetAppInfo(ctx, AppInfo)
 
 	return &types.MsgUpdateAppInfoResponse{}, nil
