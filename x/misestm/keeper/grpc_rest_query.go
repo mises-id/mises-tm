@@ -177,3 +177,12 @@ func (k Keeper) QueryAppFeeGrant(c context.Context, req *types.RestQueryAppFeeGr
 	}, nil
 
 }
+
+func (k Keeper) QueryTx(c context.Context, req *types.RestQueryTxRequest) (*types.RestTxResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	return &types.RestTxResponse{}, nil
+
+}

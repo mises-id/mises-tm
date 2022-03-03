@@ -167,15 +167,15 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 			filter["uidto"] = bson.M{"$gt": lastDidTo}
 		}
 		if relType&types.RelTypeBitFollow != 0 {
-			filter["isFollowing"] = bson.M{"$eq": true}
+			filter["isfollowing"] = bson.M{"$eq": true}
 		}
 
 		if relType&types.RelTypeBitBlock != 0 {
-			filter["isBlocking"] = bson.M{"$eq": true}
+			filter["isblocking"] = bson.M{"$eq": true}
 		}
 
 		if relType&types.RelTypeBitReferredBy != 0 {
-			filter["isReferredBy"] = bson.M{"$eq": true}
+			filter["isreferredby"] = bson.M{"$eq": true}
 		}
 
 		findOptions := options.Find()

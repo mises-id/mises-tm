@@ -1,14 +1,20 @@
 syntax = "proto3";
 package misesid.misestm.v1beta1;
 
+import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/base/abci/v1beta1/abci.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
 
 import "misestm/v1beta1/DidRegistry.proto";
 import "misestm/v1beta1/UserInfo.proto";
 import "misestm/v1beta1/UserRelation.proto";
 import "misestm/v1beta1/AppInfo.proto";
-import "misestm/v1beta1/rest_tx.proto";
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 
 // Rest defines the gRPC rest service.
@@ -40,6 +46,12 @@ service RestQuery {
 	rpc QueryAppFeeGrant(RestQueryAppFeeGrantRequest) returns (RestQueryAppFeeGrantResponse) {
 		option (google.api.http).get = "/mises/app/feegrant";
 	}
+	
+	// query a tx result
+	rpc QueryTx(RestQueryTxRequest) returns (RestTxResponse) {
+		option (google.api.http).get = "/mises/tx";
+	}
+
 
 
 }
@@ -88,11 +100,29 @@ message RestQueryAppResponse {
 	uint64 version = 2;
 }
 
+message RestQueryTxRequest {
+	string  txhash = 1;
+}
+
+message RestTxResponse {
+	// tx_response is the queried TxResponses.
+  	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+	uint32 code = 2;
+}
+
+
 message RestQueryAppFeeGrantRequest {
 	string mises_appid = 1;
 	string mises_uid = 2;
 }
 
+message AppFeeGrant {
+	cosmos.base.v1beta1.Coin spend_limit = 1;
+	google.protobuf.Duration period = 2 [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
+	google.protobuf.Timestamp expiration = 3 [(gogoproto.stdtime) = true];
+}
+
+
 message RestQueryAppFeeGrantResponse {
-	misesid.misestm.v1beta1.AppFeeGrant grant = 1;
+	AppFeeGrant grant = 1;
 }

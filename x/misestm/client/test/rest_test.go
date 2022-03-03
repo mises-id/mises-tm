@@ -32,6 +32,9 @@ import (
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	dbm "github.com/tendermint/tm-db"
 	_ "github.com/tendermint/tm-db/metadb"
+
+	"github.com/mises-id/mises-tm/app"
+	"github.com/mises-id/mises-tm/app/params"
 )
 
 type IntegrationTestSuite struct {
