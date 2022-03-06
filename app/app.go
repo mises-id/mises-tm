@@ -11,6 +11,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cast"
@@ -253,7 +254,7 @@ type App struct {
 // New returns a reference to an initialized Gaia.
 // NewSimApp returns a reference to an initialized SimApp.
 func New(
-	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool, skipUpgradeHeights map[int64]bool,
+	logger log.Logger, db dbm.DB, traceStore io.Writer, snapshotStore *snapshots.Store, loadLatest bool, skipUpgradeHeights map[int64]bool,
 	homePath string, invCheckPeriod uint, encodingConfig appparams.EncodingConfig,
 	// this line is used by starport scaffolding # stargate/app/newArgument
 	appOpts servertypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp),
@@ -267,6 +268,7 @@ func New(
 	cms := store.NewCommitMultiStore(db)
 	bApp.SetCMS(cms)
 	bApp.SetCommitMultiStoreTracer(traceStore)
+	bApp.SetSnapshotStore(snapshotStore) //should be set after cms ready
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 

@@ -276,7 +276,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 	// this line is used by starport scaffolding # stargate/root/appBeforeInit
 
 	return app.New(
-		logger, db, traceStore, true, skipUpgradeHeights,
+		logger, db, traceStore, snapshotStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
 		a.encCfg,
@@ -290,7 +290,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		baseapp.SetInterBlockCache(cache),
 		baseapp.SetTrace(cast.ToBool(appOpts.Get(server.FlagTrace))),
 		baseapp.SetIndexEvents(cast.ToStringSlice(appOpts.Get(server.FlagIndexEvents))),
-		baseapp.SetSnapshotStore(snapshotStore),
 		baseapp.SetSnapshotInterval(cast.ToUint64(appOpts.Get(server.FlagStateSyncSnapshotInterval))),
 		baseapp.SetSnapshotKeepRecent(cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent))),
 	)
@@ -313,6 +312,7 @@ func (a appCreator) appExport(
 			logger,
 			db,
 			traceStore,
+			nil,
 			false,
 			map[int64]bool{},
 			homePath,
@@ -330,6 +330,7 @@ func (a appCreator) appExport(
 			logger,
 			db,
 			traceStore,
+			nil,
 			true,
 			map[int64]bool{},
 			homePath,
