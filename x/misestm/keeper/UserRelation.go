@@ -52,6 +52,7 @@ func (k Keeper) AppendUserRelation(
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	appendedValue := k.cdc.MustMarshal(&UserRelation)
 	store.Set(GetUserRelationIDBytes(UserRelation.Id), appendedValue)
+	store.Set(GetUserRelationKeyBytes(UserRelation.UidFrom, UserRelation.UidTo), GetUserRelationIDBytes(UserRelation.Id))
 
 	// Update UserRelation count
 	k.SetUserRelationCount(ctx, count+1)
@@ -74,10 +75,22 @@ func (k Keeper) GetUserRelation(ctx sdk.Context, id uint64) types.UserRelation {
 	return UserRelation
 }
 
+func (k Keeper) GetUserRelationByMisesID(ctx sdk.Context, fromMisesID string, toMisesID string) types.UserRelation {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
+	var UserRelation types.UserRelation
+	k.cdc.MustUnmarshal(store.Get(GetUserRelationKeyBytes(fromMisesID, toMisesID)), &UserRelation)
+	return UserRelation
+}
+
 // HasUserRelation checks if the UserRelation exists in the store
 func (k Keeper) HasUserRelation(ctx sdk.Context, id uint64) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	return store.Has(GetUserRelationIDBytes(id))
+}
+
+func (k Keeper) HasUserRelationByMisesID(ctx sdk.Context, fromMisesID string, toMisesID string) bool {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
+	return store.Has(GetUserRelationKeyBytes(fromMisesID, toMisesID))
 }
 
 // GetUserRelationOwner returns the creator of the UserRelation
@@ -89,6 +102,8 @@ func (k Keeper) GetUserRelationOwner(ctx sdk.Context, id uint64) string {
 func (k Keeper) RemoveUserRelation(ctx sdk.Context, id uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	store.Delete(GetUserRelationIDBytes(id))
+	rel := k.GetUserRelation(ctx, id)
+	store.Delete(GetUserRelationKeyBytes(rel.UidFrom, rel.UidTo))
 }
 
 // GetAllUserRelation returns all UserRelation
@@ -117,4 +132,8 @@ func GetUserRelationIDBytes(id uint64) []byte {
 // GetUserRelationIDFromBytes returns ID in uint64 format from a byte array
 func GetUserRelationIDFromBytes(bz []byte) uint64 {
 	return binary.BigEndian.Uint64(bz)
+}
+
+func GetUserRelationKeyBytes(fromMisesID string, toMisesID string) []byte {
+	return []byte(fromMisesID + toMisesID)
 }

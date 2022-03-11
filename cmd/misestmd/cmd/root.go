@@ -8,6 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/mises-id/mises-tm/app/params"
+	"github.com/mises-id/mises-tm/x/misestm"
 
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	"github.com/spf13/cast"
@@ -189,6 +190,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 func addModuleInitFlags(startCmd *cobra.Command) {
 	crisis.AddModuleInitFlags(startCmd)
 	// this line is used by starport scaffolding # stargate/root/initFlags
+	misestm.AddModuleInitFlags(startCmd)
 }
 
 func queryCommand() *cobra.Command {

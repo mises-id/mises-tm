@@ -46,8 +46,9 @@ func NewKeeper(
 		db:       db,
 		// this line is used by starport scaffolding # ibc/keeper/return
 	}
-
-	db.(dbm.TrackableDB).TrackWrite(NewUserMgrImpl(*k))
+	if db != nil {
+		db.(dbm.TrackableDB).TrackWrite(NewUserMgrImpl(*k))
+	}
 
 	return k
 }

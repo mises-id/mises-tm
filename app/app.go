@@ -401,7 +401,15 @@ func New(
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
-	mongodb, _ := NewMongoDB("mises", MongoDBHome)
+	var useMongoUrl = cast.ToString(appOpts.Get(misestm.FlagMisesUseMongoDBBackend))
+	var mongodb dbm.DB
+	var rawdb dbm.RawDB
+	if useMongoUrl != "" {
+		os.Setenv("MONGO_URL", useMongoUrl)
+		mongodb, _ = NewMongoDB("mises", MongoDBHome)
+		rawdb = mongodb.(dbm.RawDB)
+	}
+
 	app.MisestmKeeper = *misestmkeeper.NewKeeper(
 		mongoCodec,
 		keys[misestmtypes.StoreKey],
@@ -409,7 +417,7 @@ func New(
 		app.AccountKeeper,
 		app.FeeGrantKeeper,
 		app.NFTKeeper,
-		mongodb.(dbm.RawDB),
+		rawdb,
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -519,20 +527,26 @@ func New(
 	app.mm.RegisterServices(app.configurator)
 
 	// initialize stores
-	kvkeys := make(map[string]*sdk.KVStoreKey)
-	for k, v := range keys {
-		if k != misestmtypes.StoreKey {
-			kvkeys[k] = v
+
+	if useMongoUrl != "" {
+		kvkeys := make(map[string]*sdk.KVStoreKey)
+		for k, v := range keys {
+			if k != misestmtypes.StoreKey {
+				kvkeys[k] = v
+			}
 		}
+		app.MountKVStores(kvkeys)
+		if misesdb := appOpts.Get("misesdb"); misesdb == nil {
+			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
+		} else {
+			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
+		}
+	} else {
+		app.MountKVStores(keys)
 	}
-	app.MountKVStores(kvkeys)
+
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
-	if misesdb := appOpts.Get("misesdb"); misesdb == nil {
-		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
-	} else {
-		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
-	}
 
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)

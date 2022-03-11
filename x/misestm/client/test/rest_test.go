@@ -63,7 +63,7 @@ func NewAppConstructor(encodingCfg params.EncodingConfig) network.AppConstructor
 	return func(val network.Validator) servertypes.Application {
 		db := dbm.NewMemDB()
 		return app.New(
-			val.Ctx.Logger, db, nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
+			val.Ctx.Logger, db, nil, nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
 			encodingCfg,
 			TestAppOptions{db},
 			baseapp.SetPruning(storetypes.NewPruningOptionsFromString(val.AppConfig.Pruning)),
