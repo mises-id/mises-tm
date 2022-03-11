@@ -83,6 +83,7 @@ message RestQueryUserRelationRequest {
 
 message MisesID {
 	string mises_id = 1;
+	string rel_type = 2;
 }
 
 message RestQueryUserRelationResponse {

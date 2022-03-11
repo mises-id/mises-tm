@@ -63,9 +63,9 @@ func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string)
 	if err != nil {
 		return nil, err
 	}
-	if k.db.Raw() == nil {
+	if k.db == nil {
 		if !k.HasUserRelationByMisesID(ctx, didFrom, didTo) {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "relation %s - %s not exists", didFrom, didTo)
+			return nil, nil
 		}
 		rel := k.GetUserRelationByMisesID(ctx, didFrom, didTo)
 		return &rel, nil
@@ -162,7 +162,7 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 			return nil, err
 		}
 	}
-	if k.db.Raw() == nil {
+	if k.db == nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not implemented")
 	}
 
@@ -251,7 +251,7 @@ func (k *userMgr) setLatestTag(filter bson.M, isLatest uint8) (err error) {
 	opts := &options.UpdateOptions{}
 	opts.SetUpsert(false)
 
-	if k.db.Raw() == nil {
+	if k.db == nil {
 		return nil
 	}
 	if db, ok := k.db.Raw().(*mongo.Database); ok {

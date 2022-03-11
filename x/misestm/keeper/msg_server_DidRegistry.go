@@ -25,7 +25,7 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 	}
 	ak := k.ak
 	userMgr := NewUserMgrImpl(k.Keeper)
-	misesAcc, err := userMgr.GetUserAccount(ctx, DidRegistry.Did)
+	misesAcc, _ := userMgr.GetUserAccount(ctx, DidRegistry.Did)
 	if misesAcc != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "account %s already exists", msg.Did)
 	}
@@ -58,7 +58,12 @@ func (k msgServer) CreateDidRegistry(goCtx context.Context, msg *types.MsgCreate
 		}
 		ak.SetAccount(ctx, acc)
 	} else {
-		if !acc.GetPubKey().Equals(&pubKey) {
+		if acc.GetPubKey() == nil || len(acc.GetPubKey().Bytes()) == 0 {
+			err = acc.SetPubKey(&pubKey)
+			if err != nil {
+				return nil, err
+			}
+		} else if !acc.GetPubKey().Equals(&pubKey) {
 			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "incorrect pubkey")
 		}
 	}

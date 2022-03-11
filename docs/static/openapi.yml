@@ -16177,6 +16177,8 @@ paths:
                   properties:
                     misesId:
                       type: string
+                    relType:
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -25587,6 +25589,8 @@ definitions:
     properties:
       misesId:
         type: string
+      relType:
+        type: string
   misesid.misestm.v1beta1.MsgBurnNFTResponse:
     type: object
     description: MsgBurnNFTResponse defines the Msg/BurnNFT response type.
@@ -26084,6 +26088,8 @@ definitions:
           type: object
           properties:
             misesId:
+              type: string
+            relType:
               type: string
       pagination:
         type: object

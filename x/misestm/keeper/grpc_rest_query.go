@@ -105,20 +105,45 @@ func (k Keeper) QueryUserRelation(c context.Context, req *types.RestQueryUserRel
 			Limit: 100,
 		}
 	}
-	relType := uint64(0)
-	if req.Filter == "following" {
-		relType = types.RelTypeBitFollow
+	_, uidOk := types.CheckDid(req.Filter, types.DIDTypeUser)
+	var UserRelations []*types.UserRelation
+	if uidOk {
+		//filter by to uid
+		uidTo := req.Filter
+		rel, err := userMgr.GetUserRelation(ctx, req.MisesUid, uidTo)
+		if err != nil || rel == nil {
+			UserRelations = []*types.UserRelation{}
+		} else {
+			UserRelations = []*types.UserRelation{rel}
+		}
+
+	} else {
+		relType := uint64(0)
+		if req.Filter == "following" {
+			relType = types.RelTypeBitFollow
+		}
+		if req.Filter == "blocking" {
+			relType = types.RelTypeBitBlock
+		}
+		UserRelations, err = userMgr.GetUserRelations(ctx, relType, req.MisesUid, string(pagination.Key), int(pagination.Limit))
+		if err != nil {
+			return nil, err
+		}
 	}
-	if req.Filter == "blocking" {
-		relType = types.RelTypeBitBlock
-	}
-	UserRelations, err := userMgr.GetUserRelations(ctx, relType, req.MisesUid, string(pagination.Key), int(pagination.Limit))
-	if err != nil {
-		return nil, err
-	}
+
 	misesList := []*types.MisesID{}
 	for _, r := range UserRelations {
-		misesList = append(misesList, &types.MisesID{MisesId: r.UidTo})
+		var relType string
+		if r.IsFollowing {
+			relType = "following,"
+		}
+		if r.IsBlocking {
+			relType += "blocking,"
+		}
+		if r.IsReferredBy {
+			relType += "refer_by,"
+		}
+		misesList = append(misesList, &types.MisesID{MisesId: r.UidTo, RelType: relType})
 	}
 	nextKey := ""
 	if len(misesList) > 0 {

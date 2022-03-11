@@ -77,9 +77,9 @@ func (k Keeper) GetUserRelation(ctx sdk.Context, id uint64) types.UserRelation {
 
 func (k Keeper) GetUserRelationByMisesID(ctx sdk.Context, fromMisesID string, toMisesID string) types.UserRelation {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	var UserRelation types.UserRelation
-	k.cdc.MustUnmarshal(store.Get(GetUserRelationKeyBytes(fromMisesID, toMisesID)), &UserRelation)
-	return UserRelation
+	idBytes := store.Get(GetUserRelationKeyBytes(fromMisesID, toMisesID))
+	id := GetUserRelationIDFromBytes(idBytes)
+	return k.GetUserRelation(ctx, id)
 }
 
 // HasUserRelation checks if the UserRelation exists in the store
@@ -101,8 +101,8 @@ func (k Keeper) GetUserRelationOwner(ctx sdk.Context, id uint64) string {
 // RemoveUserRelation removes a UserRelation from the store
 func (k Keeper) RemoveUserRelation(ctx sdk.Context, id uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	store.Delete(GetUserRelationIDBytes(id))
 	rel := k.GetUserRelation(ctx, id)
+	store.Delete(GetUserRelationIDBytes(id))
 	store.Delete(GetUserRelationKeyBytes(rel.UidFrom, rel.UidTo))
 }
 
