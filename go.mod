@@ -36,7 +36,7 @@ replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.202108
 
 replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.17.4-0.20211207035003-f9d26e6150db
 
-replace github.com/cosmos/cosmos-sdk => github.com/mises-id/cosmos-sdk v0.44.6-0.20220303045135-50c576364ddb
+replace github.com/cosmos/cosmos-sdk => github.com/mises-id/cosmos-sdk v0.44.6-0.20220315083352-753fe8446102
 
 replace github.com/tendermint/tendermint => github.com/mises-id/tendermint v0.34.15-0.20220303055734-a5c89353c3e2
 
