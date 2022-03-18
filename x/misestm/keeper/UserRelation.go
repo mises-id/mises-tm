@@ -6,7 +6,12 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/address"
 	"github.com/mises-id/mises-tm/x/misestm/types"
+)
+
+var (
+	UserRelationExistKeyPrefix = []byte{0x00}
 )
 
 // GetUserRelationCount get the total number of UserRelation
@@ -149,5 +154,15 @@ func GetUserRelationIDFromBytes(bz []byte) uint64 {
 }
 
 func GetUserRelationExistKeyBytes(fromMisesID string, toMisesID string) []byte {
-	return []byte(fromMisesID + toMisesID)
+	fromAddr, _, _ := types.AddrFromDid(fromMisesID)
+	toAddr, _, _ := types.AddrFromDid(toMisesID)
+	return UserRelationExistKey(fromAddr, toAddr)
+}
+
+func UserRelationExistKey(fromUser sdk.AccAddress, toUser sdk.AccAddress) []byte {
+	return append(UserRelationExistPrefixBy(toUser), address.MustLengthPrefix(fromUser.Bytes())...)
+}
+
+func UserRelationExistPrefixBy(toUser sdk.AccAddress) []byte {
+	return append(UserRelationExistKeyPrefix, address.MustLengthPrefix(toUser.Bytes())...)
 }
