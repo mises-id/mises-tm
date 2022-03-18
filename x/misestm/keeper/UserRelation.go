@@ -38,6 +38,19 @@ func (k Keeper) SetUserRelationCount(ctx sdk.Context, count uint64) {
 	store.Set(byteKey, bz)
 }
 
+func (k Keeper) SetUserRelationExist(ctx sdk.Context, fromMisesID string, toMisesID string, relID uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationExistKey))
+	byteKey := GetUserRelationExistKeyBytes(fromMisesID, toMisesID)
+	bz := GetUserRelationIDBytes(relID)
+	store.Set(byteKey, bz)
+}
+
+func (k Keeper) RemoveUserRelationExist(ctx sdk.Context, fromMisesID string, toMisesID string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationExistKey))
+	byteKey := GetUserRelationExistKeyBytes(fromMisesID, toMisesID)
+	store.Delete(byteKey)
+}
+
 // AppendUserRelation appends a UserRelation in the store with a new id and update the count
 func (k Keeper) AppendUserRelation(
 	ctx sdk.Context,
@@ -52,7 +65,7 @@ func (k Keeper) AppendUserRelation(
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	appendedValue := k.cdc.MustMarshal(&UserRelation)
 	store.Set(GetUserRelationIDBytes(UserRelation.Id), appendedValue)
-	store.Set(GetUserRelationKeyBytes(UserRelation.UidFrom, UserRelation.UidTo), GetUserRelationIDBytes(UserRelation.Id))
+	k.SetUserRelationExist(ctx, UserRelation.UidFrom, UserRelation.UidTo, UserRelation.Id)
 
 	// Update UserRelation count
 	k.SetUserRelationCount(ctx, count+1)
@@ -76,8 +89,8 @@ func (k Keeper) GetUserRelation(ctx sdk.Context, id uint64) types.UserRelation {
 }
 
 func (k Keeper) GetUserRelationByMisesID(ctx sdk.Context, fromMisesID string, toMisesID string) types.UserRelation {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	idBytes := store.Get(GetUserRelationKeyBytes(fromMisesID, toMisesID))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationExistKey))
+	idBytes := store.Get(GetUserRelationExistKeyBytes(fromMisesID, toMisesID))
 	id := GetUserRelationIDFromBytes(idBytes)
 	return k.GetUserRelation(ctx, id)
 }
@@ -89,8 +102,8 @@ func (k Keeper) HasUserRelation(ctx sdk.Context, id uint64) bool {
 }
 
 func (k Keeper) HasUserRelationByMisesID(ctx sdk.Context, fromMisesID string, toMisesID string) bool {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
-	return store.Has(GetUserRelationKeyBytes(fromMisesID, toMisesID))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationExistKey))
+	return store.Has(GetUserRelationExistKeyBytes(fromMisesID, toMisesID))
 }
 
 // GetUserRelationOwner returns the creator of the UserRelation
@@ -103,7 +116,8 @@ func (k Keeper) RemoveUserRelation(ctx sdk.Context, id uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserRelationKey))
 	rel := k.GetUserRelation(ctx, id)
 	store.Delete(GetUserRelationIDBytes(id))
-	store.Delete(GetUserRelationKeyBytes(rel.UidFrom, rel.UidTo))
+
+	k.RemoveUserRelationExist(ctx, rel.UidFrom, rel.UidTo)
 }
 
 // GetAllUserRelation returns all UserRelation
@@ -134,6 +148,6 @@ func GetUserRelationIDFromBytes(bz []byte) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-func GetUserRelationKeyBytes(fromMisesID string, toMisesID string) []byte {
+func GetUserRelationExistKeyBytes(fromMisesID string, toMisesID string) []byte {
 	return []byte(fromMisesID + toMisesID)
 }

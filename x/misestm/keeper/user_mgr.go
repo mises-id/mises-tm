@@ -121,13 +121,13 @@ func (k *userMgr) userRelationFromBsonBytes(rawResult []byte) (*types.UserRelati
 	if val, ok := bsonVal.Map()["id"]; ok {
 		UserRelation.Id = uint64(val.(int64))
 	}
-	if val, ok := bsonVal.Map()["isFollowing"]; ok {
+	if val, ok := bsonVal.Map()["isfollowing"]; ok {
 		UserRelation.IsFollowing = val.(bool)
 	}
-	if val, ok := bsonVal.Map()["isBlocking"]; ok {
+	if val, ok := bsonVal.Map()["isblocking"]; ok {
 		UserRelation.IsBlocking = val.(bool)
 	}
-	if val, ok := bsonVal.Map()["isReferredBy"]; ok {
+	if val, ok := bsonVal.Map()["isreferredby"]; ok {
 		UserRelation.IsReferredBy = val.(bool)
 	}
 	if val, ok := bsonVal.Map()["version"]; ok {
