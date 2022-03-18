@@ -678,6 +678,8 @@ github.com/mises-id/cosmos-sdk v0.44.6-0.20220303045135-50c576364ddb h1:14sdukdA
 github.com/mises-id/cosmos-sdk v0.44.6-0.20220303045135-50c576364ddb/go.mod h1:XXS/asyCqWNWkx2rW6pSuen+EVcpAFxq6khrhnZgHaQ=
 github.com/mises-id/cosmos-sdk v0.44.6-0.20220315083352-753fe8446102 h1:FyrHOPDgPHR1OnGijHvsH9e0rFIpmn5XgrTHB3xIIao=
 github.com/mises-id/cosmos-sdk v0.44.6-0.20220315083352-753fe8446102/go.mod h1:1toU4zx+rBP7+CDD9TW3kb9G7i1Mc29wdZvLYKHwYrY=
+github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639 h1:IMr0Xv3qBGTGXpcvt2b9mAAUjYj91aY+zSxh2+gYZ8I=
+github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639/go.mod h1:1toU4zx+rBP7+CDD9TW3kb9G7i1Mc29wdZvLYKHwYrY=
 github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e h1:/UOCQvRz3AHYtTI6Ko+zKEbaabIhepGJkX8frwdGO1k=
 github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e/go.mod h1:1+9inmAF6UPq5vuJE9p9gLwBiPG++KE6k7SL9zLjJck=
 github.com/mises-id/iavl v0.17.4-0.20211207035003-f9d26e6150db h1:7if9aLADO/xbrqJj3xbl/eQYunF1UqhN91tTC16tRg0=
