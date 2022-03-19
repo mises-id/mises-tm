@@ -63,42 +63,12 @@ func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string)
 	if err != nil {
 		return nil, err
 	}
-	if k.db == nil {
-		if !k.HasUserRelationByMisesID(ctx, didFrom, didTo) {
-			return nil, nil
-		}
-		rel := k.GetUserRelationByMisesID(ctx, didFrom, didTo)
-		return &rel, nil
+
+	if !k.HasUserRelationByMisesID(ctx, didFrom, didTo) {
+		return nil, nil
 	}
-
-	if db, ok := k.db.Raw().(*mongo.Database); ok {
-		collection := db.Collection("UserRelation")
-		filter := bson.M{
-			"uidfrom": bson.M{"$eq": didFrom},
-			"uidto":   bson.M{"$eq": didTo},
-		}
-
-		findOptions := options.FindOne()
-		findOptions.SetSort(bson.M{"version": -1})
-
-		result := collection.FindOne(context.Background(), filter, findOptions)
-		if result.Err() != nil {
-			if result.Err() == mongo.ErrNoDocuments {
-				return nil, nil
-			}
-			return nil, result.Err()
-		}
-		rawResult, err := result.DecodeBytes()
-		if err != nil {
-			return nil, err
-		}
-		ret, err = k.userRelationFromBsonBytes(rawResult)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return ret, nil
+	rel := k.GetUserRelationByMisesID(ctx, didFrom, didTo)
+	return &rel, nil
 }
 
 func (k *userMgr) userRelationFromBsonBytes(rawResult []byte) (*types.UserRelation, error) {
