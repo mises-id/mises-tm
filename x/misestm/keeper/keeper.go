@@ -18,6 +18,8 @@ type (
 		storeKey sdk.StoreKey
 		memKey   sdk.StoreKey
 		ak       types.AccountKeeper
+		fk       types.FeeGrantKeeper
+		nk       types.NFTKeeper
 		db       dbm.RawDB
 		// this line is used by starport scaffolding # ibc/keeper/attribute
 	}
@@ -28,6 +30,8 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ak types.AccountKeeper,
+	fk types.FeeGrantKeeper,
+	nk types.NFTKeeper,
 	db dbm.RawDB,
 	// this line is used by starport scaffolding # ibc/keeper/parameter
 ) *Keeper {
@@ -37,11 +41,14 @@ func NewKeeper(
 		storeKey: storeKey,
 		memKey:   memKey,
 		ak:       ak,
+		fk:       fk,
+		nk:       nk,
 		db:       db,
 		// this line is used by starport scaffolding # ibc/keeper/return
 	}
-
-	db.(dbm.TrackableDB).TrackWrite(NewUserMgrImpl(*k))
+	if db != nil {
+		db.(dbm.TrackableDB).TrackWrite(NewUserMgrImpl(*k))
+	}
 
 	return k
 }

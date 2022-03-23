@@ -37,6 +37,7 @@ const (
 
 const (
 	UserRelationKey      = "UserRelation-value-"
+	UserRelationExistKey = "UserRelation-exist-"
 	UserRelationCountKey = "UserRelation-count-"
 )
 

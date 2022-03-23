@@ -1,12 +1,12 @@
 syntax = "proto3";
-package misesid.misestm.misestm;
+package misesid.misestm.v1beta1;
 
 // this line is used by starport scaffolding # genesis/proto/import
-import "misestm/UserInfo.proto";
-import "misestm/UserRelation.proto";
-import "misestm/AppInfo.proto";
-import "misestm/DidRegistry.proto";
-import "misestm/MisesAccount.proto";
+import "misestm/v1beta1/UserInfo.proto";
+import "misestm/v1beta1/UserRelation.proto";
+import "misestm/v1beta1/AppInfo.proto";
+import "misestm/v1beta1/DidRegistry.proto";
+import "misestm/v1beta1/MisesAccount.proto";
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 

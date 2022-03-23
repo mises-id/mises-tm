@@ -11,6 +11,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cast"
@@ -98,6 +99,14 @@ import (
 	appparams "github.com/mises-id/mises-tm/app/params"
 	_ "github.com/mises-id/mises-tm/docs"
 
+	//gravity "github.com/cosmos/gravity-bridge/module/x/gravity"
+	//gravitykeeper "github.com/cosmos/gravity-bridge/module/x/gravity/keeper"
+	//gravitytypes "github.com/cosmos/gravity-bridge/module/x/gravity/types"
+
+	"github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
+	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	misescodec "github.com/mises-id/mises-tm/codec"
 	"github.com/mises-id/mises-tm/docs"
@@ -153,8 +162,10 @@ var (
 		transfer.AppModuleBasic{},
 		authzmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		//gravity.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		misestm.AppModuleBasic{},
+		nftmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -166,6 +177,8 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		//gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+		nft.ModuleName: nil,
 	}
 )
 
@@ -219,9 +232,13 @@ type App struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	AuthzKeeper      authzkeeper.Keeper
 
+	//GravityKeeper gravitykeeper.Keeper
+
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
+
+	NFTKeeper nftkeeper.Keeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
@@ -237,7 +254,7 @@ type App struct {
 // New returns a reference to an initialized Gaia.
 // NewSimApp returns a reference to an initialized SimApp.
 func New(
-	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool, skipUpgradeHeights map[int64]bool,
+	logger log.Logger, db dbm.DB, traceStore io.Writer, snapshotStore *snapshots.Store, loadLatest bool, skipUpgradeHeights map[int64]bool,
 	homePath string, invCheckPeriod uint, encodingConfig appparams.EncodingConfig,
 	// this line is used by starport scaffolding # stargate/app/newArgument
 	appOpts servertypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp),
@@ -251,6 +268,7 @@ func New(
 	cms := store.NewCommitMultiStore(db)
 	bApp.SetCMS(cms)
 	bApp.SetCommitMultiStoreTracer(traceStore)
+	bApp.SetSnapshotStore(snapshotStore) //should be set after cms ready
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 
@@ -259,9 +277,9 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		authzkeeper.StoreKey,
+		authzkeeper.StoreKey, //gravitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		misestmtypes.StoreKey, feegrant.StoreKey,
+		misestmtypes.StoreKey, feegrant.StoreKey, nftkeeper.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -322,10 +340,25 @@ func New(
 		skipUpgradeHeights, keys[upgradetypes.StoreKey], appCodec, homePath, app.BaseApp,
 	)
 
+	// app.GravityKeeper = gravitykeeper.NewKeeper(
+	// 	appCodec,
+	// 	keys[gravitytypes.StoreKey],
+	// 	app.GetSubspace(gravitytypes.ModuleName),
+	// 	app.AccountKeeper,
+	// 	stakingKeeper,
+	// 	app.BankKeeper,
+	// 	app.SlashingKeeper,
+	// 	sdk.DefaultPowerReduction,
+	// )
+
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	app.StakingKeeper = *stakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
+		stakingtypes.NewMultiStakingHooks(
+			app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(),
+			//app.GravityKeeper.Hooks(),
+		),
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -363,16 +396,28 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
+	app.NFTKeeper = nftkeeper.NewKeeper(keys[nftkeeper.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
-	mongodb, _ := NewMongoDB("mises", MongoDBHome)
+	var useMongoUrl = cast.ToString(appOpts.Get(misestm.FlagMisesUseMongoDBBackend))
+	var mongodb dbm.DB
+	var rawdb dbm.RawDB
+	if useMongoUrl != "" {
+		os.Setenv("MONGO_URL", useMongoUrl)
+		mongodb, _ = NewMongoDB("mises", MongoDBHome)
+		rawdb = mongodb.(dbm.RawDB)
+	}
+
 	app.MisestmKeeper = *misestmkeeper.NewKeeper(
 		mongoCodec,
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
 		app.AccountKeeper,
-		mongodb.(dbm.RawDB),
+		app.FeeGrantKeeper,
+		app.NFTKeeper,
+		rawdb,
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -418,6 +463,12 @@ func New(
 		transferModule,
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
+
+		// gravity.NewAppModule(
+		// 	app.GravityKeeper,
+		// 	app.BankKeeper,
+		// ),
+		nftmodule.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 		misestmModule,
 	)
@@ -427,11 +478,22 @@ func New(
 	// CanWithdrawInvariant invariant.
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
-		upgradetypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
-		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
+		upgradetypes.ModuleName,
+		minttypes.ModuleName,
+		distrtypes.ModuleName,
+		slashingtypes.ModuleName,
+		evidencetypes.ModuleName,
+		stakingtypes.ModuleName,
+		ibchost.ModuleName,
+		//gravitytypes.ModuleName,
 	)
 
-	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName)
+	app.mm.SetOrderEndBlockers(
+		crisistypes.ModuleName,
+		govtypes.ModuleName,
+		stakingtypes.ModuleName,
+		//gravitytypes.ModuleName,
+	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -453,6 +515,8 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
+		//gravitytypes.ModuleName,
+		nft.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		misestmtypes.ModuleName,
 	)
@@ -463,20 +527,26 @@ func New(
 	app.mm.RegisterServices(app.configurator)
 
 	// initialize stores
-	kvkeys := make(map[string]*sdk.KVStoreKey)
-	for k, v := range keys {
-		if k != misestmtypes.StoreKey {
-			kvkeys[k] = v
+
+	if useMongoUrl != "" {
+		kvkeys := make(map[string]*sdk.KVStoreKey)
+		for k, v := range keys {
+			if k != misestmtypes.StoreKey {
+				kvkeys[k] = v
+			}
 		}
+		app.MountKVStores(kvkeys)
+		if misesdb := appOpts.Get("misesdb"); misesdb == nil {
+			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
+		} else {
+			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
+		}
+	} else {
+		app.MountKVStores(keys)
 	}
-	app.MountKVStores(kvkeys)
+
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
-	if misesdb := appOpts.Get("misesdb"); misesdb == nil {
-		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
-	} else {
-		cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
-	}
 
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)
@@ -670,6 +740,7 @@ func initParamsKeeper(appCodec codec.Codec, legacyAmino *codec.LegacyAmino, key,
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
+	//paramsKeeper.Subspace(gravitytypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(misestmtypes.ModuleName)
 

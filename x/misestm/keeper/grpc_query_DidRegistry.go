@@ -53,7 +53,10 @@ func (k Keeper) DidRegistry(c context.Context, req *types.QueryGetDidRegistryReq
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DidRegistryKey))
-	k.cdc.Unmarshal(store.Get(GetDidRegistryIDBytes(req.Id)), &DidRegistry)
+
+	if err := k.cdc.Unmarshal(store.Get(GetDidRegistryIDBytes(req.Id)), &DidRegistry); err != nil {
+		return nil, err
+	}
 
 	return &types.QueryGetDidRegistryResponse{DidRegistry: &DidRegistry}, nil
 }

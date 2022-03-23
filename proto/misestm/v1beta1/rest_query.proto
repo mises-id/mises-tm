@@ -1,0 +1,129 @@
+syntax = "proto3";
+package misesid.misestm.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/base/abci/v1beta1/abci.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+
+import "misestm/v1beta1/DidRegistry.proto";
+import "misestm/v1beta1/UserInfo.proto";
+import "misestm/v1beta1/UserRelation.proto";
+import "misestm/v1beta1/AppInfo.proto";
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+// Rest defines the gRPC rest service.
+service RestQuery {
+
+	// query a did
+	rpc QueryDid(RestQueryDidRequest) returns (RestQueryDidResponse) {
+		option (google.api.http).get = "/mises/did";
+	}
+
+	// query a user info
+	rpc QueryUser(RestQueryUserRequest) returns (RestQueryUserResponse) {
+		option (google.api.http).get = "/mises/user";
+	}
+
+	// query user relations
+	rpc QueryUserRelation(RestQueryUserRelationRequest) returns (RestQueryUserRelationResponse) {
+		option (google.api.http).get = "/mises/user/relation";
+	}
+
+
+	// query app info
+	rpc QueryApp(RestQueryAppRequest) returns (RestQueryAppResponse) {
+		option (google.api.http).get = "/mises/app";
+	}
+
+
+	// query app info
+	rpc QueryAppFeeGrant(RestQueryAppFeeGrantRequest) returns (RestQueryAppFeeGrantResponse) {
+		option (google.api.http).get = "/mises/app/feegrant";
+	}
+	
+	// query a tx result
+	rpc QueryTx(RestQueryTxRequest) returns (RestTxResponse) {
+		option (google.api.http).get = "/mises/tx";
+	}
+
+
+
+}
+
+message RestQueryDidRequest {
+	string mises_id = 1;
+}
+
+message RestQueryDidResponse {
+	DidRegistry didRegistry = 1;
+}
+
+
+message RestQueryUserRequest {
+	string mises_uid = 1;
+}
+
+message RestQueryUserResponse {
+	misesid.misestm.v1beta1.PublicUserInfo pub_info = 1;
+	misesid.misestm.v1beta1.PrivateUserInfo pri_info = 2;
+	uint64 version = 3;
+}
+
+message RestQueryUserRelationRequest {
+	string mises_uid = 1;
+	string filter = 2;
+	cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+message MisesID {
+	string mises_id = 1;
+	string rel_type = 2;
+}
+
+message RestQueryUserRelationResponse {
+	repeated MisesID mises_list = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+message RestQueryAppRequest {
+	string mises_appid = 1;
+}
+
+message RestQueryAppResponse {
+	misesid.misestm.v1beta1.PublicAppInfo pub_info = 1;
+	uint64 version = 2;
+}
+
+message RestQueryTxRequest {
+	string  txhash = 1;
+}
+
+message RestTxResponse {
+	// tx_response is the queried TxResponses.
+  	cosmos.base.abci.v1beta1.TxResponse tx_response = 1;
+	uint32 code = 2;
+}
+
+
+message RestQueryAppFeeGrantRequest {
+	string mises_appid = 1;
+	string mises_uid = 2;
+}
+
+message AppFeeGrant {
+	cosmos.base.v1beta1.Coin spend_limit = 1;
+	google.protobuf.Duration period = 2 [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
+	google.protobuf.Timestamp expiration = 3 [(gogoproto.stdtime) = true];
+}
+
+
+message RestQueryAppFeeGrantResponse {
+	AppFeeGrant grant = 1;
+}

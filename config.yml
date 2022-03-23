@@ -1,23 +1,23 @@
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    coins: ["200000000umis"]
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000umis"]
 validator:
   name: alice
-  staked: "100000000stake"
+  staked: "100000000umis"
 client:
   vuex:
-    path: "vue/src/store"
+    path: "vue/src/store/mises-store"
   openapi:
     path: "docs/static/openapi.yml"
 faucet:
   name: bob
-  coins: ["5token", "100000stake"]
+  coins: ["100000umis"]
 build:
   binary: "misestmd"
 init:
   app:
-    minimum-gas-prices: "0token"
+    minimum-gas-prices: "1umis"
     api:
       swagger: true

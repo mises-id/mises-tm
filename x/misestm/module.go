@@ -29,6 +29,10 @@ var (
 	// this line is used by starport scaffolding # ibc/module/interface
 )
 
+const (
+	FlagMisesUseMongoDBBackend = "mises-use-mongodb"
+)
+
 // ----------------------------------------------------------------------------
 // AppModuleBasic
 // ----------------------------------------------------------------------------
@@ -40,6 +44,11 @@ type AppModuleBasic struct {
 
 func NewAppModuleBasic(cdc codec.Codec) AppModuleBasic {
 	return AppModuleBasic{cdc: cdc}
+}
+
+// AddModuleInitFlags implements servertypes.ModuleInitFlags interface.
+func AddModuleInitFlags(startCmd *cobra.Command) {
+	startCmd.Flags().String(FlagMisesUseMongoDBBackend, "", "enable mises to store states in mongodb backend")
 }
 
 // Name returns the capability module's name.

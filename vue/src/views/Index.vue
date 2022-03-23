@@ -1,15 +1,24 @@
 <template>
 	<div>
+	
+			
 		<div class="container">
-			<SpWelcome />
+		
+			<MisesWelcome />
 			<SpTokenSend :address="address" />
 			<SpTransferList :address="address" />
 		</div>
+		
 	</div>
+
 </template>
 
 <script>
+import MisesWelcome from '../components/MisesWelcome'
 export default {
+	components: {
+		MisesWelcome
+	},
 	name: 'Index',
 	computed: {
 		address() {

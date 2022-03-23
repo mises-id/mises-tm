@@ -1,0 +1,24 @@
+syntax = "proto3";
+package misesid.misestm.v1beta1;
+
+option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
+
+import "gogoproto/gogo.proto";
+
+
+message PublicAppInfo {
+	string name = 1; 
+	repeated string domains = 2; 
+	string developer = 3;
+	string home_url = 4; 
+	string icon_url = 5;
+}
+
+
+message AppInfo {
+  string creator = 1;
+  uint64 id = 2;
+  string appid = 3; 
+  PublicAppInfo pub_info = 4;
+  uint64 version = 5;
+}

@@ -20,6 +20,8 @@ FROM golang:1.16 as final
 WORKDIR /
 
 RUN  sed -i s@/deb.debian.org/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+RUN echo "deb http://mirrors.aliyun.com/debian/ buster main non-free contrib" > /etc/apt/sources.list
+
 RUN  apt-get clean
 
 RUN apt-get update

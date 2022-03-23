@@ -26,7 +26,7 @@ var _ types.UserMgr = &userMgr{}
 
 func (k *userMgr) GetUserAccount(ctx sdk.Context, did string) (*types.MisesAccount, error) {
 	ak := k.ak
-	addr, err := types.AddrFormDid(did)
+	addr, didtype, err := types.AddrFromDid(did)
 	if err != nil {
 		return nil, err
 	}
@@ -38,9 +38,12 @@ func (k *userMgr) GetUserAccount(ctx sdk.Context, did string) (*types.MisesAccou
 		return nil, sdkerrors.ErrKeyNotFound
 	}
 	misesAcc := k.GetMisesAccount(ctx, did)
+
+	if didtype != misesAcc.DidType || didtype != types.DIDTypeUser {
+		return nil, sdkerrors.ErrLogic
+	}
 	return &misesAcc, nil
 }
-
 
 func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (ret *types.UserRelation, err error) {
 	if didFrom == didTo {
@@ -61,34 +64,11 @@ func (k *userMgr) GetUserRelation(ctx sdk.Context, didFrom string, didTo string)
 		return nil, err
 	}
 
-	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
-		collection := db.Collection("UserRelation")
-		filter := bson.M{
-			"uidfrom": bson.M{"$eq": didFrom},
-			"uidto":   bson.M{"$eq": didTo},
-		}
-
-		findOptions := options.FindOne()
-		findOptions.SetSort(bson.M{"version": -1})
-
-		result := collection.FindOne(context.Background(), filter, findOptions)
-		if result.Err() != nil {
-			if result.Err() == mongo.ErrNoDocuments {
-				return nil, nil
-			}
-			return nil, result.Err()
-		}
-		rawResult, err := result.DecodeBytes()
-		if err != nil {
-			return nil, err
-		}
-		ret, err = k.userRelationFromBsonBytes(rawResult)
-		if err != nil {
-			return nil, err
-		}
+	if !k.HasUserRelationByMisesID(ctx, didFrom, didTo) {
+		return nil, nil
 	}
-
-	return ret, nil
+	rel := k.GetUserRelationByMisesID(ctx, didFrom, didTo)
+	return &rel, nil
 }
 
 func (k *userMgr) userRelationFromBsonBytes(rawResult []byte) (*types.UserRelation, error) {
@@ -111,8 +91,14 @@ func (k *userMgr) userRelationFromBsonBytes(rawResult []byte) (*types.UserRelati
 	if val, ok := bsonVal.Map()["id"]; ok {
 		UserRelation.Id = uint64(val.(int64))
 	}
-	if val, ok := bsonVal.Map()["reltype"]; ok {
-		UserRelation.RelType = uint64(val.(int64))
+	if val, ok := bsonVal.Map()["isfollowing"]; ok {
+		UserRelation.IsFollowing = val.(bool)
+	}
+	if val, ok := bsonVal.Map()["isblocking"]; ok {
+		UserRelation.IsBlocking = val.(bool)
+	}
+	if val, ok := bsonVal.Map()["isreferredby"]; ok {
+		UserRelation.IsReferredBy = val.(bool)
 	}
 	if val, ok := bsonVal.Map()["version"]; ok {
 		UserRelation.Version = uint64(val.(int64))
@@ -146,9 +132,12 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 			return nil, err
 		}
 	}
+	if k.db == nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not implemented")
+	}
 
 	var UserRelations = []*types.UserRelation{}
-	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
+	if db, ok := k.db.Raw().(*mongo.Database); ok {
 		collection := db.Collection("UserRelation")
 		filter := bson.M{
 			"uidfrom":  bson.M{"$eq": didFrom},
@@ -156,6 +145,17 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 		}
 		if lastDidTo != "" {
 			filter["uidto"] = bson.M{"$gt": lastDidTo}
+		}
+		if relType&types.RelTypeBitFollow != 0 {
+			filter["isfollowing"] = bson.M{"$eq": true}
+		}
+
+		if relType&types.RelTypeBitBlock != 0 {
+			filter["isblocking"] = bson.M{"$eq": true}
+		}
+
+		if relType&types.RelTypeBitReferredBy != 0 {
+			filter["isreferredby"] = bson.M{"$eq": true}
 		}
 
 		findOptions := options.Find()
@@ -177,11 +177,6 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 			UserRelation, err := k.userRelationFromBsonBytes(rawResult)
 			if err != nil {
 				return nil, err
-			}
-			if relType != 0 {
-				if (UserRelation.RelType & relType) == 0 {
-					continue
-				}
 			}
 			UserRelations = append(UserRelations, UserRelation)
 			limit--
@@ -212,7 +207,7 @@ func (k *userMgr) setLatestUserRelation(rel *types.UserRelation) (err error) {
 		filter["version"] = bson.M{"$eq": rel.Version - 1}
 
 		err = k.setLatestTag(filter, 0)
-		if err != nil { 
+		if err != nil {
 			return err
 		}
 	}
@@ -220,16 +215,16 @@ func (k *userMgr) setLatestUserRelation(rel *types.UserRelation) (err error) {
 	return nil
 }
 func (k *userMgr) setLatestTag(filter bson.M, isLatest uint8) (err error) {
-	bsonval := bson.D{
-		{"isLatest", isLatest},
-	}
-	update := bson.D{
-		{"$set", bsonval},
-	}
+	bsonval := bson.M{"isLatest": isLatest}
+	update := bson.M{"$set": bsonval}
 
 	opts := &options.UpdateOptions{}
 	opts.SetUpsert(false)
-	if db, ok :=  k.db.Raw().(*mongo.Database); ok {
+
+	if k.db == nil {
+		return nil
+	}
+	if db, ok := k.db.Raw().(*mongo.Database); ok {
 		collection := db.Collection("UserRelation")
 
 		_, err = collection.UpdateOne(context.Background(), filter, update, opts)

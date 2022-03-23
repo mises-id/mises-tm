@@ -3,38 +3,41 @@ module github.com/mises-id/mises-tm
 go 1.16
 
 require (
-	github.com/btcsuite/btcd v0.22.0-beta
-	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
-	github.com/cosmos/cosmos-sdk v0.43.0
-	github.com/cosmos/ibc-go v1.0.0
+	github.com/cosmos/cosmos-sdk v0.44.6
+	github.com/cosmos/gravity-bridge/module v0.0.0-20210828152730-0195030967c3
+	github.com/cosmos/ibc-go v1.2.4
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/multiformats/go-multibase v0.0.3
 	github.com/rakyll/statik v0.1.7
-	github.com/spf13/cast v1.3.1
-	github.com/spf13/cobra v1.1.3
+	github.com/spf13/cast v1.4.1
+	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.8.0
+	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
-	github.com/tendermint/btcd v0.1.1
-	github.com/tendermint/spm v0.1.4
-	github.com/tendermint/tendermint v0.34.11
-	github.com/tendermint/tm-db v0.6.4
-	go.mongodb.org/mongo-driver v1.6.0
-	google.golang.org/genproto v0.0.0-20210617175327-b9e0b3197ced
-	google.golang.org/grpc v1.39.0
+	github.com/tendermint/spm v0.1.8
+	github.com/tendermint/tendermint v0.34.16
+	github.com/tendermint/tm-db v0.6.6
+	go.mongodb.org/mongo-driver v1.8.0
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	google.golang.org/genproto v0.0.0-20220302033224-9aa15565e42a
+	google.golang.org/grpc v1.44.0
+	google.golang.org/protobuf v1.27.1
 )
 
-replace google.golang.org/grpc => google.golang.org/grpc v1.33.2
+replace google.golang.org/grpc => google.golang.org/grpc v1.42.0
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20210807072059-c4a752ad7494
+replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20210822095222-e1ff1e0dc734
 
-replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.16.1-0.20210713120007-802386a4697d
+replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.17.4-0.20211207035003-f9d26e6150db
 
-//replace github.com/tendermint/tm-db => ../tm-db
+replace github.com/cosmos/cosmos-sdk => github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639
 
-//replace github.com/cosmos/iavl => ../iavl
+replace github.com/tendermint/tendermint => github.com/mises-id/tendermint v0.34.15-0.20220303055734-a5c89353c3e2
+
+replace github.com/cosmos/gravity-bridge/module => github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e

@@ -1,3 +1,5 @@
+// +build cgo,tests
+
 package rest_test
 
 import (
@@ -27,11 +29,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	bankcli "github.com/cosmos/cosmos-sdk/x/bank/client/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/mises-id/mises-tm/app"
-	"github.com/mises-id/mises-tm/app/params"
 	"github.com/mises-id/mises-tm/x/misestm/types"
 	dbm "github.com/tendermint/tm-db"
 	_ "github.com/tendermint/tm-db/metadb"
+
+	"github.com/mises-id/mises-tm/app"
+	"github.com/mises-id/mises-tm/app/params"
 )
 
 type IntegrationTestSuite struct {
@@ -60,7 +63,7 @@ func NewAppConstructor(encodingCfg params.EncodingConfig) network.AppConstructor
 	return func(val network.Validator) servertypes.Application {
 		db := dbm.NewMemDB()
 		return app.New(
-			val.Ctx.Logger, db, nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
+			val.Ctx.Logger, db, nil, nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
 			encodingCfg,
 			TestAppOptions{db},
 			baseapp.SetPruning(storetypes.NewPruningOptionsFromString(val.AppConfig.Pruning)),
@@ -119,7 +122,7 @@ func (s *IntegrationTestSuite) TestCreateDid() {
 
 	req := &types.MsgCreateMisesID{
 		MsgReqBase: types.MsgReqBase{
-			MisesID: "did:mises:" + account.GetAddress().String(),
+			MisesID: types.DIDPrefixForUser + account.GetAddress().String(),
 		},
 		PubKey: hex.EncodeToString(account.GetPubKey().Bytes()),
 	}

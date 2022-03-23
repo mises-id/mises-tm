@@ -1,5 +1,5 @@
 syntax = "proto3";
-package misesid.misestm.misestm;
+package misesid.misestm.v1beta1;
 
 option go_package = "github.com/mises-id/mises-tm/x/misestm/types";
 

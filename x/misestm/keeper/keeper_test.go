@@ -27,7 +27,7 @@ func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
 	require.NoError(t, stateStore.LoadLatestVersion())
 
 	registry := codectypes.NewInterfaceRegistry()
-	keeper := NewKeeper(codec.NewProtoCodec(registry), storeKey, memStoreKey, nil, nil)
+	keeper := NewKeeper(codec.NewProtoCodec(registry), storeKey, memStoreKey, nil, nil, nil, nil)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
 	return keeper, ctx

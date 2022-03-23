@@ -1,7 +1,7 @@
 import { env, blocks, wallet, transfers, relayers } from '@starport/vuex'
-import generated from './generated'
+import mises_generated from './mises-store/generated'
 export default function init(store) {
-	for (const moduleInit of Object.values(generated)) {
+	for (const moduleInit of Object.values(mises_generated)) {
 		moduleInit(store)
 	}
 	transfers(store)
