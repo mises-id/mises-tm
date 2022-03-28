@@ -24,7 +24,7 @@ MISES_CLI_BINARY = misestmcli
 GO_MOD=GO111MODULE=on
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
-LEDGER_ENABLED ?= true
+LEDGER_ENABLED ?= false
 HTTPS_GIT := https://github.com/mises-id/mises-tm.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
@@ -107,7 +107,7 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 # process linker flags
 
 ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=mises-tm \
-		  -X github.com/cosmos/cosmos-sdk/version.ServerName=$(MISES_DAEMON_BINARY) \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=$(MISES_DAEMON_BINARY) \
 		  -X github.com/cosmos/cosmos-sdk/version.ClientName=$(MISES_CLI_BINARY) \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
@@ -116,6 +116,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=mises-tm \
 ifeq ($(WITH_CLEVELDB),yes)
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
 endif
+
 ldflags += $(LDFLAGS)
 ldflags := $(strip $(ldflags))
 
