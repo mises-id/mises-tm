@@ -1,19 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Index from '@/views/Index.vue'
-import Types from '@/views/Types.vue'
-import Relayers from '@/views/Relayers.vue'
-import LatestBlocks from '@/views/LatestBlocks.vue'
-import Blocks from '@/views/Blocks.vue'
-import Block from '@/views/Block.vue'
-import Validators from '@/views/Validators.vue'
+import Portfolio from '../views/Portfolio.vue'
+import Data from '../views/Data.vue'
+import Relayers from '../views/Relayers.vue'
+import LatestBlocks from '../views/LatestBlocks.vue'
+import Blocks from '../views/Blocks.vue'
+import Block from '../views/Block.vue'
+import Validators from '../views/Validators.vue'
 
 const routerHistory = createWebHistory()
 const routes = [
-	{
-		path: '/',
-		component: Index
-	},
-	{ path: '/types', component: Types },
+	{ path: '/', component: Portfolio },
+	{ path: '/portfolio', component: Portfolio },
+	{ path: '/data', component: Data },
 	{ path: '/relayers', component: Relayers },
 	{ path: '/latestblocks', component: LatestBlocks },
 	{ path: '/blocks/:page?', component: Blocks },

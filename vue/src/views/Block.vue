@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import SpBlockDisplayFull from '../components/SpBlockDisplayFull'
 import axios from 'axios'
 import { fromBase64, toHex } from '@cosmjs/encoding'
 import { sha256 } from '@cosmjs/crypto'
@@ -73,9 +74,12 @@ async function decodeTx(apiCosmos, apiTendermint, encodedTx) {
 	})
 }
 export default {
+	components: {
+		SpBlockDisplayFull
+	},
 	data() {
 		return {
-			block: null
+			block: {height:0,timestamp:"",hash:"",details:"",txDecoded:[]}
 		}
 	},
 	async created() {

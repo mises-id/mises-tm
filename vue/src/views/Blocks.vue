@@ -35,8 +35,12 @@
 </template>
 
 <script>
+import SpBlocksTable from '../components/SpBlocksTable'
 import axios from 'axios'
 export default {
+	components: {
+		SpBlocksTable
+	},
 	name: 'Blocks',
 	data() {
 		return {
@@ -45,22 +49,8 @@ export default {
 		}
 	},
 	computed: {
-		depsLoaded() {
-			return this._depsLoaded
-		},
 		page() {
 			return parseInt(this.$route.params.page) || 1
-		}
-	},
-	beforeCreate() {
-		const module = ['common', 'blocks']
-		for (let i = 1; i <= module.length; i++) {
-			let submod = module.slice(0, i)
-			if (!this.$store.hasModule(submod)) {
-				console.log('Module `common.blocks` has not been registered!')
-				this._depsLoaded = false
-				break
-			}
 		}
 	},
 	watch: {

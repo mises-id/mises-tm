@@ -1,49 +1,55 @@
 <template>
-	<div v-if="initialized">
-		<SpWallet ref="wallet" v-on:dropdown-opened="$refs.menu.closeDropdown()" />
-		<SpLayout>
-			<template v-slot:sidebar>
-				<Sidebar />
-			</template>
-			<template v-slot:content>
-				<router-view />
-			</template>
-		</SpLayout>
-	</div>
+  <div>
+    <SpTheme>
+      <SpNavbar
+        :links="navbarLinks"
+        :active-route="router.currentRoute.value.path"
+      />
+      <router-view />
+    </SpTheme>
+  </div>
 </template>
 
-<style>
-body {
-	margin: 0;
-}
-</style>
-
-<script>
+<script lang="ts">
 import './scss/app.scss'
-import '@starport/vue/lib/starport-vue.css'
-import Sidebar from './components/Sidebar'
-
+import { SpNavbar, SpTheme } from '@starport/vue'
+import { computed, onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
-	components: {
-		Sidebar
-	},
-	data() {
-		return {
-			initialized: false
-		}
-	},
-	computed: {
-		hasWallet() {
-			return this.$store.hasModule(['common', 'wallet'])
-		}
-	},
-	async created() {
-		await this.$store.dispatch('common/env/init')
-		this.initialized = true
-	},
-	errorCaptured(err) {
-		console.log(err)
-		return false
-	}
+  components: { SpTheme, SpNavbar },
+  setup() {
+    // store
+    let $s = useStore()
+    // router
+    let router = useRouter()
+    // state
+    let navbarLinks = [
+      { name: 'Home', url: '/portfolio' },
+      { name: 'SocialData', url: '/data' },
+	  { name: 'Blocks', url: '/latestblocks' },
+	  { name: 'Validators', url: '/validators' }
+    ]
+    // computed
+    let address = computed(() => $s.getters['common/wallet/address'])
+    // lh
+    onBeforeMount(async () => {
+      await $s.dispatch('common/env/init')
+      router.push('portfolio')
+    })
+    return {
+      navbarLinks,
+      // router
+      router,
+      // computed
+      address
+    }
+  }
 }
 </script>
+
+<style scoped lang="scss">
+body {
+  margin: 0;
+}
+</style>
