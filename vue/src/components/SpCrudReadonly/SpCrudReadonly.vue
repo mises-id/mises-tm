@@ -106,7 +106,7 @@ export default defineComponent({
       
     })
     let commandKey = computed(() =>{
-      if (props.itemName == "User Info") {
+      if (props.itemName == "UserInfo") {
         return "QueryUser"
       } else if (props.itemName == "Tx"){
         return "GetTxsEvent"

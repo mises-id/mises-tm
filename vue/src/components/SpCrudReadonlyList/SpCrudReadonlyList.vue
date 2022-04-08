@@ -158,13 +158,14 @@ export default defineComponent({
         })
     }
     let items = computed(() => {
-        console.log("props.query", props.query)
         if (Object.keys(props.query).length > 0) {
           
+          console.log("props.query", props.query)
           const itemData = $s.state[props.storeName][props.commandKey]
 
           let queryKey 
           Object.keys(itemData).forEach((key) => {
+            console.log("key", key)
             if (key.indexOf(Object.values(props.query)[0]) >= 0) {
               queryKey = key
             }

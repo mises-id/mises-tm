@@ -35,7 +35,7 @@ export default {
     // lh
     onBeforeMount(async () => {
       await $s.dispatch('common/env/init')
-      router.push('portfolio')
+      //router.push('portfolio')
     })
     return {
       navbarLinks,
