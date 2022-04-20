@@ -180,13 +180,14 @@ export default defineComponent({
                 const tx_responses = itemData[queryKey]["tx_responses"];
                 const data = tx_responses.map(val=>{
                   const {messages=[{}]} = val.tx.body;
+                  console.log(val)
                   return {
                     hash: val.txhash,
                     blockHeight:val.height,
                     fromAddress: messages[0].from_address,
                     toAddress: messages[0].to_address,
                     amount:messages[0].amount ? `${precisionRound(messages[0].amount[0].amount / 1000000, 6)}MIS` : '',
-                    gasFeeAmount:`${precisionRound(val.gas_used / 1000000, 6)}MIS`,
+                    gas_used:val.gas_used,
                     status: val.code===0 ? 'success' : 'failed',
                     [`More Info`]:val.tx,
                   }
