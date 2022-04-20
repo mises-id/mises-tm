@@ -11,8 +11,10 @@ require (
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0 // indirect
 	github.com/multiformats/go-multibase v0.0.3
 	github.com/rakyll/statik v0.1.7
+	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
@@ -23,8 +25,8 @@ require (
 	github.com/tendermint/tm-db v0.6.6
 	go.mongodb.org/mongo-driver v1.8.0
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	google.golang.org/genproto v0.0.0-20220302033224-9aa15565e42a
-	google.golang.org/grpc v1.44.0
+	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e
+	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.27.1
 )
 
@@ -38,6 +40,6 @@ replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.17.4-0.20211207035
 
 replace github.com/cosmos/cosmos-sdk => github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639
 
-replace github.com/tendermint/tendermint => github.com/mises-id/tendermint v0.34.15-0.20220303055734-a5c89353c3e2
+replace github.com/tendermint/tendermint => github.com/mises-id/tendermint v0.34.15-0.20220331082541-d269a1ad09b8
 
 replace github.com/cosmos/gravity-bridge/module => github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e
