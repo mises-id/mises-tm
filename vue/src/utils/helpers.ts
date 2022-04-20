@@ -18,3 +18,7 @@ export function str2rgba(r: string): string {
   for (let t = 0; t < r.length; t++) n = (n >>> 8) ^ o[255 & (n ^ r.charCodeAt(t))]
   return ((-1 ^ n) >>> 0).toString(16)
 }
+export function precisionRound(n: number, p: number): number {
+  let factor = Math.pow(10, p)
+  return Math.round(n * factor) / factor
+}
