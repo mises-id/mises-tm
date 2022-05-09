@@ -1,8 +1,28 @@
 <template>
   <div>
 
-    <div v-if="items" style="max-width: 600px">
-      <div
+    <div v-if="items">
+      <table border="none" class="table" v-if="(items || []).length">
+        <thead>
+          <tr>
+            <th v-for="field in state.itemHeader" :key="field"><span class="table-content">{{field}}</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item, index) in items" :key="index">
+            <td  v-for="(value,key) in item" :key="key">
+              <span class="table-content view" v-if="key==='More Info'" @click="triggerModel(value)">
+                View
+              </span>
+              <span class="table-content" :class="key" v-else>
+                {{value}}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div
         v-for="item in items"
         :key="item.id"
         style="
@@ -12,86 +32,48 @@
           margin-bottom: 3rem;
         "
       >
-        <div style="width: 50px">
-          <svg
-            width="46"
-            height="46"
-            viewBox="0 0 46 46"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 8C0 3.58172 3.58172 0 8 0H38C42.4183 0 46 3.58172 46 8V38C46 42.4183 42.4183 46 38 46H8C3.58172 46 0 42.4183 0 38V8Z"
-              fill="black"
-              fill-opacity="0.03"
-            />
-            <path
-              d="M24.3334 16.3335H19.0001C18.6465 16.3335 18.3073 16.474 18.0573 16.724C17.8072 16.9741 17.6667 17.3132 17.6667 17.6668V28.3335C17.6667 28.6871 17.8072 29.0263 18.0573 29.2763C18.3073 29.5264 18.6465 29.6668 19.0001 29.6668H27.0001C27.3537 29.6668 27.6928 29.5264 27.9429 29.2763C28.1929 29.0263 28.3334 28.6871 28.3334 28.3335V20.3335L24.3334 16.3335Z"
-              stroke="black"
-              stroke-opacity="0.64"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M24.3333 16.3335V20.3335H28.3333"
-              stroke="black"
-              stroke-opacity="0.64"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M25.6666 23.6665H20.3333"
-              stroke="black"
-              stroke-opacity="0.64"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M25.6666 26.3335H20.3333"
-              stroke="black"
-              stroke-opacity="0.64"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M21.6666 21H20.9999H20.3333"
-              stroke="black"
-              stroke-opacity="0.64"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </div>
         <div style="width: 100%">
-          <div v-for="field in itemFields">
+          <div v-for="field in itemFields" :key="field.name">
             <div class="item-title capitalize-first-letter">
               {{ field.name }}
             </div>
-            <div class="item-value">{{ item[field.name] }}</div>
+            <div class="item-value">
+              {{ item[field.name] }}
+
+            </div>
             <SpSpacer size="xsm" />
           </div>
         </div>
       
-      </div>
+      </div> -->
       <div v-if="(items || []).length === 0">
         <SpSpacer size="md" />
         <SpTypography size="md" class="empty">No items</SpTypography>
       </div>
     </div>
+    <MisesDialog v-model:visible="state.dialogVisable" title="More Info">
+      <div v-if="state.selectedItem">
+        <div v-for="field in itemFields" :key="field.name">
+          
+        <div class="item-title capitalize-first-letter">
+            {{ field.name }}
+          </div>
+          <div class="item-value">
+            {{ state.selectedItem[field.name] }}
+          </div>
+        </div>
+      </div>
+    </MisesDialog>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 
 import {SpTypography, SpModal, SpButton, SpSpacer} from '@starport/vue'
-
+import { precisionRound } from '../../utils/helpers'
+import MisesDialog from '../MisesDialog'
 export default defineComponent({
   name: 'SpCrudReadonlyList',
 
@@ -99,7 +81,8 @@ export default defineComponent({
     SpSpacer,
     SpTypography,
     SpButton,
-    SpModal
+    SpModal,
+    MisesDialog
   },
 
   props: {
@@ -134,9 +117,16 @@ export default defineComponent({
     let $s = useStore()
 
     // computed
-    let itemFields = computed(() =>
-      $s.getters[props.storeName + '/getTypeStructure'](props.itemName)
-    )
+    let itemFields = computed(() =>{
+      const fields = $s.getters[props.storeName + '/getTypeStructure'](props.itemName)
+      //get table keys from store ['pub_info','signatures',"body","auth_info"]
+      const getFields = fields.filter(field => {
+        if(['pub_info','signatures',"body","auth_info"].includes(field.name)) {
+          return field
+        }
+      })
+      return getFields;
+    })
     // let itemFields = computed(() =>
     //   [
     //     {
@@ -150,6 +140,11 @@ export default defineComponent({
     //     }
     //   ]
     // )
+    const state = reactive({
+      itemHeader:[],
+      dialogVisable: false,
+      selectedItem:null
+    })
     let reloadSocial = async () => {
         $s.dispatch(`${props.storeName}${props.commandName}`, {
           options: { subscribe: false },
@@ -160,45 +155,68 @@ export default defineComponent({
     let items = computed(() => {
         if (Object.keys(props.query).length > 0) {
           
-          console.log("props.query", props.query)
+          // console.log("props.query", props.query)
           const itemData = $s.state[props.storeName][props.commandKey]
-
           let queryKey 
           Object.keys(itemData).forEach((key) => {
-            console.log("key", key)
+            // console.log("key", key)
             if (key.indexOf(Object.values(props.query)[0]) >= 0) {
               queryKey = key
             }
           })
-          console.log("queryKey", queryKey)
+          // console.log("queryKey", queryKey)
           if (!queryKey) {
             reloadSocial()
           } else {
-            console.log(itemData[queryKey])
+            // console.log(itemData,queryKey,'queryKeyqueryKeyqueryKeyqueryKeyqueryKey')
             if (queryKey && itemData[queryKey]) {
+              // console.log([itemData[queryKey]],'============')
+              if(itemData[queryKey]['pub_info']){
+                const key = Object.keys(itemData[queryKey]['pub_info']);
+                state.itemHeader = key;
+                return [itemData[queryKey]['pub_info']]
+              }
               if (itemData[queryKey]["pagination"]) {
-                return itemData[queryKey]["txs"].sort((a, b) => {
-                  return b.id - a.id
-                })
+                const tx_responses = itemData[queryKey]["tx_responses"];
+                const data = tx_responses.map(val=>{
+                  const {messages=[{}]} = val.tx.body;
+                  console.log(val)
+                  return {
+                    hash: val.txhash,
+                    blockHeight:val.height,
+                    fromAddress: messages[0].from_address,
+                    toAddress: messages[0].to_address,
+                    amount:messages[0].amount ? `${precisionRound(messages[0].amount[0].amount / 1000000, 6)}MIS` : '',
+                    gas_used:val.gas_used,
+                    status: val.code===0 ? 'success' : 'failed',
+                    [`More Info`]:val.tx,
+                  }
+                });
+                if(data.length){
+                  const key = Object.keys(data[0])
+                  state.itemHeader = key;
+                  return data
+                }
+                return data;
               }
               return [itemData[queryKey]]
-
             }
           }
 
         }
-
       return []
     })
-
-    // lh
-    onMounted(() => {
-
-    })
-
+    const triggerModel = (item)=>{
+      state.dialogVisable = !state.dialogVisable
+      if(state.dialogVisable&&item){
+        state.selectedItem = item
+      }
+    }
     return {
       itemFields,
-      items
+      items,
+      state,
+      triggerModel
     }
   }
 })
@@ -250,5 +268,46 @@ export default defineComponent({
 .empty {
   font-size: 16px;
   color: rgba(0, 0, 0, 0.667);
+}
+.table-content{
+  display: block;
+  padding: 13px 10px;
+  font-size: 13px;
+  text-align: center;
+  word-break: break-all;
+}
+$borderColor:#ebeef5;
+.table{
+  margin-top: 20px;
+  border-collapse: collapse;
+  width:100%;
+  border:1px solid $borderColor ;
+  margin-bottom:20px;
+  th{
+    border-collapse: collapse;
+    border-right:1px solid $borderColor ;
+    border-bottom:1px solid $borderColor ;
+    background-color:#f5f7fa ; 
+    font-size:14px;
+    font-weight:normal;
+    text-align:center;
+    white-space: nowrap;
+  }
+  td{
+    border-collapse: collapse;
+    border-right:1px solid $borderColor ;
+    border-bottom:1px solid $borderColor ;
+    font-size:12px;
+    font-weight:normal;
+    text-align:center;
+    word-break: break-all;
+  }
+  .status,.amount,info{
+    white-space: nowrap;
+  }
+  .view{
+    color: #1989fa;
+    cursor: pointer;
+  }
 }
 </style>
