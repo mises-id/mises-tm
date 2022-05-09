@@ -1,0 +1,90 @@
+# This is a basic workflow that is manually triggered
+
+name: misestm
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  push:
+    tags:
+      - '*'
+
+
+# This workflow makes x86_64 binaries for mac, windows, and linux.
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: misestm 
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+
+      - name: Compile linux-amd64
+        run:  |
+          make build
+          tar -czvf misestmd.linux-amd64.tar.gz build
+        env:
+          GOOS: linux
+          GOARCH: amd64
+          CGO_ENABLED: 1
+
+
+      - name: Compile darwin-amd64
+        run:  |
+          make build
+          tar -czvf misestmd.darwin-amd64.tar.gz build
+        env:
+          GOOS: darwin
+          GOARCH: amd64
+          CGO_ENABLED: 0
+
+
+      - name: Compile windows-amd64
+        run:  |
+          make build
+          tar -czvf misestmd.windows-amd64.tar.gz build
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: 0
+
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+      
+
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: misestmd.linux-amd64.tar.gz
+          asset_name: misestmd.linux-amd64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: upload darwin artifact
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: misestmd.darwin-amd64.tar.gz
+          asset_name: misestmd.darwin-amd64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: misestmd.windows-amd64.tar.gz
+          asset_name: misestmd.windows-amd64.tar.gz
+          asset_content_type: application/gzip
+
+
