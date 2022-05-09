@@ -26,7 +26,7 @@ jobs:
       - name: Compile linux-amd64
         run:  |
           make build
-          tar -czvf misestmd.linux-amd64.tar.gz build
+          tar -czvf misestmd.linux-amd64.tar.gz build/misestmd
         env:
           GOOS: linux
           GOARCH: amd64
@@ -36,7 +36,7 @@ jobs:
       - name: Compile darwin-amd64
         run:  |
           make build
-          tar -czvf misestmd.darwin-amd64.tar.gz build
+          tar -czvf misestmd.darwin-amd64.tar.gz build/misestmd
         env:
           GOOS: darwin
           GOARCH: amd64
@@ -46,7 +46,7 @@ jobs:
       - name: Compile windows-amd64
         run:  |
           make build
-          tar -czvf misestmd.windows-amd64.tar.gz build
+          tar -czvf misestmd.windows-amd64.tar.gz build/misestmd.exe
         env:
           GOOS: windows
           GOARCH: amd64
@@ -79,7 +79,7 @@ jobs:
           asset_name: misestmd.darwin-amd64.tar.gz
           asset_content_type: application/gzip
 
-      - name: upload linux artifact
+      - name: upload windows artifact
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}

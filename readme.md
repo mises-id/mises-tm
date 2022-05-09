@@ -1,17 +1,19 @@
-## Table of Contents <!-- omit in toc -->
+# Table of Contents <!-- omit in toc -->
 
 - [What is Mises?](#what-is-mises)
 - [Build](#build)
+- [Production Environment](#production)
 - [Full Node](#full-node)
   - [Join the mainnet](#join-the-mainnet)
   - [Run a single node testnet](#run-a-single-node-testnet)
+- [Run as service](#service)
 - [Contributing](#contributing)
 
-## The Mises Chain
+# The Mises Chain
 Mises is a social network protocol based on blockchain technology, it helps developer build decentralized social media applications on blockchain.
 
 
-## Build
+# Build
 **Step 1. Install Golang**
 
 Go v1.17+ or higher is required for Mises.
@@ -57,7 +59,7 @@ build_deps:
 ```
 
 
-## `misestmd`
+# `misestmd` CLI
 
 `misestmd` is the all-in-one command for operating and interacting with a running Mises node. For comprehensive coverage on each of the available functions. To view various subcommands and their expected arguments, use the `$ misestmd --help` command:
 
@@ -106,13 +108,38 @@ build_deps:
     </div>
 </pre>
 
+# Set up a production environment
+
+Use the following information to set up and manage your production-level full Mises node.  
+
+For information about running a validator node, visit the [validator guide](docs/VALIDATOR.md).
 
 
-## Full Node
+
+## Create a dedicated user
+
+Although `misestmd` does not require a super user account, during the setup process you'll need super user permission to create and modify some files. It is strongly recommended to use a normal user when running `misestmd`.  
+
+## Increase the maximum files `misestmd` can open
+
+`misestmd` is set to open 1024 files by default. It is recommended that you increase this amount.
+
+Modify `/etc/security/limits.conf`[*](https://linux.die.net/man/5/limits.conf) to increase the amount, where `nofile` is the number of files `misestmd` can open.
+
+```bash
+# If you have never changed this system config or your system is fresh, most of this file will be commented
+# ...
+*                soft    nofile          65535   # Uncomment the following two lines at the bottom
+*                hard    nofile          65535   # Change the default values to ~65535
+# ...
+```
+
+
+# Full Node
 
 Once you have `misestm` installed, you will need to set up your node to be part of the network.
 
-### Join the mainnet
+## Join the mainnet
 
 The following requirements are recommended for running a `mises` mainnet node:
 
@@ -159,7 +186,7 @@ misestmd start --mises-use-mongodb mongodb://127.0.0.1:27017
 ```
 
 
-### Run a single node testnet
+## Run a single node testnet
 
 You can also run a local testnet using a single node. On a local testnet, you will be the sole validator signing blocks.
 
@@ -200,6 +227,75 @@ Your `misestmd` node will be running a node on `tcp://localhost:26656`, listenin
 
 Congratulations, you've successfully set up your local Mises network!
 
-## Contributing
+
+
+# Run the server as a daemon
+
+`misestmd` must be running at all times. It is recommended that you register `misestmd` as a `systemd` service so that it will be started automatically when the system reboots.
+
+## Register `misestmd` as a service
+
+1. Create a service definition file in `/etc/systemd/system/misestmd.service`.
+
+     **Example**:
+
+     ```bash
+     [Unit]
+     Description=Mises Daemon
+     After=network.target
+
+     [Service]
+     Type=simple
+     User=<Mises_USER>
+     ExecStart=<PATH_TO_MISESTMD>/misestmd start  
+     Restart=on-abort
+
+     [Install]
+     WantedBy=multi-user.target
+
+     [Service]
+     LimitNOFILE=65535  
+     ```
+
+2. Modify the `Service` section according to your environment:
+
+   - Enter the user (likely your username, unless you created a user specifically for `misestmd`)
+   - Enter the path to the `misestmd` executable. `<PATH_TO_MISESTMD>` is likely `/home/<YOUR_USER>/go/bin/misestmd` or `/usr/go/bin`. Confirm this with `whereis misestmd`
+   - Make sure you made the correct edits to /etc/security/limits.conf
+
+
+3. Run `systemctl daemon-reload` followed by `systemctl enable misestmd`. This will register `misestmd` as a system service and turn it on upon startup.
+
+4. Now start the serivce with `systemctl start misestmd`.
+
+### Controlling the service
+
+Use `systemctl` to start, stop, and restart the service:
+
+```bash
+# Check health
+systemctl status misestmd
+# Start
+systemctl start misestmd
+# Stop
+systemctl stop misestmd
+# Restart
+systemctl restart misestmd
+```
+
+### Access logs
+
+Use `journalctl -t` to access entire logs, entire logs in reverse, and the latest and continuous log.
+
+```bash
+# Entire log reversed
+journalctl -t misestmd -r
+# Entire log
+journalctl -t misestmd
+# Latest and continuous
+journalctl -t misestmd -f
+```
+
+# Contributing
 
 If you are interested in contributing to Mises source, please review our [code of conduct](./coc.md).
