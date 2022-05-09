@@ -6,7 +6,7 @@
 			<SpLinkIcon link="/latestblocks" text="Latest Blocks" icon="Transactions" />
 			<SpLinkIcon link="/validators" text="Validators" icon="Form" />
 			<div class="sp-dash"></div>
-			<SpLinkIcon href="https://github.com/mises-id/doc" target="_blank" text="Documentation" icon="Docs" />
+			<SpLinkIcon href="https://github.com/mises-id/mises-tm" target="_blank" text="Documentation" icon="Docs" />
 		</template>
 		<template v-slot:footer>
 			<SpStatusAPI :showText="sidebarOpen" />

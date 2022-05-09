@@ -29,12 +29,17 @@
 				</tbody>
 			</table>
 		</div>
+
 	</div>
 </template>
 
 <script>
+import SpStatusLED from '../components/SpStatusLED'
 import axios from 'axios'
 export default {
+	components: {
+		SpStatusLED
+	},
 	name: 'Validators',
 	data() {
 		return {
@@ -43,9 +48,6 @@ export default {
 		}
 	},
 	computed: {
-		depsLoaded() {
-			return this._depsLoaded
-		},
 		page() {
 			return parseInt(this.$route.params.page) || 1
 		}
