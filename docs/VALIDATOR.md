@@ -137,6 +137,12 @@ You can currently delegate to a validator  if they appear on MISES Chain Explore
 ```bash
 # recover key from the mnemonic of your mises account
 misestmd keys add delegator --recover  
+
+# check the info and delegation params of a validator
+misestmd query staking validator OPERATOR_ADDRESS_OF_THE_VALIDATOR 
+    --chain-id "mainnet"
+    --node https://e1.mises.site:443
+    
 # delegate
 misestmd tx staking delegate OPERATOR_ADDRESS_OF_THE_VALIDATOR 1000000umis
     --from delegator
@@ -145,6 +151,29 @@ misestmd tx staking delegate OPERATOR_ADDRESS_OF_THE_VALIDATOR 1000000umis
     --node https://e1.mises.site:443
 ```
 
+OPERATOR_ADDRESS_OF_THE_VALIDATOR need to be replaced with the address you find on `https://gw.mises.site/validators`
+
+### How Can I view and withdraw my delegation reward?
+
+The reward of each validator or delegator will be recorded in a reward pool, and it will not be sent to user accounts automatically.
+If you want to withdraw your reward and stake the reward again（aka redelegation）, a withdraw-all-rewards tx should be broadcasted from your account.
+
+**Example:**
+
+```bash
+# query my reward on a single validator
+misestmd query distribution rewards DELEGATOR_ADDRESS OPERATOR_ADDRESS_OF_THE_VALIDATOR 
+    --chain-id "mainnet"
+    --node https://e1.mises.site:443
+   
+# withdraw all my reward
+misestmd tx distribution withdraw-all-rewards 
+    --from delegator
+    --chain-id "mainnet"
+    --gas auto
+    --node https://e1.mises.site:443
+```
+DELEGATOR_ADDRESS need to be replaced with your delegator account address
 OPERATOR_ADDRESS_OF_THE_VALIDATOR need to be replaced with the address you find on `https://gw.mises.site/validators`
 
 
