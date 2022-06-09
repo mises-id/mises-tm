@@ -26,7 +26,7 @@ export default {
     // state
     let navbarLinks = [
       { name: 'Home', url: '/portfolio' },
-      { name: 'SocialData', url: '/data' },
+      { name: 'SocialTxs', url: '/data' },
 	  { name: 'Blocks', url: '/latestblocks' },
 	  { name: 'Validators', url: '/validators' }
     ]

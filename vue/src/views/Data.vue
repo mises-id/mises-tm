@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
   		<div class="enter-address-wrapper">
-          <div class="input-label">Search Social Data & Transfer</div>
+          <div class="input-label">Search Social Data & Transactions</div>
 
           <div class="input-wrapper">
             <input
@@ -23,8 +23,8 @@
 	</div>
 	<SpCrudReadonly store-name="misesid.misestm.v1beta1" item-name="UserInfo" :address="searchAddress" display-name="User Info" />
 	<!-- <SpCrudReadonly store-name="misesid.misestm.v1beta1" item-name="UserRelation" :address="searchAddress"  /> -->
-	<SpCrudReadonly store-name="cosmos.tx.v1beta1" item-name="Tx" :address="searchAddress"  display-name="Transfer Recv" />
-	<SpCrudReadonly store-name="cosmos.tx.v1beta1" item-name="Tx" :address="searchAddress"  display-name="Transfer Send" />
+	<SpCrudReadonly store-name="cosmos.tx.v1beta1" item-name="Tx" :address="searchAddress"  display-name="Transactions Recv" />
+	<SpCrudReadonly store-name="cosmos.tx.v1beta1" item-name="Tx" :address="searchAddress"  display-name="Transactions Send" />
 	<!-- <SpCrudReadonly store-name="misesid.misestm.v1beta1" item-name="AppInfo"  address="searchAddress" />
 	<SpCrudReadonly store-name="misesid.misestm.v1beta1" item-name="DidRegistry" address="searchAddress"  /> -->
 </template>
@@ -45,6 +45,14 @@ export default {
 		SpCrudReadonly
 	},
 	name: 'Data',
+  computed: {
+		address() {
+			return this.$route.params.address || ''
+		}
+	},
+  async created() {
+    this.state.address = this.$route.params.address || ''
+  },
 	setup() {
 		let state: State = reactive(initialState)
 		let validAddress = computed<boolean>(() => {
