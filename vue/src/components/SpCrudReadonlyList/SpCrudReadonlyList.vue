@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { sentenceCase } from 'sentence-case'
+// import { sentenceCase } from 'sentence-case'
 import { computed, defineComponent, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 
