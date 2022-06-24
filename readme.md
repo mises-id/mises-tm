@@ -155,9 +155,10 @@ misestmd init mises --chain-id mainnet
 
 sudo snap install jq
 curl https://e1.mises.site:443/genesis | jq .result.genesis > ~/.misestm/config/genesis.json
+
 PERSISTENT_PEERS="40a8318fa18fa9d900f4b0d967df7b1020689fa0@e1.mises.site:26656"
 
-sed -i '/persistent_peers =/c\persistent_peers = "'"$PERSISTENT_PEERS"'"' ~/.misestm/config/config.toml
+sed -i.bak -E "s|^(persistent_peers[[:space:]]+=[[:space:]]+).*$|\1\"$PERSISTENT_PEERS\"|"  ~/.misestm/config/config.toml
 
 misestmd start
 
@@ -169,13 +170,21 @@ first query the lastet block height and hash from mises block explorer https://g
 then edit the config.toml to enable it.
 
 ```
+read BLOCK_HASH BLOCK_HEIGHT < <(echo $(curl https://e1.mises.site:443/block -s | jq -r '.result.block_id.hash,.result.block.header.height')) 
+
+sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
+s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"http://e1.mises.site:26657,http://e2.mises.site:26657,http://w1.mises.site:26657,http://w2.mises.site:26657\"| ; \
+s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
+s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$BLOCK_HASH\"|"  ~/.misestm/config/config.toml
+
 vi ~/.misestm/config/config.toml
 
+//you should see something like this in config.toml
 [statesync]
 enable = true
 rpc_servers = "https://e1.mises.site:443,https://e2.mises.site:443,https://w1.mises.site:443,https://w2.mises.site:443"
-trust_height = 38188 
-trust_hash = "8AF6C7C7607A5C49ECCEB355DD82E8479922A1CDCD6D9F4F0E7C620A2259587F"
+trust_height = 38188  //should be the latest height
+trust_hash = "8AF6C7C7607A5C49ECCEB355DD82E8479922A1CDCD6D9F4F0E7C620A2259587F" //should be the latest hash
 
 ```
 
