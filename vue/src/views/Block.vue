@@ -42,18 +42,17 @@ function formatTx({
 		}
 	}
 }
-async function getTx(apiCosmos, apiTendermint, encodedTx) {
-	const txHash = sha256(fromBase64(encodedTx))
+async function getTx(apiCosmos, apiTendermint, txHash) {
 	try {
-		const rpcRes = await axios.get(apiTendermint + '/tx?hash=0x' + toHex(txHash))
-		const apiRes = await axios.get(apiCosmos + '/cosmos/tx/v1beta1/txs/' + toHex(txHash))
-		return { rpcRes, apiRes, txHash: toHex(txHash).toUpperCase() }
+		const rpcRes = await axios.get(apiTendermint + '/tx?hash=0x' + txHash)
+		const apiRes = await axios.get(apiCosmos + '/cosmos/tx/v1beta1/txs/' + txHash)
+		return { rpcRes, apiRes, txHash: txHash.toUpperCase() }
 	} catch (e) {
 		throw 'Error fetching TX data'
 	}
 }
-async function decodeTx(apiCosmos, apiTendermint, encodedTx) {
-	const fullTx = await getTx(apiCosmos, apiTendermint, encodedTx)
+async function decodeTx(apiCosmos, apiTendermint, txHash) {
+	const fullTx = await getTx(apiCosmos, apiTendermint, txHash)
 	const { data } = fullTx.rpcRes
 	const { height, tx_result } = data.result
 	const { code, log, gas_used, gas_wanted } = tx_result
@@ -83,19 +82,35 @@ export default {
 		}
 	},
 	async created() {
-		const blockDetails = await axios.get(this.$store.getters['common/env/apiTendermint'] + '/block?height=' + this.$route.params.block)
-		const txDecoded = blockDetails.data.result.block.data.txs.map(async (x) => {
-			const dec = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], x)
-			return dec
-		})
-		const txs = await Promise.all(txDecoded)
-		this.block = {
-			height: blockDetails.data.result.block.header.height,
-			timestamp: blockDetails.data.result.block.header.time,
-			hash: blockDetails.data.result.block_id.hash,
-			details: blockDetails.data.result.block,
-			txDecoded: [...txs]
+		if (this.$route.params.block) {
+			const blockDetails = await axios.get(this.$store.getters['common/env/apiTendermint'] + '/block?height=' + this.$route.params.block)
+			const txDecoded = blockDetails.data.result.block.data.txs.map(async (x) => {
+				const txhash = toHex(sha256(fromBase64(x)))
+				const dec = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], txhash)
+				return dec
+			})
+			const txs = await Promise.all(txDecoded)
+			this.block = {
+				height: blockDetails.data.result.block.header.height,
+				timestamp: blockDetails.data.result.block.header.time,
+				hash: blockDetails.data.result.block_id.hash,
+				details: blockDetails.data.result.block,
+				txDecoded: [...txs]
+			}
 		}
+		if (this.$route.params.txhash) {
+			const txhash = this.$route.params.txhash
+
+			console.log(txhash)
+			const txDecoded  = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], txhash)
+			this.block = {
+				height: txDecoded.height,
+				hash: '' + txDecoded.meta.height,
+				details: '',
+				txDecoded: [txDecoded]
+			}
+		}
+
 	}
 }
 </script>

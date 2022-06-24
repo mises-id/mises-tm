@@ -6,21 +6,21 @@
         <SpAssets />
         <SpTokenTransferList />
       </div>
-      <div class="col-md-5 col-lg-4 col-md-offset-1 col-lg-offset-2">
+      <!-- <div class="col-md-5 col-lg-4 col-md-offset-1 col-lg-offset-2">
         <SpTokenTransfer />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import MisesWelcome from '../components/MisesWelcome'
-import { SpAssets, SpTokenTransfer, SpTokenTransferList } from '@starport/vue'
+import { SpAssets, SpTokenTransferList } from '@starport/vue'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 export default {
   name: 'Portfolio',
-  components: { SpTokenTransfer, SpAssets, SpTokenTransferList, MisesWelcome },
+  components: { SpAssets, SpTokenTransferList, MisesWelcome },
   setup() {
     // store
     let $s = useStore()

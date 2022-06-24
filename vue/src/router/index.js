@@ -17,6 +17,8 @@ const routes = [
 	{ path: '/blocks/:page?', component: Blocks },
 	{ path: '/block/:block', component: Block },
 	{ path: '/validators/:page?', component: Validators },
+	{ path: '/address/:address', component: Data },
+	{ path: '/tx/:txhash', component: Block },
 ]
 
 const router = createRouter({

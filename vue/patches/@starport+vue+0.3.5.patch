@@ -1,0 +1,13 @@
+diff --git a/node_modules/@starport/vue/src/components/SpAmountInput/SpAmountInput.vue b/node_modules/@starport/vue/src/components/SpAmountInput/SpAmountInput.vue
+index f3da843..b468dae 100644
+--- a/node_modules/@starport/vue/src/components/SpAmountInput/SpAmountInput.vue
++++ b/node_modules/@starport/vue/src/components/SpAmountInput/SpAmountInput.vue
+@@ -55,7 +55,7 @@ export default defineComponent({
+ 
+       if (newValue.split('').filter((char) => char === '.').length > 1) {
+         // Remove subsequent separators
+-        newValue = newValue.replace(/(?<=\..*)\./g, '')
++        //newValue = newValue.replace(/(?<=\..*)\./g, '')
+       }
+ 
+       let [integerDigits, fractionDigits] = newValue.split('.')

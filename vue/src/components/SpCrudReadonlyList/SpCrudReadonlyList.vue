@@ -68,6 +68,7 @@
 </template>
 
 <script lang="ts">
+// import { sentenceCase } from 'sentence-case'
 import { computed, defineComponent, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 
@@ -109,7 +110,12 @@ export default defineComponent({
     commandKey: {
       type: String,
       required: true
-    }
+    },
+    
+    creator: {
+      type: String,
+      required: true
+    },
   },
 
   setup(props) {
@@ -127,6 +133,62 @@ export default defineComponent({
       })
       return getFields;
     })
+
+    let formatCoins = (data: any) => data.map(formatCoin).join(',')
+    let formatCoin = ({ amount, denom }: any) => `${amount}${denom}`
+
+    let defaultMessage = (type: string) => {
+      const result = type.split('.')
+      return sentenceCase(result[result.length - 1].replace('Msg', ''))
+    }
+
+
+    let summary = (msg: any): string  =>{
+      const creator = props.creator
+      console.log(creator)
+      try {
+        const msgType = msg["@type"]
+        const data = msg
+
+        switch (msgType) {
+          case '/cosmos.bank.v1beta1.MsgSend': {
+            const { amount, to_address, from_address } = data
+            if (creator === to_address) {
+              return `Recv ${formatCoins(amount)} from ${from_address}`
+            }
+            return `Send ${formatCoins(amount)} to ${to_address}`
+          }
+
+          case '/cosmos.staking.v1beta1.MsgDelegate': {
+            const { amount, validator_address } = data
+            return `Delegate ${formatCoin(amount)} to ${validator_address}`
+          }
+
+          case '/cosmos.staking.v1beta1.MsgBeginRedelegate': {
+            const { amount, validator_dst_address, validator_src_address } = data
+            return `Redelegate ${formatCoin(
+              amount
+            )} from ${validator_src_address} to ${validator_dst_address}`
+          }
+
+          case '/cosmos.staking.v1beta1.MsgUndelegate': {
+            const { amount, validator_address } = data
+            return `Undelegate ${formatCoin(amount)} from ${validator_address}`
+          }
+
+          case '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward': {
+            const { validator_address } = data
+            return `Withdraw rewards from ${validator_address}`
+          }
+
+          default:
+            return defaultMessage(msgType)
+        }
+      } catch {
+        return ''
+      }
+    }
+
     // let itemFields = computed(() =>
     //   [
     //     {
@@ -178,20 +240,21 @@ export default defineComponent({
               }
               if (itemData[queryKey]["pagination"]) {
                 const tx_responses = itemData[queryKey]["tx_responses"];
-                const data = tx_responses.map(val=>{
+                const data = tx_responses.reduce((result, val)=>{
                   const {messages=[{}]} = val.tx.body;
-                  console.log(val)
-                  return {
-                    hash: val.txhash,
-                    blockHeight:val.height,
-                    fromAddress: messages[0].from_address,
-                    toAddress: messages[0].to_address,
-                    amount:messages[0].amount ? `${precisionRound(messages[0].amount[0].amount / 1000000, 6)}MIS` : '',
-                    gas_used:val.gas_used,
-                    status: val.code===0 ? 'success' : 'failed',
-                    [`More Info`]:val.tx,
-                  }
-                });
+                  return result.concat(messages.map(msg=>{
+                    return {
+                      hash: val.txhash,
+                      blockHeight:val.height,
+                      amount:msg.amount ? `${precisionRound((Array.isArray(msg.amount)?msg.amount[0]:msg.amount).amount / 1000000, 6)}MIS` : '',
+
+                      summary: summary(msg),
+                      gas_used:val.gas_used,
+                      status: val.code===0 ? 'success' : 'failed',
+                      [`More Info`]:val.tx,
+                    }
+                  }))
+                } , []);
                 if(data.length){
                   const key = Object.keys(data[0])
                   state.itemHeader = key;

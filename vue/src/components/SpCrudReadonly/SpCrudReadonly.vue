@@ -121,10 +121,10 @@ export default defineComponent({
       }
       if (props.displayName == "User Info") {
         return {"mises_id": "did:mises:" + props.address}
-      } else if (props.displayName == "Transfer Recv"){
-        return {"events": "transfer.recipient='" + props.address + "'"}
-      }  else if (props.displayName == "Transfer Send"){
-        return {"events": "transfer.sender='" + props.address + "'"}
+      } else if (props.displayName == "Transactions Recv"){
+        return {"events": "transfer.recipient='" + props.address + "'", "order_by": "ORDER_BY_DESC"}
+      }  else if (props.displayName == "Transactions Send"){
+        return {"events": "transfer.sender='" + props.address + "'", "order_by": "ORDER_BY_DESC"}
       } else {
         return {"mises_id": "did:mises:" + props.address}
       }

@@ -5,7 +5,6 @@
 		<div class="container">
 		
 			<MisesWelcome />
-			<SpTokenSend :address="address" />
 			<SpTransferList :address="address" />
 		</div>
 		
