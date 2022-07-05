@@ -194,7 +194,7 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
-	MongoDBHome = filepath.Join(userHomeDir, ".mongo")
+	MongoDBHome = filepath.Join(DefaultNodeHome, "data")
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -406,6 +406,7 @@ func New(
 	var rawdb dbm.RawDB
 	if useMongoUrl != "" {
 		os.Setenv("MONGO_URL", useMongoUrl)
+		MongoDBHome = filepath.Join(homePath, "data")
 		mongodb, _ = NewMongoDB("mises", MongoDBHome)
 		rawdb = mongodb.(dbm.RawDB)
 	}

@@ -27,6 +27,7 @@ jobs:
         run:  |
           make build
           tar -czvf misestmd.linux-amd64.tar.gz build/misestmd
+          make clean
         env:
           GOOS: linux
           GOARCH: amd64
@@ -37,6 +38,7 @@ jobs:
         run:  |
           make build
           tar -czvf misestmd.darwin-amd64.tar.gz build/misestmd
+          make clean
         env:
           GOOS: darwin
           GOARCH: amd64
@@ -47,6 +49,7 @@ jobs:
         run:  |
           make build
           tar -czvf misestmd.windows-amd64.tar.gz build/misestmd.exe
+          make clean
         env:
           GOOS: windows
           GOARCH: amd64

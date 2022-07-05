@@ -149,6 +149,20 @@ build-misestm-linux: go.sum
 build-misestm-windows: go.sum
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 $(MAKE) build-misestm
 
+build-misestm-darwin: go.sum
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 $(MAKE) build-misestm
+
+build-tar:
+	$(MAKE) clean
+	$(MAKE) build-misestm-linux 
+	tar -czvf misestmd.linux-amd64.tar.gz build/misestmd
+	$(MAKE) clean
+	$(MAKE) build-misestm-windows 
+	tar -czvf misestmd.windows-amd64.tar.gz build/misestmd.exe 
+	$(MAKE) clean
+	$(MAKE) build-misestm-darwin 
+	tar -czvf misestmd.darwin-amd64.tar.gz build/misestmd
+
 .PHONY: build build-misestm build-misestm-linux
 
 install:
