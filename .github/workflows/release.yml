@@ -44,17 +44,6 @@ jobs:
           GOARCH: amd64
           CGO_ENABLED: 0
 
-
-      - name: Compile windows-amd64
-        run:  |
-          make build
-          tar -czvf misestmd.windows-amd64.tar.gz build/misestmd.exe
-          make clean
-        env:
-          GOOS: windows
-          GOARCH: amd64
-          CGO_ENABLED: 0
-
       - name: release
         uses: actions/create-release@v1
         id: create_release
@@ -80,14 +69,6 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: misestmd.darwin-amd64.tar.gz
           asset_name: misestmd.darwin-amd64.tar.gz
-          asset_content_type: application/gzip
-
-      - name: upload windows artifact
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: misestmd.windows-amd64.tar.gz
-          asset_name: misestmd.windows-amd64.tar.gz
           asset_content_type: application/gzip
 
 
