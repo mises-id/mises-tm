@@ -46,3 +46,27 @@
     }
   }
 }
+@font-face {
+  font-family: 'hlt-45';
+  src: url("/fonts/HelveticaNeueLTPro-Lt.otf") format("opentype");
+}
+@font-face {
+  font-family: 'hlt-55';
+  src: url("/fonts/HelveticaNeueLTPro-Roman.otf") format("opentype");
+}
+@font-face {
+  font-family: 'hlt-65';
+  src: url("/fonts/HelveticaNeueLTPro-Md.otf") format("opentype");
+}
+@font-face {
+  font-family: 'hlt-75';
+  src: url("/fonts/HelveticaNeueLTPro-Bd.otf") format("opentype");
+}
+@font-face {
+  font-family: 'hlt-85';
+  src: url("/fonts/HelveticaNeueLTPro-Hv.otf") format("opentype");
+}
+.flex{
+  display: flex;
+  align-items: center;
+}

@@ -1,11 +1,10 @@
 <template>
   <div>
     <SpTheme>
-      <SpNavbar
-        :links="navbarLinks"
-        :active-route="router.currentRoute.value.path"
-      />
-      <router-view />
+      <div class="fixed"><SpNavbar :links="navbarLinks" :active-route="router.currentRoute.value.path" /></div>
+      <div class="page">
+        <router-view />
+      </div>
     </SpTheme>
   </div>
 </template>
@@ -26,9 +25,38 @@ export default {
     // state
     let navbarLinks = [
       { name: 'Home', url: '/portfolio' },
-      { name: 'SocialTxs', url: '/data' },
-	  { name: 'Blocks', url: '/latestblocks' },
-	  { name: 'Validators', url: '/validators' }
+      {
+        name: 'BlockChain',
+        url: '/latestblocks',
+        children: [
+          {
+            name: 'View Holders',
+            url: '/holders'
+          },
+          {
+            name: 'View Blocks',
+            url: '/blocks'
+          },
+          {
+            name: 'View Txns',
+            url: '/txns'
+          }
+        ]
+      },
+      {
+        name: 'Validators',
+        url: '/validators',
+        children: [
+          {
+            name: 'Validators Leaderboard',
+            url: '/leaderboard'
+          },
+          {
+            name: 'Validators Set Info',
+            url: '/setInfo'
+          }
+        ]
+      }
     ]
     // computed
     let address = computed(() => $s.getters['common/wallet/address'])
@@ -51,5 +79,15 @@ export default {
 <style scoped lang="scss">
 body {
   margin: 0;
+}
+.fixed{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 55;
+}
+.page{
+  padding-top: 80px;
 }
 </style>
