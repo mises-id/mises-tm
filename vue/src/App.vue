@@ -11,10 +11,11 @@
 
 <script lang="ts">
 import './scss/app.scss'
-import { SpNavbar, SpTheme } from '@starport/vue'
+import { SpTheme } from '@starport/vue'
 import { computed, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import SpNavbar from './components/SpNav'
 export default {
   components: { SpTheme, SpNavbar },
   setup() {

@@ -3,19 +3,46 @@
     <div class="homepage">
       <p class="welcome">The Mises Blockchain Explorer</p>
       <div class="search">
-        <input type="text" placeholder="Search by Txn Hash/Block/Address/User Name" />
-        <div class="search-btn">
+        <input type="text" placeholder="Search by Txn Hash/Block Height/Address" @keyup="getKeyUp" v-model="search"/>
+        <div class="search-btn" @click="getText">
           <img src="/images/index/search@2x.png" alt="" />
         </div>
       </div>
       <div class="mises-stats">
-        <div v-for="(item, index) in state.misesStats" :key="index" class="flex stats-item">
+        <div class="flex stats-item">
           <div class="flex stats-item-icon-box">
-            <img :src="`/images/index/${item.icon}@2x.png`" alt="" class="stats-item-icon" />
+            <img :src="`/images/index/icon_1@2x.png`" alt="" class="stats-item-icon" />
           </div>
           <div class="stats-item-value">
-            <span class="title">{{ item.title }}</span>
-            <p class="value">{{ item.value }}</p>
+            <span class="title">Total MIS Supply</span>
+            <p class="value">{{ supply }} MIS</p>
+          </div>
+        </div>
+        <div class="flex stats-item">
+          <div class="flex stats-item-icon-box">
+            <img :src="`/images/index/icon_2@2x.png`" alt="" class="stats-item-icon" />
+          </div>
+          <div class="stats-item-value">
+            <span class="title">Med Gas Price</span>
+            <p class="value">{{ gasPrice }}</p>
+          </div>
+        </div>
+        <div class="flex stats-item">
+          <div class="flex stats-item-icon-box">
+            <img :src="`/images/index/icon_1@2x.png`" alt="" class="stats-item-icon" />
+          </div>
+          <div class="stats-item-value">
+            <span class="title">Latest Block</span>
+            <p class="value">{{ blockHeight }}</p>
+          </div>
+        </div>
+        <div class="flex stats-item">
+          <div class="flex stats-item-icon-box">
+            <img :src="`/images/index/icon_1@2x.png`" alt="" class="stats-item-icon" />
+          </div>
+          <div class="stats-item-value">
+            <span class="title">Social Relationships</span>
+            <p class="value">{{ relationships }}</p>
           </div>
         </div>
       </div>
@@ -24,88 +51,212 @@
       <div class="block-box">
         <p class="title">MIS Coin Top Holders</p>
         <div class="block-list">
-          <div v-for="(item, index) in state.holders" :key="index" class="block-item flex">
+          <div v-for="(item, index) in holderList" :key="index" class="block-item flex">
             <div>
-              <p>mises-w1</p>
-              <p class="second-value">misemisesvaloper1zt9wqeewewqeeee</p>
+              <p class="name">{{ item.name }}</p>
+              <p class="second-value">{{ item.misesid }}</p>
             </div>
             <div>
               <p>Quantity</p>
-              <p>1109250 MIS</p>
+              <p>{{ item.quantity }} MIS</p>
             </div>
             <div>
               <p>Percentage</p>
-              <p>25.14%</p>
+              <p>{{item.percentage}}%</p>
             </div>
           </div>
+          <div v-if="!holderList.length">
+            <Skeleton active />
+            <Skeleton active />
+          </div>
         </div>
-        <div class="block-btn">View all Holders</div>
+        <router-link class="block-btn" to="/holders">View all Holders</router-link>
       </div>
       <div class="block-box">
-        <p class="title">MIS Coin Top Holders</p>
+        <p class="title">Latest Blocks</p>
         <div class="block-list">
-          <div v-for="(item, index) in state.blocks" :key="index" class="block-item flex">
+          <div v-for="item in blocks" :key="item.height" class="block-item flex">
             <div>
-              <p>Height: 1544940</p>
-              <p class="second-value">2022.7.1 15:23:36</p>
+              <p>Height: {{ item.height }}</p>
+              <p class="second-value">{{ formatTS(item.timestamp) }}</p>
             </div>
             <div>
-              <p>Miner: Mises-West</p>
-              <p>12 Txns in 12 sec</p>
+              <p>Miner: {{item.validdator}}</p>
+              <p>{{item.transactions || 0}} TXs in {{item.timeAgo}}</p>
             </div>
             <div>
               <p>Block Reward</p>
-              <p>0.0032 MIS</p>
+              <p>{{item.block_reward || 0}} MIS</p>
             </div>
           </div>
+          
+          <div v-if="!blocks.length">
+            <Skeleton active />
+            <Skeleton active />
+          </div>
         </div>
-        <div class="block-btn">View all Blocks</div>
+        <router-link class="block-btn" to="/blocks">View all Blocks</router-link>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import MisesWelcome from '../components/MisesWelcome'
-import { SpAssets, SpTokenTransferList } from '@starport/vue'
-import { computed, reactive } from 'vue'
+<script  lang="ts">
+import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { getIndexPageStats, getBlocks, getTopHolder } from '../api/serve'
+import { Block } from '../utils/interfaces'
+import dayjs from 'dayjs'
+import BigNumber from 'bignumber.js'
+import {shortenAddress} from '../utils/plugins/index'
+import {Skeleton} from 'ant-design-vue'
+import { number } from 'vue-types'
 export default {
+  components:{
+    Skeleton
+  },
   name: 'Portfolio',
-  components: { SpAssets, SpTokenTransferList, MisesWelcome },
-  setup() {
-    const state = reactive({
-      misesStats: [
-        {
-          icon: 'icon_1',
-          title: 'Total MIS Supply',
-          value: '105M'
-        },
-        {
-          icon: 'icon_2',
-          title: 'Med Gas Price',
-          value: '0.005 MIS'
-        },
-        {
-          icon: 'icon_3',
-          title: 'Latest Block',
-          value: '105M'
-        },
-        {
-          icon: 'icon_4',
-          title: 'Social Relationships',
-          value: '70,098'
-        }
-      ],
-      holders: [{}, {}, {}, {}, {}],
-      blocks: [{}, {}, {}, {}, {}]
-    })
-    // store
-    // let $s = useStore()
-    // // computed
-    // let address = computed(() => $s.getters['common/wallet/address'])
+  data() {
     return {
-      state
+      supply: 'N/A',
+      gasPrice: 'N/A',
+      blockHeight: 'N/A',
+      relationships: 'N/A',
+      initBlocks: [],
+      holders:[],
+      search:''
+    }
+  },
+  setup() {
+    const $s = useStore()
+    const supply = computed(() => {
+      const data = $s.getters['cosmos.bank.v1beta1/getTotalSupply']()
+      const supply = data.supply?.[0]
+      const totalSupply = supply?.amount ? new BigNumber(supply.amount).div(1000000).integerValue().toString() : 0
+      return totalSupply
+    })
+    return {
+      supply
+    }
+  },
+
+  computed: {
+    blocks(): Array<Block> {
+      try {
+        let $s = useStore()
+        const blocks = $s.getters['common/blocks/getBlocks'](5)
+        if (blocks[0]?.height) this.blockHeight = blocks[0].height
+        console.log(blocks)
+        return [...blocks, ...this.initBlocks].slice(0, 5).map(val=>{
+          const timeAgo = new BigNumber(dayjs().diff(dayjs(val.timestamp), 'minute')).toNumber();
+          return {
+            ...val,
+            timeAgo: timeAgo===0 ? `${dayjs().diff(dayjs(val.timestamp), 'second')} Sec` : `${timeAgo} Min`
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        return []
+      }
+    },
+    holderList(){
+      if(this.holders.length&&this.supply){
+        return this.holders.map(val=>{
+          return {
+            ...val,
+            percentage: new BigNumber(val.quantity).div(this.supply).times(100).integerValue().toString()
+          }
+        })
+      }
+      return this.holders
+    }
+  },
+  created() {
+    this.getStatsData()
+    this.getBlockList()
+    this.getHolderList()
+  },
+  methods: {
+    formatTS(timestamp: string): string {
+      const momentTime = dayjs(timestamp)
+      return momentTime.format('YYYY.MM.DD HH:mm:ss')
+    },
+    // update home page data
+    getStatsData() {
+      getIndexPageStats().then((res) => {
+        this.relationships = res.social_relationships
+        this.gasPrice = res.gas_price
+      })
+    },
+    getBlockList() {
+      getBlocks({
+        page_num: 1,
+        page_size: 5
+      }).then((res) => {
+        this.initBlocks = res.data.map((val) => {
+          const timeAgo = new BigNumber(dayjs().diff(dayjs(val.block.header.time), 'minute')).toNumber();
+          return {
+            details: val.block,
+            timestamp: val.block.header.time,
+            height: val.height,
+            block_reward:val.block_reward || 0,
+            transactions: val.transactions, 
+            validdator: val.validdator?.moniker ?? '',
+            timeAgo: timeAgo===0 ? `${dayjs().diff(dayjs(val.block.header.time), 'second')} Sec` : `${timeAgo} Min`
+          }
+        })
+        this.blockHeight = this.initBlocks[0].height
+      })
+    },
+    getHolderList(){
+      getTopHolder({
+        list_num: 5
+      }).then((res) => {
+        this.holders = res.map((val) => {
+          return {
+            ...val,
+            name: val.pubinfo?.name ?? shortenAddress(val.misesid),
+            quantity: new BigNumber(val.user_ext.quantity).integerValue().toString(),
+            relationships: 0
+          }
+        })
+      })
+    },
+    getKeyUp(val:KeyboardEvent){
+      if(val.code.toLocaleLowerCase() === 'enter'){
+        this.getText()
+      }
+    },
+    getText(){
+      const hashLength = 64;
+      const addressLength = 44;
+      const blockHeight = (number:string)=>new BigNumber(number).isNaN()
+      if(this.search.length === hashLength){
+        this.$router.push({
+          name: 'block',
+          params: {
+            hash: this.search
+          }
+        })
+        return
+      }
+      if(this.search.length === addressLength){
+        this.$router.push({
+          name: 'block',
+          params: {
+            hash: this.search
+          }
+        })
+        return
+      }
+      if(blockHeight(this.search)){
+        this.$router.push({
+          name: 'block',
+          params: {
+            hash: this.search
+          }
+        })
+      }
     }
   }
 }
@@ -215,6 +366,7 @@ export default {
       color: #16161d;
       margin: 15px 0 0;
       font-family: 'hlt-55';
+      line-height: 1;
     }
   }
 }
@@ -241,9 +393,9 @@ export default {
     .block-list {
       padding: 0 15px;
       border-bottom: 1px solid #eee;
-      
     }
     .block-btn {
+      display: block;
       cursor: pointer;
       height: 34px;
       background: #5d61ff;
@@ -252,7 +404,7 @@ export default {
       line-height: 37px;
       color: white;
       font-family: 'hlt-55';
-      margin:15px;
+      margin: 15px;
     }
     .block-item {
       border-top: 1px solid #eee;
@@ -269,7 +421,13 @@ export default {
       }
       .second-value {
         color: #999999;
-        width: 120px;
+        width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .name {
+        width: 180px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

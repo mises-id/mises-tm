@@ -1,5 +1,9 @@
 <template>
-	<div>
+	<div class="content content-top">
+		<Card title="Blocks" secondTitle="00000">
+			<template #rightTool>1111</template>
+			<template #content>ewqeiwqjewi</template>
+		</Card>
 		<div class="container">
 			
 
@@ -37,9 +41,10 @@
 <script>
 import SpBlocksTable from '../components/SpBlocksTable'
 import axios from 'axios'
+import Card from '../components/MisesCard'
 export default {
 	components: {
-		SpBlocksTable
+		SpBlocksTable,Card
 	},
 	name: 'Blocks',
 	data() {

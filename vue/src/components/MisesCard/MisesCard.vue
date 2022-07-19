@@ -1,0 +1,63 @@
+<template>
+  <div class="card">
+    <div class="title-box flex">
+      <div>
+        <p class="title">{{ title }}</p>
+        <p v-if="secondTitle" class="second-title">{{ secondTitle }}</p>
+      </div>
+      <div><slot name="rightTool"></slot></div>
+    </div>
+    <div class="card-content">
+      <slot name="content"></slot>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    secondTitle: {
+      type: String,
+      default: ''
+    }
+  },
+  setup() {}
+})
+</script>
+
+<style scoped lang="scss">
+.card {
+  padding: 50px 30px;
+  background: white;
+  border: 1px solid #eeeeee;
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+.title-box {
+  justify-content: space-between;
+}
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-family: 'hlt-75';
+  color: #16161d;
+  line-height: 1;
+}
+.second-title {
+  font-size: 14px;
+  font-family: 'hlt-55';
+  font-weight: normal;
+  color: #666666;
+  margin-top: 12px;
+  margin-bottom: 0;
+  line-height: 1;
+}
+.card-content{
+  margin-top: 26px;
+}
+</style>

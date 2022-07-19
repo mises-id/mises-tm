@@ -10,3 +10,15 @@ export const registerComponentProgrammatic = (instance: Application, property: s
   if (!instance.config.globalProperties.$test) instance.config.globalProperties.$test = {}
   instance.config.globalProperties.$test[property] = component
 }
+export function shortenAddress(
+  address = '',
+  prefix = 8,
+) {
+  if (address.length < 44) {
+    return address;
+  }
+
+  return `${address.slice(0, prefix)}...${address.slice(
+    -4,
+  )}`;
+}
