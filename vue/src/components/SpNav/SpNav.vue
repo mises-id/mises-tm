@@ -11,21 +11,21 @@
         <div class="right-nav-link">
           <div v-for="(link, lid) in links" :key="`link-${lid}`" class="nav-link">
             <router-link v-if="!link.children" :to="link.url" class="sp-nav-link" :alt="link.name" :title="link.name">
-              <div :class="link.url === activeRoute ? 'link-active' : ''">
+              <div :class="link.url === activeRouteName ? 'link-active' : ''">
                 {{ link.name }}
               </div>
             </router-link>
 
             <div v-if="link.children" class="link-list-container">
               <div class="flex">
-                <span class="sp-nav-link" :class="link.children.some((val) => val.url === activeRoute) ? 'link-active' : ''">
+                <span class="sp-nav-link" :class="link.children.some((val) => val.url === activeRouteName) ? 'link-active' : ''">
                   {{ link.name }}
                 </span>
                 <img src="/images/index/down_black@2x.png" alt="" class="downblock" />
               </div>
               <div class="link-list">
                 <router-link v-for="(item, id) in link.children" :key="`link-item-${id}`" :to="item.url" :alt="item.name" :title="item.name">
-                  <div :class="item.url === activeRoute ? 'link-active' : ''">
+                  <div :class="item.url === activeRouteName ? 'link-active' : ''">
                     {{ item.name }}
                   </div>
                 </router-link>
@@ -64,7 +64,12 @@ export default defineComponent({
       type: String,
       required: false
     }
-  }
+  },
+  computed:{
+    activeRouteName(){
+      return this.activeRoute==='/' ? '/portfolio' : this.activeRoute
+    }
+  },
 })
 </script>
 

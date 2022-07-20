@@ -51,7 +51,7 @@
       <div class="block-box">
         <p class="title">MIS Coin Top Holders</p>
         <div class="block-list">
-          <div v-for="(item, index) in holderList" :key="index" class="block-item flex">
+          <div v-for="(item, index) in holderList" :key="index" class="block-item flex" @click="holder(item)">
             <div>
               <p class="name">{{ item.name }}</p>
               <p class="second-value">{{ item.misesid }}</p>
@@ -68,6 +68,7 @@
           <div v-if="!holderList.length">
             <Skeleton active />
             <Skeleton active />
+            <Skeleton active />
           </div>
         </div>
         <router-link class="block-btn" to="/holders">View all Holders</router-link>
@@ -75,14 +76,14 @@
       <div class="block-box">
         <p class="title">Latest Blocks</p>
         <div class="block-list">
-          <div v-for="item in blocks" :key="item.height" class="block-item flex">
+          <div v-for="item in blocks" :key="item.height" class="block-item flex" @click="block(item)">
             <div>
               <p>Height: {{ item.height }}</p>
               <p class="second-value">{{ formatTS(item.timestamp) }}</p>
             </div>
             <div>
               <p>Miner: {{item.validdator}}</p>
-              <p>{{item.transactions || 0}} TXs in {{item.timeAgo}}</p>
+              <p>{{item.transactions || 0}} Txns in {{item.timeAgo}}</p>
             </div>
             <div>
               <p>Block Reward</p>
@@ -91,6 +92,7 @@
           </div>
           
           <div v-if="!blocks.length">
+            <Skeleton active />
             <Skeleton active />
             <Skeleton active />
           </div>
@@ -108,9 +110,8 @@ import { getIndexPageStats, getBlocks, getTopHolder } from '../api/serve'
 import { Block } from '../utils/interfaces'
 import dayjs from 'dayjs'
 import BigNumber from 'bignumber.js'
-import {shortenAddress} from '../utils/plugins/index'
+import {formatTime, shortenAddress} from '../utils/plugins/index'
 import {Skeleton} from 'ant-design-vue'
-import { number } from 'vue-types'
 export default {
   components:{
     Skeleton
@@ -132,7 +133,7 @@ export default {
     const supply = computed(() => {
       const data = $s.getters['cosmos.bank.v1beta1/getTotalSupply']()
       const supply = data.supply?.[0]
-      const totalSupply = supply?.amount ? new BigNumber(supply.amount).div(1000000).integerValue().toString() : 0
+      const totalSupply = supply?.amount ? new BigNumber(supply.amount).div(1000000).toFixed(4).toString() : 0
       return totalSupply
     })
     return {
@@ -144,18 +145,15 @@ export default {
     blocks(): Array<Block> {
       try {
         let $s = useStore()
-        const blocks = $s.getters['common/blocks/getBlocks'](5)
-        if (blocks[0]?.height) this.blockHeight = blocks[0].height
-        console.log(blocks)
-        return [...blocks, ...this.initBlocks].slice(0, 5).map(val=>{
-          const timeAgo = new BigNumber(dayjs().diff(dayjs(val.timestamp), 'minute')).toNumber();
+        const blocks = $s.getters['common/blocks/getBlocks'](5).map(val=>{
           return {
             ...val,
-            timeAgo: timeAgo===0 ? `${dayjs().diff(dayjs(val.timestamp), 'second')} Sec` : `${timeAgo} Min`
+            timeAgo: formatTime(val.timestamp)
           }
         })
+        if (blocks[0]?.height) this.blockHeight = blocks[0].height
+        return [...blocks, ...this.initBlocks].slice(0, 5)
       } catch (error) {
-        console.log(error)
         return []
       }
     },
@@ -194,7 +192,6 @@ export default {
         page_size: 5
       }).then((res) => {
         this.initBlocks = res.data.map((val) => {
-          const timeAgo = new BigNumber(dayjs().diff(dayjs(val.block.header.time), 'minute')).toNumber();
           return {
             details: val.block,
             timestamp: val.block.header.time,
@@ -202,7 +199,7 @@ export default {
             block_reward:val.block_reward || 0,
             transactions: val.transactions, 
             validdator: val.validdator?.moniker ?? '',
-            timeAgo: timeAgo===0 ? `${dayjs().diff(dayjs(val.block.header.time), 'second')} Sec` : `${timeAgo} Min`
+            timeAgo: formatTime(val.block.header.time)
           }
         })
         this.blockHeight = this.initBlocks[0].height
@@ -230,33 +227,24 @@ export default {
     getText(){
       const hashLength = 64;
       const addressLength = 44;
-      const blockHeight = (number:string)=>new BigNumber(number).isNaN()
+      const blockHeight = (number:string)=>!new BigNumber(number).isNaN()
       if(this.search.length === hashLength){
-        this.$router.push({
-          name: 'block',
-          params: {
-            hash: this.search
-          }
-        })
+        this.$router.push(`/tx/${this.search}`)
         return
       }
       if(this.search.length === addressLength){
-        this.$router.push({
-          name: 'block',
-          params: {
-            hash: this.search
-          }
-        })
+        this.$router.push(`/holders/${this.search}`)
         return
       }
       if(blockHeight(this.search)){
-        this.$router.push({
-          name: 'block',
-          params: {
-            hash: this.search
-          }
-        })
+        this.$router.push(`/block/${this.search}`)
       }
+    },
+    holder(item){
+      this.$router.push(`/holders/${item.misesid}`)
+    },
+    block(item){
+      this.$router.push(`/block/${item.height}`)
     }
   }
 }
@@ -319,6 +307,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
       img {
         width: 16px;
         height: 16px;
@@ -413,6 +402,7 @@ export default {
       font-size: 14px;
       color: #16161d;
       justify-content: space-between;
+      cursor: pointer;
       p {
         margin: 0;
         &:last-child {

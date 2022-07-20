@@ -8,14 +8,22 @@
       <div><slot name="rightTool"></slot></div>
     </div>
     <div class="card-content">
-      <slot name="content"></slot>
+      <template v-if="loading">
+        <Skeleton active />
+        <Skeleton active />
+      </template>
+      <slot name="content" v-if="!loading"></slot>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import {Skeleton} from 'ant-design-vue'
 import { defineComponent } from 'vue'
 export default defineComponent({
+  components:{
+    Skeleton
+  },
   props: {
     title: {
       type: String,
@@ -24,6 +32,10 @@ export default defineComponent({
     secondTitle: {
       type: String,
       default: ''
+    },
+    loading:{
+      type: Boolean,
+      default: false
     }
   },
   setup() {}

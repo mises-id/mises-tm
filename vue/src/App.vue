@@ -28,7 +28,6 @@ export default {
       { name: 'Home', url: '/portfolio' },
       {
         name: 'BlockChain',
-        url: '/latestblocks',
         children: [
           {
             name: 'View Holders',
@@ -40,23 +39,13 @@ export default {
           },
           {
             name: 'View Txns',
-            url: '/txns'
+            url: '/tx'
           }
         ]
       },
       {
         name: 'Validators',
-        url: '/validators',
-        children: [
-          {
-            name: 'Validators Leaderboard',
-            url: '/leaderboard'
-          },
-          {
-            name: 'Validators Set Info',
-            url: '/setInfo'
-          }
-        ]
+        url: '/validators'
       }
     ]
     // computed

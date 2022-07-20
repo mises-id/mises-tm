@@ -1,116 +1,91 @@
 <template>
-	<div>
-		<div class="container">
-			<SpBlockDisplayFull :block="block" />
-		</div>
+	<div class="content content-top">
+    <Card title="Block Detail" :loading="loading">
+			<template #content>
+				<MisesList :data="block"/>
+			</template>
+		</Card>
+		<!-- <SpBlockDisplayFull :block="block" /> -->
 	</div>
 </template>
 
-<script>
-import SpBlockDisplayFull from '../components/SpBlockDisplayFull'
-import axios from 'axios'
-import { fromBase64, toHex } from '@cosmjs/encoding'
-import { sha256 } from '@cosmjs/crypto'
-function formatTx({
-	txHash = '',
-	messages = [],
-	memo = '',
-	signer_infos = [],
-	fee = {},
-	gas_used = null,
-	gas_wanted = null,
-	height = null,
-	code = 0,
-	log = null
-}) {
-	return {
-		txHash,
-		body: {
-			messages,
-			memo
-		},
-		auth_info: {
-			signer_infos,
-			fee
-		},
-		meta: {
-			gas_used,
-			gas_wanted,
-			height,
-			code,
-			log
-		}
-	}
-}
-async function getTx(apiCosmos, apiTendermint, txHash) {
-	try {
-		const rpcRes = await axios.get(apiTendermint + '/tx?hash=0x' + txHash)
-		const apiRes = await axios.get(apiCosmos + '/cosmos/tx/v1beta1/txs/' + txHash)
-		return { rpcRes, apiRes, txHash: txHash.toUpperCase() }
-	} catch (e) {
-		throw 'Error fetching TX data'
-	}
-}
-async function decodeTx(apiCosmos, apiTendermint, txHash) {
-	const fullTx = await getTx(apiCosmos, apiTendermint, txHash)
-	const { data } = fullTx.rpcRes
-	const { height, tx_result } = data.result
-	const { code, log, gas_used, gas_wanted } = tx_result
-	const { body, auth_info } = fullTx.apiRes.data.tx
-	const { messages, memo } = body
-
-	return formatTx({
-		txHash: fullTx.txHash,
-		messages,
-		memo,
-		signer_infos: auth_info.signer_infos,
-		fee: auth_info.fee,
-		gas_used,
-		gas_wanted,
-		height,
-		code,
-		log
-	})
-}
+<script lang="ts">
+import Card from '../components/MisesCard'
+import MisesList from '../components/MisesList'
+import {getBlock} from '../api/serve'
+import { dataItem } from '../components/MisesList/MisesList.vue'
+import { formatTime, shortenAddress } from '../utils/plugins'
+import dayjs from 'dayjs'
+import { h } from 'vue'
+import { message } from 'ant-design-vue'
 export default {
 	components: {
-		SpBlockDisplayFull
+		Card,MisesList
 	},
 	data() {
 		return {
-			block: {height:0,timestamp:"",hash:"",details:"",txDecoded:[]}
+			block: [] as dataItem[],
+			loading:false
 		}
 	},
 	async created() {
-		if (this.$route.params.block) {
-			const blockDetails = await axios.get(this.$store.getters['common/env/apiTendermint'] + '/block?height=' + this.$route.params.block)
-			const txDecoded = blockDetails.data.result.block.data.txs.map(async (x) => {
-				const txhash = toHex(sha256(fromBase64(x)))
-				const dec = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], txhash)
-				return dec
-			})
-			const txs = await Promise.all(txDecoded)
-			this.block = {
-				height: blockDetails.data.result.block.header.height,
-				timestamp: blockDetails.data.result.block.header.time,
-				hash: blockDetails.data.result.block_id.hash,
-				details: blockDetails.data.result.block,
-				txDecoded: [...txs]
-			}
-		}
-		if (this.$route.params.txhash) {
-			const txhash = this.$route.params.txhash
+		this.loading = true;
+		// const blockDetails = await axios.get(this.$store.getters['common/env/apiTendermint'] + '/block?height=' + this.$route.params.block)
+		// const txDecoded = blockDetails.data.result.block.data.txs.map(async (x) => {
+		// 	const txhash = toHex(sha256(fromBase64(x)))
+		// 	const dec = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], txhash)
+		// 	return dec
+		// })
+		// const txs = await Promise.all(txDecoded)
+		// this.block = {
+		// 	height: blockDetails.data.result.block.header.height,
+		// 	timestamp: blockDetails.data.result.block.header.time,
+		// 	hash: blockDetails.data.result.block_id.hash,
+		// 	details: blockDetails.data.result.block,
+		// 	txDecoded: [...txs]
+		// }
+		try {
+			const res = await getBlock({height:this.$route.params.block})
+			this.block = [{
+				title:'Block',
+				value: res.height
+			},{
+				title:'Timestamp',
+				value: `${formatTime(res.block.header.time)}(${dayjs(res.block.header.time).format('MMM-DD-YYYY HH:mm:ss A [ +UTC]')})`
+			},{
+				title:'Transactions',
+				value: res.transactions,
+				render:({value})=>{
+					return h('span',{
+						class:'active',
+						onClick: ()=>{
+							if(value>0){
 
-			console.log(txhash)
-			const txDecoded  = await decodeTx(this.$store.getters['common/env/apiCosmos'], this.$store.getters['common/env/apiTendermint'], txhash)
-			this.block = {
-				height: txDecoded.height,
-				hash: '' + txDecoded.meta.height,
-				details: '',
-				txDecoded: [txDecoded]
-			}
+							}else{
+								message.info('No transactions in this block')
+							}
+						}
+					},`${value} Txns in this block`)
+				}
+			},{
+				title:'Validated',
+				value: res.validdator ? `${res.validdator.moniker}(${shortenAddress(res.validdator.address)})`: '-'
+			},{
+				title:'Gas Used',
+				value: res.gas_used
+			},{
+				title:'Gas Limit',
+				value: res.gas_limit
+			}] as dataItem[]
+		} finally{
+			this.loading = false;
 		}
-
 	}
 }
 </script>
+<style lang="scss">
+.active{
+	color:#5D61FF;
+	cursor: pointer;
+}
+</style>

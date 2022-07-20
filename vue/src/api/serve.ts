@@ -11,9 +11,30 @@ export function getBlocks(params){
     params
   })
 }
-export function getTopHolder(params){
+export function getTxs(params){
+  return request({
+    url: 'api/v1/tx/page',
+    params
+  })
+}
+export function getTopHolder(params?:any){
   return request({
     url: '/api/v1/address/top',
     params
+  })
+}
+export function getBlock(params){
+  return request({
+    url: `/api/v1/block/${params.height}`
+  })
+}
+export function getTx(params){
+  return request({
+    url: `api/v1/tx/${params.hash}`
+  })
+}
+export function getAddress(params){
+  return request({
+    url: `/api/v1/address/${params.misesid}`,
   })
 }

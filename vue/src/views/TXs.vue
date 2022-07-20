@@ -1,9 +1,9 @@
 <template>
   <div class="content content-top">
-    <Card title="Blocks">
+    <Card title="Transactions">
       <template #content>
         <a-table
-          :dataSource="blocks"
+          :dataSource="txs"
           :columns="columns"
           :loading="loading"
           @change="handleChange"
@@ -24,81 +24,81 @@
 </template>
 
 <script lang="ts">
-import BigNumber from 'bignumber.js'
-import dayjs from 'dayjs'
-import { getBlocks } from '../api/serve'
+import { getTxs } from '../api/serve'
 import Card from '../components/MisesCard'
 import { Table } from 'ant-design-vue'
-import { formatTime } from '../utils/plugins'
+import { formatTime, shortenAddress } from '../utils/plugins'
 export default {
   components: {
     Card,
     ATable: Table
   },
-  name: 'Blocks',
+  name: 'Txs',
   data() {
     return {
-      blocks: [],
+      txs: [],
       pages: 1,
       page_size: 10,
       total: 0,
       columns: [
         {
-          title: 'Block Height',
-          dataIndex: 'height',
-          width: '15%'
-        },
-        {
-          title: 'Hash',
+          title: 'Txn Hash',
           dataIndex: 'hash',
-          ellipsis: true
+          width: '25%',
+          ellipsis: true,
         },
         {
-          title: 'Age',
-          dataIndex: 'timeAgo',
-          width: '20%'
+          title: 'Block',
+          dataIndex: 'height',
+          width:'8%'
         },
         {
-          title: 'Txns',
-          dataIndex: 'transactions',
-          customRender: ({ text }) => {
-            return `${text} Txns in this block`
-          },
-          width: '15%'
+          title: 'Time',
+          dataIndex: 'block_time',
+          width: '15%',
         },
         {
-          title: 'Block Reward',
-          dataIndex: 'block_reward',
-          customRender: ({ text }) => {
-            return `${text} MIS`
-          },
-          width: '15%'
-        }
+          title: 'Form',
+          dataIndex: 'from_address',
+        },
+        {
+          title: 'To',
+          dataIndex: 'to_address',
+        },
+        {
+          title: 'Value',
+          dataIndex: 'value_mis',
+          width:'10%'
+        },
+        {
+          title: 'Gas Fee',
+          dataIndex: 'gas_used',
+          width:'10%'
+        },
       ],
       loading: false
     }
   },
   created() {
-    this.getBlockList()
+    this.getTxsList()
   },
   methods: {
-    getBlockList() {
+    getTxsList() {
       this.loading = true
-      getBlocks({
+      getTxs({
         page_num: this.pages,
         page_size: this.page_size
       })
         .then((res) => {
-          this.blocks = res.data.map((val) => {
+          this.txs = res.data.map((val) => {
             return {
-              details: val.block,
-              timestamp: val.block.header.time,
-              height: val.height,
-              block_reward: val.block_reward || 0,
-              transactions: val.transactions,
-              validdator: val.validdator?.moniker ?? '',
-              hash: val.block_id.hash,
-              timeAgo: formatTime(val.block.header.time)
+              block_time: formatTime(val.block_time),
+              from_address: shortenAddress(val.tx_msg?.from_address) ?? '-',
+              to_address: shortenAddress(val.tx_msg?.to_address) ?? '-',
+              value_mis:`${val.value_mis} MIS`,
+              gas_used:`${val.gas_used} MIS`,
+              hash: val.hash,
+              height: val.height
             }
           })
           this.total = res.pagination.total_records
@@ -111,12 +111,12 @@ export default {
     handleChange(val) {
       this.page_size = val.pageSize
       this.pages = val.current
-      this.getBlockList()
+      this.getTxsList()
     },
     handleClickRow(record) {
       return {
 				onClick: () => {
-					this.$router.push(`/block/${record.height}`)
+					this.$router.push(`/tx/${record.hash}`)
 				}
       }
     }
