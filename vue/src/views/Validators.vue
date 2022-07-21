@@ -23,7 +23,7 @@ import SpStatusLED from '../components/SpStatusLED'
 import axios from 'axios'
 import Card from '../components/MisesCard'
 import { h } from 'vue'
-import { getCalcVotingPowerRate, valConsAddress } from '../utils/plugins'
+import { getBondedMISCount, getCalcVotingPowerRate, uptime_estimated, valConsAddress } from '../utils/plugins'
 import BigNumber from 'bignumber.js'
 export default {
   components: {
@@ -64,16 +64,12 @@ export default {
           dataIndex: 'last_block'
         },
         {
-          title: '1 Day',
-          dataIndex: 'b'
+          title: 'Bonded MIS',
+          dataIndex: 'bondedMIS'
         },
         {
-          title: '7 Days',
-          dataIndex: 'a'
-        },
-        {
-          title: '30 Days',
-          dataIndex: 'c'
+          title: 'Uptime',
+          dataIndex: 'uptime'
         },
         {
           title: 'Active',
@@ -108,6 +104,9 @@ export default {
     for (let validator_meta of page.data.validators) {
 			const voting_power_rate = calcRate(validator_meta.operator_address)
       const info = validators?.find(({ address }) => address === valConsAddress(validator_meta)) || {}
+      const uptime = uptime_estimated(info);
+
+      const bondedMIS = getBondedMISCount(page.data.validators, validator_meta.operator_address)
 			// console.log(info)
       const validator = {
         moniker: validator_meta.description.moniker,
@@ -116,7 +115,9 @@ export default {
         voting_power: new BigNumber(voting_power_rate).times(100).toFixed(2),
         proposer_priority: validator_meta.proposer_priority,
         first_block: info?.start_height,
-				last_block: new BigNumber(info?.start_height).plus(info?.index_offset).plus(info?.missed_blocks_counter).toString()
+				last_block: new BigNumber(info?.start_height).plus(info?.index_offset).plus(info?.missed_blocks_counter).toString(),
+        uptime:`${uptime&&new BigNumber(uptime).times(100).toFixed(2)}%`,
+        bondedMIS:`${bondedMIS}MIS`,
       }
       this.validators.push(validator)
     }

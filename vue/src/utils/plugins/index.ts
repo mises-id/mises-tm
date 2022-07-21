@@ -86,6 +86,7 @@ export const useCalcVotingPower = () => {
   return init()
 }
 import jscrypto from 'jscrypto'
+import {Buffer} from 'Buffer'
 export const rawAddress = (key) => {
   if(!key) return []
   var pubkeyData = Buffer.from(key, 'base64');
@@ -108,4 +109,23 @@ export function uptime_estimated(info): number {
     return 1 - Number(missed_blocks_counter) / 10000
   }
   return 1
+}
+export const getBondedMISCount = (
+  TerraValidators: any[],
+  address: string
+) => {
+
+  TerraValidators = TerraValidators.map(val=>{
+    return {
+      ...val,
+      voting_power:new BigNumber(val.tokens).div(1000000).toString()
+    }
+  })
+  const validator = TerraValidators.find(
+    ({ operator_address }) => operator_address === address
+  )
+
+  if (!validator) return
+  const { voting_power } = validator
+  return voting_power ? Number(validator.voting_power) : undefined
 }
