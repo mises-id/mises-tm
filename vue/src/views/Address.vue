@@ -33,12 +33,14 @@ import MisesList from '../components/MisesList'
 import { getAddress, getTxs } from '../api/serve'
 import { dataItem } from '../components/MisesList/MisesList.vue'
 import { formatTime, shortenAddress } from '../utils/plugins'
+import {Table} from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { h } from '@vue/runtime-core'
 export default {
   components: {
     Card,
-    MisesList
+    MisesList,
+    ATable: Table
   },
   data() {
     return {

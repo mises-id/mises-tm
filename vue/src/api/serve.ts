@@ -23,6 +23,12 @@ export function getTopHolder(params?:any){
     params
   })
 }
+export function getHolders(params?:any){
+  return request({
+    url: 'api/v1/address/page',
+    params
+  })
+}
 export function getBlock(params){
   return request({
     url: `/api/v1/block/${params.height}`

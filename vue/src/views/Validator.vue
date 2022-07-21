@@ -33,14 +33,15 @@ import MisesList from '../components/MisesList'
 import { getAddress, getTxs } from '../api/serve'
 import { dataItem } from '../components/MisesList/MisesList.vue'
 import { formatTime, getCalcVotingPowerRate, shortenAddress, uptime_estimated, valConsAddress } from '../utils/plugins'
-import dayjs from 'dayjs'
+import {Table} from 'ant-design-vue'
 import { h } from '@vue/runtime-core'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 export default {
   components: {
     Card,
-    MisesList
+    MisesList,
+    ATable: Table
   },
   data() {
     return {

@@ -19,16 +19,16 @@
 </template>
 
 <script>
-import SpStatusLED from '../components/SpStatusLED'
 import axios from 'axios'
 import Card from '../components/MisesCard'
 import { h } from 'vue'
 import { getBondedMISCount, getCalcVotingPowerRate, uptime_estimated, valConsAddress } from '../utils/plugins'
 import BigNumber from 'bignumber.js'
+import {Table} from 'ant-design-vue'
 export default {
   components: {
-    SpStatusLED,
-    Card
+    Card,
+    ATable: Table
   },
   name: 'Validators',
   data() {

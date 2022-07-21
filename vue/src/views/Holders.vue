@@ -10,7 +10,12 @@
           :bordered="false"
 					rowKey="misesid"
           :customRow="handleClickRow"
-          :pagination="false"
+          :pagination="{
+            total: total,
+            current: pages,
+            pageSize: page_size,
+						showQuickJumper:true
+          }"
           :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
         ></a-table>
       </template>
@@ -29,12 +34,10 @@
 <script lang="ts">
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
-import { getTopHolder } from '../api/serve'
+import { getHolders } from '../api/serve'
 import Card from '../components/MisesCard'
 import { Table } from 'ant-design-vue'
 import { formatTime, shortenAddress, useSupply } from '../utils/plugins'
-import { useStore } from 'vuex'
-import { computed } from 'vue'
 export default {
   components: {
     Card,
@@ -100,10 +103,12 @@ export default {
   methods: {
     getHolderList() {
       this.loading = true
-      getTopHolder({
+      getHolders({
+        page_num: this.pages,
+        page_size: this.page_size,
         keywords: this.keywords,
       }).then((res) => {
-          this.holders = res.filter(val=>val).map((val) => {
+          this.holders = res.data.filter(val=>val).map((val) => {
             return {
               misesid: val.misesid,
               name: val.validdator ? `${val.validdator?.moniker}(${shortenAddress(val.validdator?.address)})` : (val.pubinfo?.name || '-'),  
@@ -111,6 +116,7 @@ export default {
               percentage: 0,
             }
           })
+          this.total = res.pagination.total_records
           this.loading = false
         })
         .catch(() => {
@@ -124,7 +130,11 @@ export default {
 				}
       }
     },
-
+    handleChange(val) {
+      this.page_size = val.pageSize
+      this.pages = val.current
+      this.getHolderList()
+    },
     getKeyUp(val:KeyboardEvent){
       if(val.code.toLocaleLowerCase() === 'enter'){
         this.getText()

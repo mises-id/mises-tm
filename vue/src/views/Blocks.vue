@@ -24,8 +24,6 @@
 </template>
 
 <script lang="ts">
-import BigNumber from 'bignumber.js'
-import dayjs from 'dayjs'
 import { getBlocks } from '../api/serve'
 import Card from '../components/MisesCard'
 import { Table } from 'ant-design-vue'
