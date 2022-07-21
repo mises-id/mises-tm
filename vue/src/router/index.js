@@ -16,6 +16,7 @@ const routes = [
 
 	{ path: '/blocks', component: Blocks },
 	{ path: '/block/:block', component: Block },
+	{ path: '/blockTx/:block', component: TXs },
 
 	{ path: '/holders', component: Holders },
 	{ path: '/holders/:misesid', component: Address },

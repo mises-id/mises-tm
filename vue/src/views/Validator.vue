@@ -50,7 +50,6 @@ export default {
       pages: 1,
       page_size: 10,
       total: 0,
-      address:'',
       columns: [
         {
           title: 'Txn Hash',
@@ -71,13 +70,13 @@ export default {
         {
           title: 'Form',
           dataIndex: 'from_address',
-          customRender:({text}, record)=> {
-            const isMe = text === this.$route.params.misesid
-            return h('div',{},[
-              h('span',{},isMe ? this.username : shortenAddress(text)),
-              h('span',{class:isMe ? 'out': 'in'},isMe ? 'Out' : 'In')
-            ])
-          }
+          // customRender:({text}, record)=> {
+          //   const isMe = text === this.$route.params.misesid
+          //   return h('div',{},[
+          //     h('span',{},isMe ? this.username : shortenAddress(text)),
+          //     h('span',{class:isMe ? 'out': 'in'},isMe ? 'Out' : 'In')
+          //   ])
+          // }
         },
         {
           title: 'To',
@@ -147,11 +146,10 @@ export default {
           }
         }
       ] as dataItem[]
-      this.address = res.operator_address
-      this.getTxsList()
     } finally {
       this.loading = false
     }
+    this.getTxsList()
   },
   methods: {
     getTxsList() {
@@ -159,13 +157,13 @@ export default {
       getTxs({
         page_num: this.pages,
         page_size: this.page_size,
-        address: this.address
+        validator_address: this.$route.params.misesid
       })
         .then((res) => {
           this.txns = res.data.map((val) => {
             return {
               block_time: formatTime(val.block_time),
-              from_address: val.tx_msg?.from_address ?? '-',
+              from_address: shortenAddress(val.tx_msg?.from_address) ?? '-',
               to_address: shortenAddress(val.tx_msg?.to_address) ?? '-',
               value_mis:`${val.value_mis} MIS`,
               gas_used:`${val.gas_used} MIS`,

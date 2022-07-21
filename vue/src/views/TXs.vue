@@ -1,6 +1,6 @@
 <template>
   <div class="content content-top">
-    <Card title="Transactions">
+    <Card title="Transactions" :secondTitle="secondTitle">
       <template #content>
         <a-table
           :dataSource="txs"
@@ -40,6 +40,7 @@ export default {
       pages: 1,
       page_size: 10,
       total: 0,
+      secondTitle:'',
       columns: [
         {
           title: 'Txn Hash',
@@ -80,6 +81,9 @@ export default {
     }
   },
   created() {
+    if(this.$route.params.block) {
+      this.secondTitle = `For Block ${this.$route.params.block}`
+    }
     this.getTxsList()
   },
   methods: {
@@ -87,7 +91,8 @@ export default {
       this.loading = true
       getTxs({
         page_num: this.pages,
-        page_size: this.page_size
+        page_size: this.page_size,
+        block_height: this.$route.params.block
       })
         .then((res) => {
           this.txs = res.data.map((val) => {

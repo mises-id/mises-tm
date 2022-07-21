@@ -116,7 +116,7 @@ export default {
         voting_power: new BigNumber(voting_power_rate).times(100).toFixed(2),
         proposer_priority: validator_meta.proposer_priority,
         first_block: info?.start_height,
-				last_block: new BigNumber(info?.start_height).plus(info?.index_offset).toString()
+				last_block: new BigNumber(info?.start_height).plus(info?.index_offset).plus(info?.missed_blocks_counter).toString()
       }
       this.validators.push(validator)
     }

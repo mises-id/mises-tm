@@ -60,7 +60,7 @@ export default {
 						class:'active',
 						onClick: ()=>{
 							if(value>0){
-
+								this.$router.push(`/blockTx/${this.$route.params.block}`)
 							}else{
 								message.info('No transactions in this block')
 							}

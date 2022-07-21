@@ -19,8 +19,9 @@
 
 <script lang="ts">
 import {Skeleton} from 'ant-design-vue'
-import { defineComponent } from 'vue'
+import { defineComponent, useSlots } from 'vue'
 export default defineComponent({
+  name: 'MisesCard',
   components:{
     Skeleton
   },
@@ -38,7 +39,6 @@ export default defineComponent({
       default: false
     }
   },
-  setup() {}
 })
 </script>
 
