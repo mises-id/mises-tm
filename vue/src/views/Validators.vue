@@ -12,7 +12,7 @@
           :customRow="handleClickRow"
           :pagination="false"
 
-          :scroll="{x:1200}"
+          :scroll="{x:1000}"
           :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
         ></a-table>
       </template>

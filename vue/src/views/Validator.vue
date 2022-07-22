@@ -20,7 +20,7 @@
               showQuickJumper: true
             }"
 
-          :scroll="{x:1200}"
+          :scroll="{x:1000}"
             :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
           />
         </div>
@@ -169,7 +169,7 @@ export default {
               from_address: shortenAddress(val.tx_msg?.from_address) ?? '-',
               to_address: shortenAddress(val.tx_msg?.to_address) ?? '-',
               value_mis:`${val.value_mis} MIS`,
-              gas_used:`${val.gas_used} MIS`,
+              gas_fee:`${val.gas_fee} MIS`,
               hash: val.hash,
               height: val.height
             }

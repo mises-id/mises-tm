@@ -7,7 +7,7 @@
   "scripts": {
     "setup": "yarn install && yarn setup:postinstall",
     "setup:postinstall": "yarn patch-package",
-    "dev": "vite",
+    "dev": "vite --mode production",
     "build": "vite build",
     "serve": "vite preview"
   },
