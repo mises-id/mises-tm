@@ -1,5 +1,6 @@
 vue/node_modules
 vue/dist
+vue/browser/*
 vue/src/store/generated
 secret.yml
 /.vscode

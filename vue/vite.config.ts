@@ -12,6 +12,9 @@ export default defineConfig({
       Buffer: Buffer
     }
   },
+  build: {
+    outDir: 'browser',
+  },
   server: {
     watch: {
       ignored: [
