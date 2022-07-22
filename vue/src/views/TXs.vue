@@ -16,6 +16,7 @@
             pageSize: page_size,
 						showQuickJumper:true
           }"
+          :scroll="{x:1200}"
           :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
         ></a-table>
       </template>
@@ -28,6 +29,7 @@ import { getTxs } from '../api/serve'
 import Card from '../components/MisesCard'
 import { Table } from 'ant-design-vue'
 import { formatTime, shortenAddress } from '../utils/plugins'
+import { h, HtmlHTMLAttributes } from 'vue'
 export default {
   components: {
     Card,
@@ -51,7 +53,16 @@ export default {
         {
           title: 'Block',
           dataIndex: 'height',
-          width:'8%'
+          width:'8%',
+          customRender: ({text}) => {
+            return h('span',{
+              class: 'active',
+              onClick: (e:Event) => {
+                e.stopPropagation()
+                this.$router.push(`/block/${text}`)
+              }
+            },text)
+          }
         },
         {
           title: 'Time',
@@ -59,7 +70,7 @@ export default {
           width: '15%',
         },
         {
-          title: 'Form',
+          title: 'From',
           dataIndex: 'from_address',
         },
         {
@@ -73,7 +84,7 @@ export default {
         },
         {
           title: 'Gas Fee',
-          dataIndex: 'gas_used',
+          dataIndex: 'gas_fee',
           width:'10%'
         },
       ],

@@ -2,7 +2,7 @@
   <div>
     <Suspense><SpSystemBar /></Suspense>
     <div class="navbar-wrapper">
-      <div class="navbar-section">
+      <div class="navbar-section content">
         <slot name="logo">
           <router-link :to="'/'" class="hide-on-small logo-link" :alt="'Home'" :title="'Home'">
             <img src="/images/index/logo@2x.png" alt="logo" srcset="" class="logo" />
@@ -74,6 +74,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+$height: 80px;
 .navbar-wrapper {
   background: #ffffff;
 }
@@ -87,9 +88,7 @@ export default defineComponent({
 .navbar-section {
   display: flex;
   justify-content: space-between;
-  width: 1200px;
-  margin: 0 auto;
-  height: 80px;
+  height: $height;
   align-content: center;
   .right-nav-link {
     display: flex;
@@ -160,7 +159,7 @@ export default defineComponent({
 }
 .link-list-container {
   position: relative;
-  height: 80px;
+  height: $height;
   display: flex;
   align-items: center;
 }
@@ -194,6 +193,14 @@ export default defineComponent({
 @media (max-width: 600px) {
   .hide-on-small {
     display: none;
+  }
+  $height: 66px;
+  .navbar-section{
+    height: $height;
+    justify-content: center;
+  }
+  .link-list-container{
+    height: $height;
   }
 }
 </style>

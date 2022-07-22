@@ -99,10 +99,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.active {
-  color: #5d61ff;
-  cursor: pointer;
-}
 .error-tips{
 	font-size: 16px;
 	font-family: 'hlt-55';

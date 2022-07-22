@@ -53,6 +53,13 @@ export default defineComponent({
 .title-box {
   justify-content: space-between;
 }
+@media (max-width: 768px) {
+  .title-box {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
 .title {
   margin: 0;
   font-size: 22px;
@@ -71,5 +78,13 @@ export default defineComponent({
 }
 .card-content{
   margin-top: 26px;
+}
+@media (max-width: 768px) {
+  .card {
+    padding: 25px 15px;
+    max-width: 92vw;
+    box-sizing: border-box;
+    margin:0 auto;
+  }
 }
 </style>

@@ -80,4 +80,9 @@ body {
 .page{
   padding-top: 80px;
 }
+@media (max-width: 768px) {
+  .page{
+    padding-top: 66px;
+  }
+}
 </style>

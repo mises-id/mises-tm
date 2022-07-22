@@ -35,6 +35,24 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@media (max-width: 768px) {
+  body .data-item {
+    flex-direction: column;
+    height: auto;
+    line-height: 25px;
+    padding:10px 30px;
+    word-break: break-all;
+    .title{
+      width: 100%;
+      font-family: 'hlt-75';
+      padding: 0;
+    }
+    .value{
+      width: 100%;
+      font-family: 'hlt-45';
+    }
+  }
+}
 .data-item {
   display: flex;
   background-color: #fcfcfc;

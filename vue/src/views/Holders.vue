@@ -16,6 +16,8 @@
             pageSize: page_size,
 						showQuickJumper:true
           }"
+
+          :scroll="{x:1200}"
           :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
         ></a-table>
       </template>
@@ -147,6 +149,27 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@media (max-width: 768px) {
+  .content .search {
+    margin: 12px auto 0;
+    display: flex;
+    justify-content: center;
+    input {
+      width: 73vw;
+      height: 32px;
+      padding-left: 8px;
+      font-size: 12px;
+    }
+    .search-btn {
+      width: 40px;
+      height: 32px;
+      img {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
 .search {
     margin: 22px auto 0;
     display: flex;

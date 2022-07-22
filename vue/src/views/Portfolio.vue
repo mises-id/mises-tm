@@ -3,7 +3,7 @@
     <div class="homepage">
       <p class="welcome">The Mises Blockchain Explorer</p>
       <div class="search">
-        <input type="text" placeholder="Search by Txn Hash/Block Height/Address" @keyup="getKeyUp" v-model="search"/>
+        <input type="text" placeholder="Search by Txn Hash/Block Height/Address" @keyup="getKeyUp" v-model="search" />
         <div class="search-btn" @click="getText">
           <img src="/images/index/search@2x.png" alt="" />
         </div>
@@ -62,7 +62,7 @@
             </div>
             <div>
               <p>Percentage</p>
-              <p>{{item.percentage}}%</p>
+              <p>{{ item.percentage }}%</p>
             </div>
           </div>
           <div v-if="!holderList.length">
@@ -82,15 +82,15 @@
               <p class="second-value">{{ formatTS(item.timestamp) }}</p>
             </div>
             <div>
-              <p>Miner: {{item.validdator}}</p>
-              <p>{{item.transactions || 0}} Txns in {{item.timeAgo}}</p>
+              <p>Miner: {{ item.validdator }}</p>
+              <p>{{ item.transactions || 0 }} Txns in {{ item.timeAgo }}</p>
             </div>
             <div>
               <p>Block Reward</p>
-              <p>{{item.block_reward || 0}} MIS</p>
+              <p>{{ item.block_reward || 0 }} MIS</p>
             </div>
           </div>
-          
+
           <div v-if="!blocks.length">
             <Skeleton active />
             <Skeleton active />
@@ -110,10 +110,10 @@ import { getIndexPageStats, getBlocks, getTopHolder } from '../api/serve'
 import { Block } from '../utils/interfaces'
 import dayjs from 'dayjs'
 import BigNumber from 'bignumber.js'
-import {formatTime, shortenAddress} from '../utils/plugins/index'
-import {Skeleton} from 'ant-design-vue'
+import { formatTime, shortenAddress } from '../utils/plugins/index'
+import { Skeleton } from 'ant-design-vue'
 export default {
-  components:{
+  components: {
     Skeleton
   },
   name: 'Portfolio',
@@ -124,8 +124,8 @@ export default {
       blockHeight: 'N/A',
       relationships: 'N/A',
       initBlocks: [],
-      holders:[],
-      search:''
+      holders: [],
+      search: ''
     }
   },
   setup() {
@@ -145,7 +145,7 @@ export default {
     blocks(): Array<Block> {
       try {
         let $s = useStore()
-        const blocks = $s.getters['common/blocks/getBlocks'](5).map(val=>{
+        const blocks = $s.getters['common/blocks/getBlocks'](5).map((val) => {
           return {
             ...val,
             timeAgo: formatTime(val.timestamp)
@@ -157,15 +157,16 @@ export default {
         return []
       }
     },
-    holderList(){
-      if(this.holders.length&&this.supply){
-        return this.holders.map(val=>{
+    holderList() {
+      if (this.holders.length && this.supply) {
+        return this.holders.map((val) => {
           return {
             ...val,
-            percentage: new BigNumber(val.quantity).div(this.supply).times(100).integerValue().toString()
+            percentage: new BigNumber(val.quantity).div(this.supply).times(100).integerValue().toString() || '0'
           }
         })
       }
+      console.log('xxx')
       return this.holders
     }
   },
@@ -196,8 +197,8 @@ export default {
             details: val.block,
             timestamp: val.block.header.time,
             height: val.height,
-            block_reward:val.block_reward || 0,
-            transactions: val.transactions, 
+            block_reward: val.block_reward || 0,
+            transactions: val.transactions,
             validdator: val.validdator?.moniker ?? '',
             timeAgo: formatTime(val.block.header.time)
           }
@@ -205,7 +206,7 @@ export default {
         this.blockHeight = this.initBlocks[0].height
       })
     },
-    getHolderList(){
+    getHolderList() {
       getTopHolder({
         list_num: 5
       }).then((res) => {
@@ -219,31 +220,31 @@ export default {
         })
       })
     },
-    getKeyUp(val:KeyboardEvent){
-      if(val.code.toLocaleLowerCase() === 'enter'){
+    getKeyUp(val: KeyboardEvent) {
+      if (val.code.toLocaleLowerCase() === 'enter') {
         this.getText()
       }
     },
-    getText(){
-      const hashLength = 64;
-      const addressLength = 44;
-      const blockHeight = (number:string)=>!new BigNumber(number).isNaN()
-      if(this.search.length === hashLength){
+    getText() {
+      const hashLength = 64
+      const addressLength = 44
+      const blockHeight = (number: string) => !new BigNumber(number).isNaN()
+      if (this.search.length === hashLength) {
         this.$router.push(`/tx/${this.search}`)
         return
       }
-      if(this.search.length === addressLength){
+      if (this.search.length === addressLength) {
         this.$router.push(`/holders/${this.search}`)
         return
       }
-      if(blockHeight(this.search)){
+      if (blockHeight(this.search)) {
         this.$router.push(`/block/${this.search}`)
       }
     },
-    holder(item){
+    holder(item) {
       this.$router.push(`/holders/${item.misesid}`)
     },
-    block(item){
+    block(item) {
       this.$router.push(`/block/${item.height}`)
     }
   }
@@ -291,7 +292,7 @@ export default {
       border: none;
       padding-left: 16px;
       font-size: 16px;
-      font-weight: 'hlt-55';
+      font-family: 'hlt-55';
       position: relative;
       right: -6px;
       color: #16161d;
@@ -359,16 +360,90 @@ export default {
     }
   }
 }
+@media (max-width: 768px) {
+  $fullWidth: 92vw;
+  body {
+    .block-container {
+      width: $fullWidth;
+      margin: 235px auto 0;
+      padding-bottom: 50px;
+      display: grid;
+      gap: 10px;
+      .block-box {
+        .block-item {
+          gap: 10px;
+          .second-value {
+            width: 30vw;
+          }
+          .name {
+            width: 30vw;
+          }
+          div {
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+    .mises-stats {
+      flex-direction: column;
+      height: auto;
+      width: $fullWidth;
+      margin: 0 auto;
+      top: 30px;
+      .stats-item{
+        width:100%;
+        &:not(:last-child){
+          border-bottom: 1px solid #eee;
+        }
+        .stats-item-icon-box{
+          padding-left: 10px;
+        }
+        .value{
+          margin-top:5px;
+        }
+      }
+    }
+    .homepage {
+      height: 200px;
+      .search {
+        margin: 22px auto 0;
+        display: flex;
+        justify-content: center;
+        input {
+          width: 80vw;
+          height: 32px;
+          padding-left: 8px;
+          font-size: 12px;
+        }
+        .search-btn {
+          width: 40px;
+          height: 32px;
+          img {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+@media (min-width: 768px) {
+  .block-container {
+    width: 1200px;
+    margin: 110px auto 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+}
 .block-container {
-  width: 1200px;
-  margin: 110px auto 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
   .block-box {
     background: #ffffff;
-    border: 1px solid #eeeeee;
+
     box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eeeeee;
     border-radius: 10px;
     .title {
       font-size: 16px;
@@ -396,12 +471,14 @@ export default {
       margin: 15px;
     }
     .block-item {
-      border-top: 1px solid #eee;
       padding: 19px 0;
       font-family: 'hlt-55';
       font-size: 14px;
       color: #16161d;
       justify-content: space-between;
+      &:not(:first-child) {
+        border-top: 1px solid #eeeeee;
+      }
       cursor: pointer;
       p {
         margin: 0;

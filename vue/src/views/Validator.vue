@@ -19,6 +19,8 @@
               pageSize: page_size,
               showQuickJumper: true
             }"
+
+          :scroll="{x:1200}"
             :rowClassName="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
           />
         </div>
@@ -69,7 +71,7 @@ export default {
           width: '15%'
         },
         {
-          title: 'Form',
+          title: 'From',
           dataIndex: 'from_address',
           // customRender:({text}, record)=> {
           //   const isMe = text === this.$route.params.misesid
@@ -90,7 +92,7 @@ export default {
         },
         {
           title: 'Gas Fee',
-          dataIndex: 'gas_used',
+          dataIndex: 'gas_fee',
           width: '10%'
         }
       ]
@@ -195,10 +197,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.active {
-  color: #5d61ff;
-  cursor: pointer;
-}
 .list-title {
   font-size: 18px;
   color: #666666;

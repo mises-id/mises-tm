@@ -65,7 +65,7 @@ export default {
 				title:'Timestamp',
 				value: `${formatTime(res.block_time)}(${dayjs(res.block_time).format('MMM-DD-YYYY HH:mm:ss A [ +UTC]')})`
 			},{
-				title:'Form',
+				title:'From',
 				value: res.tx_msg?.from_address ?? '-'
 			},{
 				title:'To',
@@ -75,7 +75,7 @@ export default {
 				value: `${res.value_mis} MIS`,
 			},{
 				title:'Gas Fee',
-				value: `${res.gas_used} MIS`,
+				value: `${res.gas_fee} MIS`,
 			}] as dataItem[]
 		} finally{
 			this.loading = false;
