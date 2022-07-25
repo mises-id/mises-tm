@@ -184,7 +184,7 @@ export default {
     getStatsData() {
       getIndexPageStats().then((res) => {
         this.relationships = res.social_relationships
-        this.gasPrice = res.gas_price
+        this.gasPrice = `${res.gas_price}MIS`
       })
     },
     getBlockList() {
