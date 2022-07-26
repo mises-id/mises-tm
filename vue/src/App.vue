@@ -1,23 +1,22 @@
 <template>
-  <div>
-    <SpTheme>
-      <div class="fixed"><SpNavbar :links="navbarLinks" :active-route="router.currentRoute.value.path" /></div>
-      <div class="page">
-        <router-view />
-      </div>
-    </SpTheme>
+  <div class="home">
+    <div class="fixed"><SpNavbar :links="navbarLinks" :active-route="router.currentRoute.value.path" /></div>
+    <div class="page">
+      <router-view />
+    </div>
+    <MisesFooter />
   </div>
 </template>
 
 <script lang="ts">
 import './scss/app.scss'
-import { SpTheme } from '@starport/vue'
 import { computed, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import SpNavbar from './components/SpNav'
+import MisesFooter from './components/MisesFooter'
 export default {
-  components: { SpTheme, SpNavbar },
+  components: { SpNavbar,MisesFooter },
   setup() {
     // store
     let $s = useStore()
@@ -69,6 +68,14 @@ export default {
 <style scoped lang="scss">
 body {
   margin: 0;
+}
+.home{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  .page{
+    flex: 1;
+  }
 }
 .fixed{
   position: fixed;

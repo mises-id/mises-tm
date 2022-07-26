@@ -76,6 +76,9 @@ export default {
 			},{
 				title:'Gas Fee',
 				value: `${res.gas_fee} MIS`,
+			},{
+				title:'More Info',
+				value: `${res.gas_fee} MIS`,
 			}] as dataItem[]
 		} finally{
 			this.loading = false;
