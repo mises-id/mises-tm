@@ -57,7 +57,7 @@ export default defineComponent({
   display: flex;
   background-color: #fcfcfc;
   color: #16161D;
-  height: 50px;
+  min-height: 50px;
   line-height: 50px;
   font-size: 16px;
   &:nth-child(2n) {
@@ -72,6 +72,7 @@ export default defineComponent({
   .value{
     width: 60%;
     font-family: 'hlt-45';
+    padding-right: 10px;
   }
 }
 .list-title{
