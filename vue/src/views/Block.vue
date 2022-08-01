@@ -53,6 +53,10 @@ export default {
             value: res.height
           },
           {
+            title: 'Transaction Hash',
+            value: res.block_id.hash
+          },
+          {
             title: 'Timestamp',
             value: `${formatTime(res.block.header.time)}(${dayjs(res.block.header.time).format('MMM-DD-YYYY HH:mm:ss A [ +UTC]')})`
           },

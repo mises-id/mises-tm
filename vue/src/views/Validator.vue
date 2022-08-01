@@ -53,6 +53,7 @@ export default {
       pages: 1,
       page_size: 10,
       total: 0,
+      username: '',
       columns: [
         {
           title: 'Txn Hash',
@@ -73,17 +74,58 @@ export default {
         {
           title: 'From',
           dataIndex: 'from_address',
-          // customRender:({text}, record)=> {
-          //   const isMe = text === this.$route.params.misesid
-          //   return h('div',{},[
-          //     h('span',{},isMe ? this.username : shortenAddress(text)),
-          //     h('span',{class:isMe ? 'out': 'in'},isMe ? 'Out' : 'In')
-          //   ])
-          // }
+          customRender:({text}, record)=> {
+            const isMe = text === this.$route.params.misesid
+            return h('div',{},[
+              h('span',{},isMe ? this.username : shortenAddress(text)),
+            ])
+          }
+        },
+        {
+          title: '',
+          width:'50px',
+          customRender:({text}, record)=> {
+            const isMe = text.from_address === this.$route.params.misesid
+            return  h('span',{class: !isMe ? 'in' : 'out'},!isMe ? 'In' : 'Out')
+          }
         },
         {
           title: 'To',
-          dataIndex: 'to_address'
+          dataIndex: 'to_address',
+          customRender:({text}, record)=> {
+            const isMe = text === this.$route.params.misesid
+            return h('div',{},[
+              h('span',{},isMe ? this.username : shortenAddress(text)),
+            ])
+          }
+        },
+        {
+          title: 'Message Type',
+          dataIndex: 'msg_type',
+          customRender:({text}, record)=> {
+            let type = '';
+            switch (text) {
+              case '/cosmos.bank.v1beta1.MsgSend':
+                type = 'Transfer'
+                break;
+              case '/cosmos.staking.v1beta1.MsgDelegate':
+                type = 'Delegate'
+                break;
+              case '/cosmos.staking.v1beta1.MsgUndelegate':
+                type = 'Undelegate'
+                break;
+              case '/cosmos.staking.v1beta1.MsgBeginRedelegate':
+                type = 'Redelegate'
+                break;
+              case '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward':
+                type = 'Withdraw Rewards'
+                break;
+            
+              default:
+                break;
+            }
+            return h('span',{},type);
+          }
         },
         {
           title: 'Value',
@@ -112,10 +154,12 @@ export default {
       const voting_power_rate = calcRate(res.operator_address)
       const info = validators?.find(({ address }) => address === valConsAddress(res)) || {}
       const uptime = uptime_estimated(info);
+      const username = res.description?.moniker;
+      this.username = username
       this.block = [
         {
           title: 'Moliker',
-          value: res.description.moniker,
+          value: username,
         },
         {
           title: 'Address',
@@ -166,12 +210,13 @@ export default {
           this.txns = res.data.map((val) => {
             return {
               block_time: formatTime(val.block_time),
-              from_address: shortenAddress(val.tx_msg?.from_address) ?? '-',
-              to_address: shortenAddress(val.tx_msg?.to_address) ?? '-',
+              from_address: val.tx_msg?.from_address ?? '-',
+              to_address: val.tx_msg?.to_address ?? '-',
               value_mis:`${val.value_mis} MIS`,
               gas_fee:`${val.gas_fee} MIS`,
               hash: val.hash,
-              height: val.height
+              height: val.height,
+              msg_type: val.msg_type
             }
           })
           this.total = res.pagination.total_records
