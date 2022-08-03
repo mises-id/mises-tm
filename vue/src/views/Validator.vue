@@ -158,7 +158,7 @@ export default {
       this.username = username
       this.block = [
         {
-          title: 'Moliker',
+          title: 'Moniker',
           value: username,
         },
         {

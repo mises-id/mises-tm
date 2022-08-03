@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-07-25 13:58:25
+ * @LastEditTime: 2022-08-01 18:01:23
+ * @LastEditors: lmk
+ * @Description: 
+ */
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import vue from '@vitejs/plugin-vue'
 import { Buffer } from 'buffer'

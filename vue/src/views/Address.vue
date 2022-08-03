@@ -149,7 +149,7 @@ export default {
           value: res.misesid
         },
         {
-          title: 'User Name/Moliker',
+          title: 'User Name/Moniker',
           value: username,
         },
         {
