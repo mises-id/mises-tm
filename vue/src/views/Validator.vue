@@ -150,20 +150,37 @@ export default {
     const {
       data: { info: validators }
     } = await axios.get(this.$store.getters['common/env/apiCosmos'] + '/cosmos/slashing/v1beta1/signing_infos')
+      const misesValoper = await getAddress({ misesid: this.$route.params.misesid })
       const {rate } = res.commission.commission_rates
       const voting_power_rate = calcRate(res.operator_address)
       const info = validators?.find(({ address }) => address === valConsAddress(res)) || {}
       const uptime = uptime_estimated(info);
       const username = res.description?.moniker;
       this.username = username
+      const that = this;
       this.block = [
         {
-          title: 'Moniker',
+          title: 'Name Tag',
           value: username,
         },
         {
-          title: 'Address',
+          title: 'Validator Address',
           value: res.operator_address
+        },
+        {
+          title: 'Balance',
+          value: `${misesValoper?.user_ext?.quantity || 0}MIS`,
+          render({value}){
+            return h('span',{
+              className:'active',
+              onClick: () => {
+                that.$router.push({
+                  path: `/holders/${res.operator_address}`
+                })
+              }
+            },`${value}(View Address)`)
+          }
+          
         },
         {
           title: 'Bonded MIS',

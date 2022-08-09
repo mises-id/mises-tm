@@ -59,7 +59,7 @@ export default {
           dataIndex: 'misesid',
         },
         {
-          title: 'User Name/Moniker',
+          title: 'Name Tag',
           dataIndex: 'name',
         },
         {
@@ -113,7 +113,7 @@ export default {
           this.holders = res.data.filter(val=>val).map((val) => {
             return {
               misesid: val.misesid,
-              name: val.validdator ? `${val.validdator?.moniker}(${shortenAddress(val.validdator?.address)})` : (val.pubinfo?.name || '-'),  
+              name: val.name_tag,  
               quantity: new BigNumber(val.user_ext.quantity).integerValue().toString(),
               percentage: 0,
             }

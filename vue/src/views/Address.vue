@@ -142,14 +142,29 @@ export default {
     this.loading = true
     try {
       const res = await getAddress({ misesid: this.$route.params.misesid })
-      const username = res.validdator ? `${res.validdator?.moniker}(${shortenAddress(res.validdator?.address)})` : res.pubinfo?.name || '-'
+      const username =  res.name_tag
+      const that = this;
       this.block = [
-        {
+        res.user_ext.validator? {
+          title: 'Validator Address',
+          value: res.user_ext.validator.operator_address,
+          render({value}){
+            return h('span',{
+              className:'active',
+              onClick: () => {
+                that.$router.push({
+                  path: `/validators/${res.user_ext.validator.operator_address}`
+                })
+              }
+            },value)
+          }
+
+        } : {
           title: 'Address',
           value: res.misesid
         },
         {
-          title: 'User Name/Moniker',
+          title: 'Name Tag',
           value: username,
         },
         {
