@@ -145,21 +145,7 @@ export default {
       const username =  res.name_tag
       const that = this;
       this.block = [
-        res.user_ext.validator? {
-          title: 'Validator Address',
-          value: res.user_ext.validator.operator_address,
-          render({value}){
-            return h('span',{
-              className:'active',
-              onClick: () => {
-                that.$router.push({
-                  path: `/validators/${res.user_ext.validator.operator_address}`
-                })
-              }
-            },value)
-          }
-
-        } : {
+        {
           title: 'Address',
           value: res.misesid
         },
@@ -180,6 +166,23 @@ export default {
           value: res.user_ext.social_relationships
         }
       ] as dataItem[]
+      if(res.user_ext.validator){
+        this.block.unshift({
+          title: 'Validator Address',
+          value: res.user_ext.validator.operator_address,
+          render({value}){
+            return h('span',{
+              className:'active',
+              onClick: () => {
+                that.$router.push({
+                  path: `/validators/${res.user_ext.validator.operator_address}`
+                })
+              }
+            },value)
+          }
+
+        })
+      }
       this.username = username 
       this.getTxsList()
     } finally {

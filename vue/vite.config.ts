@@ -14,11 +14,11 @@ import envCompatible from 'vite-plugin-env-compatible'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  define: {
-    global: {
-      Buffer: Buffer
-    }
-  },
+  // define: {
+  //   global: {
+  //     Buffer: Buffer
+  //   }
+  // },
   build: {
     outDir: 'browser',
   },
