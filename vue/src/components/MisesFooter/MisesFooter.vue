@@ -9,7 +9,7 @@
         <div class="center-content flex">
           <div>
             <p class="official">Official Website:</p>
-            <a href="https://www.mises.site/" target="_blank" class="site">https://www.mises.site/</a>
+            <a href="https://www.mises.site" target="_blank" class="site">https://www.mises.site</a>
           </div>
           <div class="flex download-app">
             <a href="https://d48fg6wpq9lc4.cloudfront.net/playstore/222071211.apk" target="_blank" class="flex btn download">
@@ -18,7 +18,11 @@
             </a>
             <a href="https://play.google.com/store/apps/details?id=site.mises.browser" target="_blank"  class="flex btn store">
               <img src="/images/index/GooglePlay@2x.png" alt="" >
-              <span>Play Store</span>
+              <span>Android</span>
+            </a>
+            <a href="https://testflight.apple.com/join/Tk1BxD1i" target="_blank"  class="flex btn store">
+              <img src="/images/index/iOS@2x.png" alt="" >
+              <span>iOS</span>
             </a>
           </div>
         </div>
