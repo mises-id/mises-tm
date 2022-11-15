@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
@@ -25,6 +26,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
+	server "github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -257,7 +259,8 @@ func New(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, snapshotStore *snapshots.Store, loadLatest bool, skipUpgradeHeights map[int64]bool,
 	homePath string, invCheckPeriod uint, encodingConfig appparams.EncodingConfig,
 	// this line is used by starport scaffolding # stargate/app/newArgument
-	appOpts servertypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp),
+	appOpts servertypes.AppOptions,
+	baseAppOptions ...func(*baseapp.BaseApp),
 ) *App {
 
 	appCodec := encodingConfig.Codec
@@ -266,6 +269,11 @@ func New(
 
 	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	cms := store.NewCommitMultiStore(db)
+	pruningOpts, err := server.GetPruningOptionsFromFlags(appOpts)
+	if err != nil {
+		panic(err)
+	}
+	cms.SetPruning(pruningOpts)
 	bApp.SetCMS(cms)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetSnapshotStore(snapshotStore) //should be set after cms ready
@@ -400,25 +408,34 @@ func New(
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
-	mongoCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
-	var useMongoUrl = cast.ToString(appOpts.Get(misestm.FlagMisesUseMongoDBBackend))
-	var mongodb dbm.DB
-	var rawdb dbm.RawDB
+	misesCodec := misescodec.NewBsonCodec(encodingConfig.InterfaceRegistry)
+	var modulesMongo = cast.ToString(appOpts.Get(misestm.FlagModulesUseMongoDBBackend))
+	var useMongoUrl = cast.ToString(appOpts.Get(misestm.FlagMongoDBUrl))
+	var misesdb dbm.DB
+	var bankdb dbm.DB
+	var rawmisesdb dbm.RawDB
 	if useMongoUrl != "" {
 		os.Setenv("MONGO_URL", useMongoUrl)
 		MongoDBHome = filepath.Join(homePath, "data")
-		mongodb, _ = NewMongoDB("mises", MongoDBHome)
-		rawdb = mongodb.(dbm.RawDB)
+		if strings.Contains(modulesMongo, "mises") {
+			misesdb, _ = NewMongoDB("mises", MongoDBHome)
+			rawmisesdb = misesdb.(dbm.RawDB)
+		}
+
+		if strings.Contains(modulesMongo, "bank") {
+			bankdb, _ = NewMongoDB("bank", MongoDBHome)
+		}
+
 	}
 
 	app.MisestmKeeper = *misestmkeeper.NewKeeper(
-		mongoCodec,
+		misesCodec,
 		keys[misestmtypes.StoreKey],
 		keys[misestmtypes.MemStoreKey],
 		app.AccountKeeper,
 		app.FeeGrantKeeper,
 		app.NFTKeeper,
-		rawdb,
+		rawmisesdb,
 	)
 	misestmModule := misestm.NewAppModule(appCodec, app.MisestmKeeper)
 
@@ -532,16 +549,22 @@ func New(
 	if useMongoUrl != "" {
 		kvkeys := make(map[string]*sdk.KVStoreKey)
 		for k, v := range keys {
-			if k != misestmtypes.StoreKey {
-				kvkeys[k] = v
+			kvkeys[k] = v
+		}
+		if misesdb != nil {
+			delete(kvkeys, misestmtypes.StoreKey)
+			if optdb := appOpts.Get("misesdb"); optdb != nil {
+				misesdb = optdb.(dbm.DB)
 			}
+			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb)
 		}
+		if bankdb != nil {
+			delete(kvkeys, banktypes.StoreKey)
+			cms.MountStoreWithDB(keys[banktypes.StoreKey], sdk.StoreTypeIAVL, bankdb)
+		}
+
 		app.MountKVStores(kvkeys)
-		if misesdb := appOpts.Get("misesdb"); misesdb == nil {
-			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, mongodb)
-		} else {
-			cms.MountStoreWithDB(keys[misestmtypes.StoreKey], sdk.StoreTypeIAVL, misesdb.(dbm.DB))
-		}
+
 	} else {
 		app.MountKVStores(keys)
 	}

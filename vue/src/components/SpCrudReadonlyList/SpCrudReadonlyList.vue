@@ -139,7 +139,7 @@ export default defineComponent({
 
     let defaultMessage = (type: string) => {
       const result = type.split('.')
-      return sentenceCase(result[result.length - 1].replace('Msg', ''))
+      return result[result.length - 1].replace('Msg', '')
     }
 
 
