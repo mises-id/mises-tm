@@ -677,12 +677,12 @@ github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639 h1:IMr0Xv3q
 github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639/go.mod h1:1toU4zx+rBP7+CDD9TW3kb9G7i1Mc29wdZvLYKHwYrY=
 github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e h1:/UOCQvRz3AHYtTI6Ko+zKEbaabIhepGJkX8frwdGO1k=
 github.com/mises-id/gravity-bridge/module v0.0.0-20211122090520-c67b7ee2244e/go.mod h1:1+9inmAF6UPq5vuJE9p9gLwBiPG++KE6k7SL9zLjJck=
-github.com/mises-id/iavl v0.17.4-0.20220705060202-d38e76838a30 h1:wUAGNmfEkU7gb5XMxBRGkRoHbWDX76OeYq5I6QvP+Ss=
-github.com/mises-id/iavl v0.17.4-0.20220705060202-d38e76838a30/go.mod h1:cqnE45ZxFV/DgOF8XQyj7eGmUPqf1ajYjxvdFZiJr28=
+github.com/mises-id/iavl v0.17.4-0.20221115032426-95b26b0b1279 h1:1PTC4Kp/i8kbJ8aCj3LUBvq5AUnDddwQdP1B9oitksE=
+github.com/mises-id/iavl v0.17.4-0.20221115032426-95b26b0b1279/go.mod h1:CFxiDdyKO6+koy0j+pAjDFVJYKVORQvZMn83pavptGA=
 github.com/mises-id/tendermint v0.34.15-0.20220331082541-d269a1ad09b8 h1:1fYBGO9Ljw5y2Y8qeO57MQ1rsQgx+2Y34DvxWW/YUE4=
 github.com/mises-id/tendermint v0.34.15-0.20220331082541-d269a1ad09b8/go.mod h1:n0G22GynfeXTYbrn2IeLeB+oqsAe6R6jl4vZxZ1Y8F4=
-github.com/mises-id/tm-db v0.6.5-0.20220705054959-78edf1c4e9d3 h1:mXcbpPlKjqEKUZgeyhvKK/g/8VwtIKR5ElEdBhxQRAI=
-github.com/mises-id/tm-db v0.6.5-0.20220705054959-78edf1c4e9d3/go.mod h1:ZOy4GaBR9dW7Com3PfPRaVP75ktxRPXw9Lm72I78PZE=
+github.com/mises-id/tm-db v0.6.5-0.20221115031436-f55df2309068 h1:388ooq1qwg4iaeIpONEc89fTN+UATYXmRrdQ6oZiZ1U=
+github.com/mises-id/tm-db v0.6.5-0.20221115031436-f55df2309068/go.mod h1:ZOy4GaBR9dW7Com3PfPRaVP75ktxRPXw9Lm72I78PZE=
 github.com/mitchellh/cli v1.0.0/go.mod h1:hNIlj7HEI86fIcpObd7a0FcrxTWetlwJDGcceTlRvqc=
 github.com/mitchellh/cli v1.1.0/go.mod h1:xcISNoH86gajksDmfB23e/pu+B+GeFRMYmoHXxx3xhI=
 github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=

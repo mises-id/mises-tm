@@ -32,10 +32,9 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.42.0
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-//replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20220705054959-78edf1c4e9d3
-replace github.com/tendermint/tm-db => ../tm-db
-//replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.17.4-0.20220705060202-d38e76838a30
-replace github.com/cosmos/iavl => ../iavl
+replace github.com/tendermint/tm-db => github.com/mises-id/tm-db v0.6.5-0.20221115031436-f55df2309068
+
+replace github.com/cosmos/iavl => github.com/mises-id/iavl v0.17.4-0.20221115032426-95b26b0b1279
 
 replace github.com/cosmos/cosmos-sdk => github.com/mises-id/cosmos-sdk v0.44.6-0.20220315093538-763383563639
 
