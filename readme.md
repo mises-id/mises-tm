@@ -156,7 +156,7 @@ misestmd init mises --chain-id mainnet
 sudo snap install jq
 curl https://e1.mises.site:443/genesis | jq .result.genesis > ~/.misestm/config/genesis.json
 
-SEEDS_PEERS="40889503320199c676570b417b132755d0414332@rpc.gw.mises.site:26656"
+SEEDS_PEERS="1070b5c04c9b2af28aedf1b8cbeaf7e90b123464@rpc.gw.mises.site:36656"
 
 sed -i.bak -E "s|^(seeds[[:space:]]+=[[:space:]]+).*$|\1\"$SEEDS_PEERS\"|"  ~/.misestm/config/config.toml
 
