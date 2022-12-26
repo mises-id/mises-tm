@@ -144,13 +144,13 @@ build-misestm: go.sum
 # go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR) ./cmd/$(MISES_CLI_BINARY)
 
 build-misestm-linux: go.sum
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 $(MAKE) build-misestm
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=1 $(MAKE) build-misestm
 
 build-misestm-windows: go.sum
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 $(MAKE) build-misestm
 
 build-misestm-darwin: go.sum
-	GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 $(MAKE) build-misestm
+	GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 $(MAKE) build-misestm
 
 build-tar:
 	$(MAKE) clean

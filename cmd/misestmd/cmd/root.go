@@ -35,7 +35,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 
-	gravitycli "github.com/cosmos/gravity-bridge/module/cmd/gravity/cmd"
+	//gravitycli "github.com/cosmos/gravity-bridge/module/cmd/gravity/cmd"
 
 	"github.com/mises-id/mises-tm/app"
 	// this line is used by starport scaffolding # stargate/root/import
@@ -191,7 +191,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		queryCommand(),
 		txCommand(),
 		keys.Commands(app.DefaultNodeHome),
-		gravitycli.Commands(app.DefaultNodeHome),
+		//gravitycli.Commands(app.DefaultNodeHome),
 	)
 
 	// add rosetta
@@ -271,11 +271,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		skipUpgradeHeights[int64(h)] = true
 	}
 
-	pruningOpts, err := server.GetPruningOptionsFromFlags(appOpts)
-	if err != nil {
-		panic(err)
-	}
-
 	snapshotDir := filepath.Join(cast.ToString(appOpts.Get(flags.FlagHome)), "data", "snapshots")
 	snapshotDB, err := sdk.NewLevelDB("metadata", snapshotDir)
 	if err != nil {
@@ -295,7 +290,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		a.encCfg,
 		// this line is used by starport scaffolding # stargate/root/appArgument
 		appOpts,
-		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
 		baseapp.SetMinRetainBlocks(cast.ToUint64(appOpts.Get(server.FlagMinRetainBlocks))),
 		baseapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),

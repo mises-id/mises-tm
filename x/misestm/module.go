@@ -30,7 +30,8 @@ var (
 )
 
 const (
-	FlagMisesUseMongoDBBackend = "mises-use-mongodb"
+	FlagModulesUseMongoDBBackend = "modules-use-mongodb"
+	FlagMongoDBUrl               = "mongodb-url"
 )
 
 // ----------------------------------------------------------------------------
@@ -48,7 +49,8 @@ func NewAppModuleBasic(cdc codec.Codec) AppModuleBasic {
 
 // AddModuleInitFlags implements servertypes.ModuleInitFlags interface.
 func AddModuleInitFlags(startCmd *cobra.Command) {
-	startCmd.Flags().String(FlagMisesUseMongoDBBackend, "", "enable mises to store states in mongodb backend")
+	startCmd.Flags().String(FlagMongoDBUrl, "", "mongodb backend url")
+	startCmd.Flags().String(FlagModulesUseMongoDBBackend, "mises", "modules need store states to mongodb backend, currrent supports bank/mises")
 }
 
 // Name returns the capability module's name.

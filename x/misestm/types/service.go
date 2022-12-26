@@ -40,9 +40,6 @@ type AppMgr interface {
 }
 
 type UserMgr interface {
-	//dbm.TrackWriteListener
-	OnWrite(key []byte, value []byte, delete bool) error
-
 	GetUserAccount(ctx sdk.Context, did string) (*MisesAccount, error)
 	GetUserRelation(ctx sdk.Context, didFrom string, didTo string) (*UserRelation, error)
 	GetUserRelations(ctx sdk.Context, relType uint64, didFrom string, lastDidTo string, limit int) ([]*UserRelation, error)

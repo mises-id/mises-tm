@@ -1,3 +1,4 @@
+//go:build cgo && tests
 // +build cgo,tests
 
 package rest_test

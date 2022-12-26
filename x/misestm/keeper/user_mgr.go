@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"bytes"
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,7 +8,6 @@ import (
 	"github.com/mises-id/mises-tm/x/misestm/types"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -140,8 +138,7 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 	if db, ok := k.db.Raw().(*mongo.Database); ok {
 		collection := db.Collection("UserRelation")
 		filter := bson.M{
-			"uidfrom":  bson.M{"$eq": didFrom},
-			"isLatest": bson.M{"$eq": 1},
+			"uidfrom": bson.M{"$eq": didFrom},
 		}
 		if lastDidTo != "" {
 			filter["uidto"] = bson.M{"$gt": lastDidTo}
@@ -188,81 +185,4 @@ func (k *userMgr) GetUserRelations(ctx sdk.Context, relType uint64, didFrom stri
 	}
 
 	return UserRelations, nil
-}
-
-func (k *userMgr) setLatestUserRelation(rel *types.UserRelation) (err error) {
-	filter := bson.M{
-		"uidfrom": bson.M{"$eq": rel.UidFrom},
-		"uidto":   bson.M{"$eq": rel.UidTo},
-	}
-
-	filter["version"] = bson.M{"$eq": rel.Version}
-
-	err = k.setLatestTag(filter, 1)
-	if err != nil {
-		return err
-	}
-
-	if rel.Version > 0 {
-		filter["version"] = bson.M{"$eq": rel.Version - 1}
-
-		err = k.setLatestTag(filter, 0)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-func (k *userMgr) setLatestTag(filter bson.M, isLatest uint8) (err error) {
-	bsonval := bson.M{"isLatest": isLatest}
-	update := bson.M{"$set": bsonval}
-
-	opts := &options.UpdateOptions{}
-	opts.SetUpsert(false)
-
-	if k.db == nil {
-		return nil
-	}
-	if db, ok := k.db.Raw().(*mongo.Database); ok {
-		collection := db.Collection("UserRelation")
-
-		_, err = collection.UpdateOne(context.Background(), filter, update, opts)
-
-	} else {
-		err = nil
-	}
-	return err
-}
-
-func (k *userMgr) nodeKeyFromBsonBytes(rawResult []byte) ([]byte, error) {
-	var bsonVal bson.D
-	err := bson.Unmarshal(rawResult, &bsonVal)
-	if err != nil {
-		return nil, err
-	}
-	var nodeKey []byte
-	if val, ok := bsonVal.Map()["node_key"]; ok {
-		nodeKey = val.(primitive.Binary).Data
-	}
-
-	return nodeKey, nil
-}
-
-func (k *userMgr) OnWrite(key []byte, value []byte, delete bool) error {
-	if delete {
-		return nil
-	}
-	prefix := types.KeyPrefix("s/_/" + types.UserRelationKey)
-	nodePrefix := types.KeyPrefix(types.UserRelationKey)
-	nodeKey, _ := k.nodeKeyFromBsonBytes(value)
-
-	if bytes.HasPrefix(key, prefix) || bytes.HasPrefix(nodeKey, nodePrefix) {
-		ret, err := k.userRelationFromBsonBytes(value)
-		if err != nil {
-			return err
-		}
-		return k.setLatestUserRelation(ret)
-	}
-	return nil
 }
